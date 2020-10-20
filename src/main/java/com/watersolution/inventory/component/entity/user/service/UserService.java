@@ -6,4 +6,6 @@ public interface UserService {
     User registerUser(User user);
 
     User saveUser(User user);
+
+    void updateFailedAttempts(User user);
 }

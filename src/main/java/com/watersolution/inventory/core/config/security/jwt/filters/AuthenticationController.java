@@ -2,8 +2,6 @@ package com.watersolution.inventory.core.config.security.jwt.filters;
 
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
 import com.watersolution.inventory.component.entity.user.model.User;
-import com.watersolution.inventory.core.config.security.jwt.model.AuthenticationRequest;
-import com.watersolution.inventory.core.config.security.jwt.model.AuthenticationResponse;
 import com.watersolution.inventory.core.config.security.service.AuthenticationService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -25,11 +23,11 @@ public class AuthenticationController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Login", response = AuthenticationResponse.class)
+    @ApiOperation(value = "Login", response = User.class)
     @CrossOrigin
     @PostMapping(value = "/login", produces = "application/json")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
-        return ResponseCreator.successfulResponse(authenticationService.login(authenticationRequest));
+    public ResponseEntity<User> login(@RequestBody User user) {
+        return ResponseCreator.successfulResponse(authenticationService.login(user));
     }
 
     @ApiResponses(value = {
@@ -38,10 +36,10 @@ public class AuthenticationController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Register", response = AuthenticationResponse.class)
+    @ApiOperation(value = "Register", response = User.class)
     @CrossOrigin
     @PostMapping(value = "/register", produces = "application/json")
-    public ResponseEntity<AuthenticationResponse> registerUser(@RequestBody User user) {
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
         return ResponseCreator.successfulResponse(authenticationService.registerUser(user));
     }
 }

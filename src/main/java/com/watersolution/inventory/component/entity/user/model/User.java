@@ -1,5 +1,6 @@
 package com.watersolution.inventory.component.entity.user.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
 import com.watersolution.inventory.component.management.role.model.role.UserRole;
@@ -24,6 +25,12 @@ public class User extends Auditable {
 
     @Column(name = "failedattempts")
     private int failedAttempts;
+
+    @Transient
+    private String id;
+
+    @Transient
+    private String token;
 
     @JsonManagedReference(value = "user")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")

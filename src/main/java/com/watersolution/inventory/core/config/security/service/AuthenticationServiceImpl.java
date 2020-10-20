@@ -4,15 +4,10 @@ import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.entity.user.model.User;
 import com.watersolution.inventory.component.entity.user.service.UserService;
 import com.watersolution.inventory.component.exception.CustomException;
-import com.watersolution.inventory.core.config.security.jwt.model.AuthenticationRequest;
-import com.watersolution.inventory.core.config.security.jwt.model.AuthenticationResponse;
 import com.watersolution.inventory.core.config.security.jwt.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -30,21 +25,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private UserService userService;
 
     @Override
-    public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
+    public User login(User user) {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new CustomException(ErrorCodes.BAD_CREDENTIALS, "Incorrect username or password", Collections.singletonList("Incorrect username or password"));
+            userService.updateFailedAttempts(user);
+            throw new CustomException(ErrorCodes.UNAUTHORIZED, "Incorrect username or password", Collections.singletonList("Incorrect username or password"));
         }
-        final UserDetails userDetails = inventoryUserDetailsService.loadUserByUsername(authenticationRequest.getEmail());
-        final String jwt = jwtUtil.generateToken(userDetails);
-        return new AuthenticationResponse(jwt);
+        catch (LockedException e){
+            throw new CustomException(ErrorCodes.UNAUTHORIZED, "Exceeds the maximum number of retries for Login Password", Collections.singletonList("Incorrect username or password"));
+        }
+        catch (DisabledException e){
+            throw new CustomException(ErrorCodes.UNAUTHORIZED, "Inactive User", Collections.singletonList("Incorrect username or password"));
+        }
+        final UserDetails userDetails = inventoryUserDetailsService.loadUserByUsername(user.getUserName());
+        user.setToken(jwtUtil.generateToken(userDetails));
+        user.setPassword(null);
+        return user;
     }
 
     @Override
-    public AuthenticationResponse registerUser(User user) {
+    public User registerUser(User user) {
         userService.registerUser(user);
-        return new AuthenticationResponse();
+        return user;
     }
 }
