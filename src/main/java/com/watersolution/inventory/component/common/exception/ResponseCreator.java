@@ -87,6 +87,10 @@ public class ResponseCreator {
                     return HttpStatus.OK;
                 case "01":
                     return HttpStatus.CREATED;
+                case "02":
+                    return HttpStatus.UNAUTHORIZED;
+                case "03":
+                    return HttpStatus.BAD_REQUEST;
                 default:
                     return HttpStatus.INTERNAL_SERVER_ERROR;
             }

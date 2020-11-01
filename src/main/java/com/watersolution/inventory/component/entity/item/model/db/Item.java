@@ -2,12 +2,11 @@ package com.watersolution.inventory.component.entity.item.model.db;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
-import com.watersolution.inventory.component.management.order.model.OrderItems;
+import com.watersolution.inventory.component.management.order.model.db.OrderItems;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 

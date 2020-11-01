@@ -1,7 +1,7 @@
 package com.watersolution.inventory.core.config.security.model;
 
 import com.watersolution.inventory.component.common.util.Status;
-import com.watersolution.inventory.component.entity.user.model.User;
+import com.watersolution.inventory.component.entity.user.model.db.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

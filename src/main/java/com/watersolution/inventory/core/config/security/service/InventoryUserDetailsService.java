@@ -1,6 +1,6 @@
 package com.watersolution.inventory.core.config.security.service;
 
-import com.watersolution.inventory.component.entity.user.model.User;
+import com.watersolution.inventory.component.entity.user.model.db.User;
 import com.watersolution.inventory.component.entity.user.repository.UserRepository;
 import com.watersolution.inventory.core.config.security.model.InventoryUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;

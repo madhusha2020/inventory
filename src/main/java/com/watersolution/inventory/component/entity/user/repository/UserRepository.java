@@ -1,6 +1,6 @@
 package com.watersolution.inventory.component.entity.user.repository;
 
-import com.watersolution.inventory.component.entity.user.model.User;
+import com.watersolution.inventory.component.entity.user.model.db.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

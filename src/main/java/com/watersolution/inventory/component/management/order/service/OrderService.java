@@ -1,8 +1,8 @@
 package com.watersolution.inventory.component.management.order.service;
 
-import com.watersolution.inventory.component.management.order.model.Order;
-import com.watersolution.inventory.component.management.order.model.OrderItemsList;
-import com.watersolution.inventory.component.management.order.model.OrderList;
+import com.watersolution.inventory.component.management.order.model.db.Order;
+import com.watersolution.inventory.component.management.order.model.api.OrderItemsList;
+import com.watersolution.inventory.component.management.order.model.api.OrderList;
 
 public interface OrderService {
 

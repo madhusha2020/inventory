@@ -1,10 +1,10 @@
 package com.watersolution.inventory.component.management.order.service;
 
 import com.watersolution.inventory.component.common.util.Status;
-import com.watersolution.inventory.component.management.order.model.Order;
-import com.watersolution.inventory.component.management.order.model.OrderItemId;
-import com.watersolution.inventory.component.management.order.model.OrderItemsList;
-import com.watersolution.inventory.component.management.order.model.OrderList;
+import com.watersolution.inventory.component.management.order.model.db.Order;
+import com.watersolution.inventory.component.management.order.model.db.OrderItemId;
+import com.watersolution.inventory.component.management.order.model.api.OrderItemsList;
+import com.watersolution.inventory.component.management.order.model.api.OrderList;
 import com.watersolution.inventory.component.management.order.repository.OrderItemsRepository;
 import com.watersolution.inventory.component.management.order.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;

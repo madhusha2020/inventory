@@ -2,7 +2,7 @@ package com.watersolution.inventory.component.entity.customer.model.db;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
-import com.watersolution.inventory.component.management.order.model.Order;
+import com.watersolution.inventory.component.management.order.model.db.Order;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

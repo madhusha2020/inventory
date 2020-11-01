@@ -5,11 +5,13 @@ import com.watersolution.inventory.component.management.role.model.privilege.Pri
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class PrivilegeList extends ResponseDefault {
+    @Valid
     private List<Privilege> privileges;
     private int totalPages;
 

@@ -1,4 +1,4 @@
-package com.watersolution.inventory.component.entity.user.model;
+package com.watersolution.inventory.component.entity.user.model.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Data
@@ -17,9 +18,11 @@ import java.util.List;
 public class User extends Auditable {
 
     @Id
+    @NotBlank(message = "Username must not be blank")
     @Column(name = "username", nullable = false, unique = true)
     private String userName;
 
+    @NotBlank(message = "Password must not be blank")
     @Column(name = "password")
     private String password;
 

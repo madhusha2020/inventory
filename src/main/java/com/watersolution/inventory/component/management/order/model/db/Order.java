@@ -1,4 +1,4 @@
-package com.watersolution.inventory.component.management.order.model;
+package com.watersolution.inventory.component.management.order.model.db;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

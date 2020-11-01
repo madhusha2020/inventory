@@ -1,9 +1,9 @@
 package com.watersolution.inventory.component.management.order.controllers;
 
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
-import com.watersolution.inventory.component.management.order.model.Order;
-import com.watersolution.inventory.component.management.order.model.OrderItemsList;
-import com.watersolution.inventory.component.management.order.model.OrderList;
+import com.watersolution.inventory.component.management.order.model.db.Order;
+import com.watersolution.inventory.component.management.order.model.api.OrderItemsList;
+import com.watersolution.inventory.component.management.order.model.api.OrderList;
 import com.watersolution.inventory.component.management.order.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

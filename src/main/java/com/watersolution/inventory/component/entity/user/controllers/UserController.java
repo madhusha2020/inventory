@@ -1,7 +1,7 @@
 package com.watersolution.inventory.component.entity.user.controllers;
 
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
-import com.watersolution.inventory.component.entity.user.model.User;
+import com.watersolution.inventory.component.entity.user.model.db.User;
 import com.watersolution.inventory.component.entity.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

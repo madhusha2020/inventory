@@ -2,7 +2,7 @@ package com.watersolution.inventory.component.management.role.model.role;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
-import com.watersolution.inventory.component.entity.user.model.User;
+import com.watersolution.inventory.component.entity.user.model.db.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

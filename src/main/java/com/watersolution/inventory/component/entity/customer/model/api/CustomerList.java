@@ -5,11 +5,13 @@ import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class CustomerList extends ResponseDefault {
+    @Valid
     private List<Customer> customers;
     private int totalPages;
 
