@@ -2,6 +2,7 @@ package com.watersolution.inventory.component.entity.user.controllers;
 
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
 import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
+import com.watersolution.inventory.component.entity.user.model.api.UserList;
 import com.watersolution.inventory.component.entity.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -16,6 +17,19 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Get All Users", response = UserList.class)
+    @CrossOrigin
+    @GetMapping
+    public ResponseEntity<UserList> getAllUsers() {
+        return ResponseCreator.successfulResponse(userService.getAllUsers());
+    }
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved list"),

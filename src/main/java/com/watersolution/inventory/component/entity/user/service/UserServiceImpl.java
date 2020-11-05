@@ -4,6 +4,7 @@ import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
 import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
+import com.watersolution.inventory.component.entity.user.model.api.UserList;
 import com.watersolution.inventory.component.entity.user.model.db.User;
 import com.watersolution.inventory.component.entity.user.repository.UserRepository;
 import com.watersolution.inventory.component.exception.CustomException;
@@ -44,6 +45,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public UserList getAllUsers() {
+        return new UserList(userRepository.findByStatus(Status.ACTIVE.getValue()));
+    }
+
     @Transactional
     @Override
     public CustomerUser saveCustomer(CustomerUser customerUser) {
@@ -61,7 +67,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private User saveUserWithRoles(User user, List<String> roles){
+    private User saveUserWithRoles(User user, List<String> roles) {
         validateUserName(user);
         validateUserRoles(roles);
         user.setStatus(Status.ACTIVE.getValue());
