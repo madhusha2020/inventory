@@ -36,7 +36,7 @@ public class User extends Auditable {
     private String token;
 
     @JsonManagedReference(value = "user")
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<UserRole> userRoles;
 
     public User() {

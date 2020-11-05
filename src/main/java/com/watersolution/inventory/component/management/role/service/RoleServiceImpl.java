@@ -1,32 +1,35 @@
 package com.watersolution.inventory.component.management.role.service;
 
-import com.watersolution.inventory.component.common.model.api.PageDetails;
 import com.watersolution.inventory.component.common.util.Status;
-import com.watersolution.inventory.component.management.role.model.api.PrivilegeList;
-import com.watersolution.inventory.component.management.role.model.privilege.Privilege;
-import com.watersolution.inventory.component.management.role.model.privilege.PrivilegeId;
+import com.watersolution.inventory.component.management.role.model.api.ModuleList;
+import com.watersolution.inventory.component.management.role.model.api.RoleList;
+import com.watersolution.inventory.component.management.role.model.db.Module;
+import com.watersolution.inventory.component.management.role.model.db.PrivilegeId;
 import com.watersolution.inventory.component.management.role.model.role.Role;
-import com.watersolution.inventory.component.management.role.repository.PrivilegeRepository;
+import com.watersolution.inventory.component.management.role.repository.ModuleRepository;
 import com.watersolution.inventory.component.management.role.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    private PrivilegeRepository privilegeRepository;
-    @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private ModuleRepository moduleRepository;
 
     @Override
-    public PrivilegeList getAllPrivileges(PageDetails pageDetails) {
-        int page = pageDetails.getOffset() / pageDetails.getLimit();
+    public RoleList getAllRoles() {
+        return new RoleList(roleRepository.findAllByStatus(Status.ACTIVE.getValue()));
+    }
 
-        Page<Privilege> privileges = privilegeRepository.findAllByStatus(Status.ACTIVE.getValue(), PageRequest.of(page, pageDetails.getLimit()));
-        return new PrivilegeList(privileges.getContent(), privileges.getTotalPages());
+    @Override
+    public ModuleList getAllModules() {
+        List<Module> moduleList = moduleRepository.findAllByStatus(Status.ACTIVE.getValue());
+        return new ModuleList(moduleList);
     }
 
     @Override

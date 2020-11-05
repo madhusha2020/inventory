@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -15,4 +16,5 @@ public class CustomerUser extends ResponseDefault {
     private User user;
     @Valid
     private Customer customer;
+    private List<String> roleNameList;
 }

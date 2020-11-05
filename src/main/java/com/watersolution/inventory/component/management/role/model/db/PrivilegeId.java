@@ -1,4 +1,4 @@
-package com.watersolution.inventory.component.management.role.model.privilege;
+package com.watersolution.inventory.component.management.role.model.db;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

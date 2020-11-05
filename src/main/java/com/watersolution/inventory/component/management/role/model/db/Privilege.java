@@ -1,4 +1,4 @@
-package com.watersolution.inventory.component.management.role.model.privilege;
+package com.watersolution.inventory.component.management.role.model.db;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
@@ -24,7 +24,7 @@ public class Privilege extends Auditable {
     private Role role;
 
     @JsonBackReference(value = "module")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("moduleId")
     @JoinColumn(name = "module_id")
     private Module module;

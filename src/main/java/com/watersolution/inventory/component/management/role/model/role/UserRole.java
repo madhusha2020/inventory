@@ -24,7 +24,7 @@ public class UserRole extends Auditable {
     private User user;
 
     @JsonBackReference(value = "role")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("roleName")
     @JoinColumn(name = "role_name")
     private Role role;

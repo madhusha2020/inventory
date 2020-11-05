@@ -1,4 +1,4 @@
-package com.watersolution.inventory.component.management.role.model.privilege;
+package com.watersolution.inventory.component.management.role.model.db;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
@@ -22,6 +22,9 @@ public class Module extends Auditable {
 
     @Column(name = "permissionCode")
     private String permissionCode;
+
+    @Column(name = "permissionDescription")
+    private String permissionDescription;
 
     @Column(name = "getAll")
     private String getAll;

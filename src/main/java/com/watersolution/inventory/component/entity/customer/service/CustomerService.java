@@ -11,4 +11,6 @@ public interface CustomerService {
     CustomerList searchCustomers(PageDetails pageDetails);
 
     Customer saveCustomer(Customer customer);
+
+    Customer updateCustomer(Customer customer);
 }

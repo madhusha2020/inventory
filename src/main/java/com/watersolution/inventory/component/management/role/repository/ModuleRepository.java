@@ -1,13 +1,13 @@
 package com.watersolution.inventory.component.management.role.repository;
 
-import com.watersolution.inventory.component.management.role.model.role.Role;
+import com.watersolution.inventory.component.management.role.model.db.Module;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface ModuleRepository extends JpaRepository<Module, Long> {
 
-    List<Role> findAllByStatus(int status);
+    List<Module> findAllByStatus(int status);
 }

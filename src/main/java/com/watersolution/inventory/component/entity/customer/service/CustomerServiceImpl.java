@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -40,6 +42,13 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer saveCustomer(Customer customer) {
         customer.setStatus(Status.ACTIVE.getValue());
         customer.fillCompulsory(customer.getUserId());
+        return customerRepository.save(customer);
+    }
+
+    @Override
+    public Customer updateCustomer(Customer customer) {
+        customer.fillCompulsory(customer.getUserId());
+        customer.setModifieddate(new Date());
         return customerRepository.save(customer);
     }
 

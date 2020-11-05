@@ -2,7 +2,7 @@ package com.watersolution.inventory.component.management.role.model.role;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
-import com.watersolution.inventory.component.management.role.model.privilege.Privilege;
+import com.watersolution.inventory.component.management.role.model.db.Privilege;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,7 +24,7 @@ public class Role extends Auditable {
     private List<UserRole> userRoles;
 
     @JsonManagedReference(value = "privilege_role")
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "role")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "role")
     private List<Privilege> privileges;
 
     public Role() {
