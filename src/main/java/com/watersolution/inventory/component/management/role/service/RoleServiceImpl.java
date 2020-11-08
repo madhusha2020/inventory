@@ -1,6 +1,8 @@
 package com.watersolution.inventory.component.management.role.service;
 
+import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
+import com.watersolution.inventory.component.exception.CustomException;
 import com.watersolution.inventory.component.management.role.model.api.ModuleList;
 import com.watersolution.inventory.component.management.role.model.api.RoleList;
 import com.watersolution.inventory.component.management.role.model.db.Module;
@@ -11,6 +13,8 @@ import com.watersolution.inventory.component.management.role.repository.RoleRepo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -32,8 +36,10 @@ public class RoleServiceImpl implements RoleService {
         return new ModuleList(moduleList);
     }
 
+    @Transactional
     @Override
     public Role saveRole(Role role) {
+        validatePermissions(role);
         role.fillCompulsory(role.getUserId());
         role.setStatus(Status.ACTIVE.getValue());
         role.getPrivileges().stream().forEach(privilege -> {
@@ -43,5 +49,11 @@ public class RoleServiceImpl implements RoleService {
             privilege.setStatus(Status.ACTIVE.getValue());
         });
         return roleRepository.save(role);
+    }
+
+    private void validatePermissions(Role role) {
+        if (role.getPrivileges() == null || role.getPrivileges().isEmpty()) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "Please select at least one user role", Collections.singletonList("Please select at least one user role"));
+        }
     }
 }
