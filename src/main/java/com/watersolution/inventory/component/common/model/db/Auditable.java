@@ -32,6 +32,9 @@ public class Auditable extends ResponseDefault {
     @Transient
     private String userId;
 
+    @Transient
+    private String statusDescription;
+
     public void fillCompulsory(String userName) {
         Date now = new Date();
         this.createdby = userName;
