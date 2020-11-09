@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("role")
 public class RoleController {
@@ -54,7 +56,7 @@ public class RoleController {
     @ApiOperation(value = "Save role", response = Role.class)
     @CrossOrigin
     @PostMapping(produces = "application/json")
-    public ResponseEntity<Role> saveUserRole(@RequestBody Role role) {
+    public ResponseEntity<Role> saveUserRole(@Valid @RequestBody Role role) {
         return ResponseCreator.successfulResponse(roleService.saveRole(role));
     }
 }

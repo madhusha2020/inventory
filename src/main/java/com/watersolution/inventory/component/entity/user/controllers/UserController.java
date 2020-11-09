@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("user")
 public class UserController {
@@ -41,7 +43,7 @@ public class UserController {
     @ApiOperation(value = "Save customer", response = CustomerUser.class)
     @CrossOrigin
     @PostMapping(value = "/customer", produces = "application/json")
-    public ResponseEntity<CustomerUser> saveCustomer(@RequestBody CustomerUser customerUser) {
+    public ResponseEntity<CustomerUser> saveCustomer(@Valid @RequestBody CustomerUser customerUser) {
         return ResponseCreator.successfulResponse(userService.saveCustomer(customerUser));
     }
 
@@ -54,7 +56,7 @@ public class UserController {
     @ApiOperation(value = "Save employee", response = EmployeeUser.class)
     @CrossOrigin
     @PostMapping(value = "/employee", produces = "application/json")
-    public ResponseEntity<EmployeeUser> saveEmployee(@RequestBody EmployeeUser employeeUser) {
+    public ResponseEntity<EmployeeUser> saveEmployee(@Valid @RequestBody EmployeeUser employeeUser) {
         return ResponseCreator.successfulResponse(userService.saveEmployee(employeeUser));
     }
 }

@@ -61,14 +61,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getEmployee(long id) {
         Employee employee = employeeRepository.findByIdAndStatus(id, Status.ACTIVE.getValue());
-        if (employee.getPhoto() != null) {
-            employee.setPhoto(imageUtil.decompressBytes(employee.getPhoto()));
-        }
+        setImage(employee);
         return employee;
     }
 
     private Employee setImage(Employee employee){
-        employee.setPhoto(imageUtil.decompressBytes(employee.getPhoto()));
+        if (employee.getPhoto() != null) {
+            employee.setPhoto(imageUtil.decompressBytes(employee.getPhoto()));
+        }
         return employee;
     }
 

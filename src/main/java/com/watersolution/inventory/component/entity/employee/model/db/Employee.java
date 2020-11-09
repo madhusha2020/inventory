@@ -1,6 +1,7 @@
 package com.watersolution.inventory.component.entity.employee.model.db;
 
 import com.watersolution.inventory.component.common.model.db.Auditable;
+import com.watersolution.inventory.component.common.validator.DateValidateConstraint;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,6 +32,7 @@ public class Employee extends Auditable {
     @Column(name = "name")
     private String name;
 
+    @DateValidateConstraint(message = "Invalid birth date")
     @Column(name = "dobirth")
     private LocalDate dobirth;
 
@@ -52,6 +54,7 @@ public class Employee extends Auditable {
     @Column(name = "description")
     private String description;
 
+    @DateValidateConstraint(message = "Invalid recruited date")
     @Column(name = "dorecruite")
     private LocalDate dorecruite;
 
