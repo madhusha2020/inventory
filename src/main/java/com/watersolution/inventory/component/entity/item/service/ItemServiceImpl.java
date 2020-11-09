@@ -33,7 +33,8 @@ public class ItemServiceImpl implements ItemService {
     public ItemList searchItems(PageDetails pageDetails) {
         customValidator.validateFoundNull(pageDetails.getSearchFilter(), ErrorCodes.SEARCH_FILTER);
         customValidator.validateNullOrEmpty(pageDetails.getSearchFilter().getStatusList(), ErrorCodes.STATUS_LIST);
-        return new ItemList(searchItemQuery(pageDetails).getContent(), searchItemQuery(pageDetails).getTotalPages());
+        Page<Item> items = searchItemQuery(pageDetails);
+        return new ItemList(items.getContent(), items.getTotalPages());
     }
 
     @Override

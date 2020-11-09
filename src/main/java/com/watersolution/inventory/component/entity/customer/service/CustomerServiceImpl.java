@@ -19,7 +19,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
-
     @Autowired
     private CustomValidator customValidator;
 
@@ -35,7 +34,8 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerList searchCustomers(PageDetails pageDetails) {
         customValidator.validateFoundNull(pageDetails.getSearchFilter(), ErrorCodes.SEARCH_FILTER);
         customValidator.validateNullOrEmpty(pageDetails.getSearchFilter().getStatusList(), ErrorCodes.STATUS_LIST);
-        return new CustomerList(searchCustomerQuery(pageDetails).getContent(), searchCustomerQuery(pageDetails).getTotalPages());
+        Page<Customer> customers = searchCustomerQuery(pageDetails);
+        return new CustomerList(customers.getContent(), customers.getTotalPages());
     }
 
     @Override

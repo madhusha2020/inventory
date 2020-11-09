@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
@@ -28,17 +27,18 @@ public class Employee extends Auditable {
     @Column(name = "callingname")
     private String callingname;
 
-    @NotBlank(message = "Employee Name must not be blank")
+    @NotBlank(message = "Name must not be blank")
     @Column(name = "name")
     private String name;
 
     @Column(name = "dobirth")
     private LocalDate dobirth;
 
-    @NotBlank(message = "Employee NIC must not be blank")
+    @NotBlank(message = "NIC must not be blank")
     @Column(name = "nic")
     private String nic;
 
+    @NotBlank(message = "Address must not be blank")
     @Column(name = "address")
     private String address;
 
