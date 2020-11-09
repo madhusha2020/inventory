@@ -3,6 +3,7 @@ package com.watersolution.inventory.component.common.exception;
 import com.watersolution.inventory.component.exception.CustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,6 @@ public class ResponseCreator {
     public static <T extends ResponseDefault> ResponseEntity<T> failedResponse(T responseDefault, String resCode, String resDesc) {
         responseDefault.setResponseCode(resCode);
         responseDefault.setDescription(resDesc);
-
         return new ResponseEntity<>(responseDefault, getResponseByCode(resCode));
     }
 

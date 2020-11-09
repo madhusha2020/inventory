@@ -3,7 +3,9 @@ package com.watersolution.inventory.component.entity.user.service;
 import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
+import com.watersolution.inventory.component.entity.employee.service.EmployeeService;
 import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
+import com.watersolution.inventory.component.entity.user.model.api.EmployeeUser;
 import com.watersolution.inventory.component.entity.user.model.api.UserList;
 import com.watersolution.inventory.component.entity.user.model.db.User;
 import com.watersolution.inventory.component.entity.user.repository.UserRepository;
@@ -26,6 +28,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private EmployeeService employeeService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -56,6 +60,14 @@ public class UserServiceImpl implements UserService {
         customerUser.setUser(saveUserWithRoles(customerUser.getUser(), customerUser.getRoleNameList()));
         customerUser.setCustomer(customerService.saveCustomer(customerUser.getCustomer()));
         return customerUser;
+    }
+
+    @Transactional
+    @Override
+    public EmployeeUser saveEmployee(EmployeeUser employeeUser) {
+        employeeUser.setUser(saveUserWithRoles(employeeUser.getUser(), employeeUser.getRoleNameList()));
+        employeeUser.setEmployee(employeeService.saveEmployee(employeeUser.getEmployee()));
+        return employeeUser;
     }
 
     @Override

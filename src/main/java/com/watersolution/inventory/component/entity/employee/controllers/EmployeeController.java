@@ -1,12 +1,12 @@
-package com.watersolution.inventory.component.entity.customer.controllers;
+package com.watersolution.inventory.component.entity.employee.controllers;
 
 import com.sun.istack.NotNull;
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
 import com.watersolution.inventory.component.common.model.api.PageDetails;
 import com.watersolution.inventory.component.common.model.api.SearchFilter;
-import com.watersolution.inventory.component.entity.customer.model.api.CustomerList;
-import com.watersolution.inventory.component.entity.customer.model.db.Customer;
-import com.watersolution.inventory.component.entity.customer.service.CustomerService;
+import com.watersolution.inventory.component.entity.employee.model.api.EmployeeList;
+import com.watersolution.inventory.component.entity.employee.model.db.Employee;
+import com.watersolution.inventory.component.entity.employee.service.EmployeeService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -20,11 +20,11 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 @RestController
-@RequestMapping("customer")
-public class CustomerController {
+@RequestMapping("employee")
+public class EmployeeController {
 
     @Autowired
-    private CustomerService customerService;
+    private EmployeeService employeeService;
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved list"),
@@ -32,11 +32,11 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "View a list of available customers", response = CustomerList.class)
+    @ApiOperation(value = "View a list of available employees", response = EmployeeList.class)
     @CrossOrigin
     @GetMapping(produces = "application/json")
-    public ResponseEntity<CustomerList> getAllCustomers(@NotNull @Min(0) @ApiParam(value = "The number of items to skip before starting to collect the result set.", required = true, defaultValue = "0") @RequestParam(value = "offset", required = true, defaultValue = "0") Integer offset, @NotNull @Min(1) @Max(100) @ApiParam(value = "The numbers of items to return.", required = true, defaultValue = "10") @RequestParam(value = "limit", required = true, defaultValue = "10") Integer limit) {
-        return ResponseCreator.successfulResponse(customerService.getAllCustomers(new PageDetails(new SearchFilter(), offset, limit)));
+    public ResponseEntity<EmployeeList> getAllEmployees(@NotNull @Min(0) @ApiParam(value = "The number of items to skip before starting to collect the result set.", required = true, defaultValue = "0") @RequestParam(value = "offset", required = true, defaultValue = "0") Integer offset, @NotNull @Min(1) @Max(100) @ApiParam(value = "The numbers of items to return.", required = true, defaultValue = "10") @RequestParam(value = "limit", required = true, defaultValue = "10") Integer limit) {
+        return ResponseCreator.successfulResponse(employeeService.getAllEmployees(new PageDetails(new SearchFilter(), offset, limit)));
     }
 
     @ApiResponses(value = {
@@ -45,11 +45,11 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Search customers", response = CustomerList.class)
+    @ApiOperation(value = "Search employees", response = EmployeeList.class)
     @CrossOrigin
     @PostMapping(value = "/search", produces = "application/json")
-    public ResponseEntity<CustomerList> searchCustomers(@RequestBody SearchFilter searchFilter, @NotNull @Min(0) @ApiParam(value = "The number of items to skip before starting to collect the result set.", required = true, defaultValue = "0") @RequestParam(value = "offset", required = true, defaultValue = "0") Integer offset, @NotNull @Min(1) @Max(100) @ApiParam(value = "The numbers of items to return.", required = true, defaultValue = "10") @RequestParam(value = "limit", required = true, defaultValue = "10") Integer limit) {
-        return ResponseCreator.successfulResponse(customerService.searchCustomers(new PageDetails(searchFilter, offset, limit)));
+    public ResponseEntity<EmployeeList> searchEmployees(@RequestBody SearchFilter searchFilter, @NotNull @Min(0) @ApiParam(value = "The number of items to skip before starting to collect the result set.", required = true, defaultValue = "0") @RequestParam(value = "offset", required = true, defaultValue = "0") Integer offset, @NotNull @Min(1) @Max(100) @ApiParam(value = "The numbers of items to return.", required = true, defaultValue = "10") @RequestParam(value = "limit", required = true, defaultValue = "10") Integer limit) {
+        return ResponseCreator.successfulResponse(employeeService.searchEmployees(new PageDetails(searchFilter, offset, limit)));
     }
 
     @ApiResponses(value = {
@@ -58,10 +58,10 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Update customer", response = Customer.class)
+    @ApiOperation(value = "Update employee", response = Employee.class)
     @CrossOrigin
     @PutMapping(produces = "application/json")
-    public ResponseEntity<Customer> updateCustomer(@Valid @RequestBody Customer customer) {
-        return ResponseCreator.successfulResponse(customerService.updateCustomer(customer));
+    public ResponseEntity<Employee> updateEmployee(@Valid @RequestBody Employee employee) {
+        return ResponseCreator.successfulResponse(employeeService.updateEmployee(employee));
     }
 }

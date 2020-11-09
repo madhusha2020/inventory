@@ -12,8 +12,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,26 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected <T extends ResponseDefault, E extends CustomException> ResponseEntity<T> handleServiceException(E ex) {
         printException(ex);
         log.info("Executing CustomException.handleException");
+        printFailedResponse(new ResponseDefault());
+        return ResponseCreator.failedResponse((T) new ResponseDefault(), ex);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    protected ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
+        printException(ex);
+        log.info("Executing MaxUploadSizeExceededException.handleException");
+        ResponseDefault responseDefault = new ResponseDefault();
+        responseDefault.setResponseCode("05");
+        responseDefault.setDescription("Maximum upload size exceeded");
+        responseDefault.setResponseValues(Collections.singletonList("Maximum upload size exceeded"));
+        printFailedResponse(responseDefault);
+        return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected <T extends ResponseDefault> ResponseEntity<T> handleException(Exception ex) {
+        printException(ex);
+        log.info("Executing Exception.handleException");
         printFailedResponse(new ResponseDefault());
         return ResponseCreator.failedResponse((T) new ResponseDefault(), ex);
     }
@@ -48,14 +70,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         responseDefault.setResponseValues(errorList);
         printFailedResponse(responseDefault);
         return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(Exception.class)
-    protected <T extends ResponseDefault> ResponseEntity<T> handleException(Exception ex) {
-        printException(ex);
-        log.info("Executing Exception.handleException");
-        printFailedResponse(new ResponseDefault());
-        return ResponseCreator.failedResponse((T) new ResponseDefault(), ex);
     }
 
     private void printFailedResponse(ResponseDefault responseDefault) {

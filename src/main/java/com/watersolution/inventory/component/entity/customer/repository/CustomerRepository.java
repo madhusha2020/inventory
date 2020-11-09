@@ -20,4 +20,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Page<Customer> findAllByStatusIn(List<Integer> statusList, Pageable pageable);
 
     Page<Customer> findAllByNameLikeAndTypeLikeAndStatusIn(String name, String type, List<Integer> statusList, Pageable pageable);
+
+    Customer findByIdAndStatus(long id, int status);
 }
