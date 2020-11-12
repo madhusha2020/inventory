@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    protected <T extends ResponseDefault, E extends CustomException> ResponseEntity<T> handleServiceException(E ex) {
+    protected <T extends ResponseDefault, E extends CustomException> ResponseEntity<T> handleCustomException(E ex) {
         printException(ex);
         log.info("Executing CustomException.handleException");
         printFailedResponse(new ResponseDefault());
