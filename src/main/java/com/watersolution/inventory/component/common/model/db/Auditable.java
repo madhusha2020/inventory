@@ -42,4 +42,10 @@ public class Auditable extends ResponseDefault {
         this.createddate = now;
         this.modifieddate = now;
     }
+
+    public void fillUpdateCompulsory(String userName) {
+        Date now = new Date();
+        this.modifiedby = userName;
+        this.modifieddate = now;
+    }
 }

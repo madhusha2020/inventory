@@ -2,6 +2,8 @@ package com.watersolution.inventory.component.entity.user.service;
 
 import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
+import com.watersolution.inventory.component.common.validator.CustomValidator;
+import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
 import com.watersolution.inventory.component.entity.employee.service.EmployeeService;
 import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
@@ -14,6 +16,7 @@ import com.watersolution.inventory.component.management.role.model.role.Role;
 import com.watersolution.inventory.component.management.role.model.role.UserRole;
 import com.watersolution.inventory.component.management.role.model.role.UserRoleId;
 import com.watersolution.inventory.component.management.role.util.Roles;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -32,6 +36,8 @@ public class UserServiceImpl implements UserService {
     private EmployeeService employeeService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CustomValidator customValidator;
 
     @Override
     public User registerUser(User user) {
@@ -56,10 +62,41 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    public CustomerUser getCustomerById(String id) {
+        customValidator.validateNullOrEmpty(id, "id");
+
+        Customer customer = customerService.getCustomerById(id);
+        customValidator.validateFoundNull(customer, "customer");
+        log.info("Customer : {}", customer.toString());
+
+        User user = userRepository.findByUserNameAndStatusIn(customer.getEmail(), Status.getAllStatusAsList());
+        customValidator.validateFoundNull(user, "user");
+        log.info("User : {}", user.toString());
+
+        List<String> roleNameList = new ArrayList<>();
+        user.getUserRoles().forEach(userRole -> {
+            roleNameList.add(userRole.getUserRoleId().getRoleName());
+        });
+
+        return new CustomerUser(user, customer, roleNameList);
+    }
+
+    @Transactional
+    @Override
     public CustomerUser saveCustomer(CustomerUser customerUser) {
         customerUser.setUser(saveUserWithRoles(customerUser.getUser(), customerUser.getRoleNameList()));
         customerUser.setCustomer(customerService.saveCustomer(customerUser.getCustomer()));
         return customerUser;
+    }
+
+    @Override
+    public CustomerUser updateCustomer(CustomerUser customerUser) {
+        return null;
+    }
+
+    @Override
+    public EmployeeUser getEmployeeById(String id) {
+        return null;
     }
 
     @Transactional
@@ -68,6 +105,11 @@ public class UserServiceImpl implements UserService {
         employeeUser.setUser(saveUserWithRoles(employeeUser.getUser(), employeeUser.getRoleNameList()));
         employeeUser.setEmployee(employeeService.saveEmployee(employeeUser.getEmployee()));
         return employeeUser;
+    }
+
+    @Override
+    public EmployeeUser updateEmployee(EmployeeUser employeeUser) {
+        return null;
     }
 
     @Override

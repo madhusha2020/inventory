@@ -2,8 +2,10 @@ package com.watersolution.inventory.component.common.util;
 
 import com.watersolution.inventory.component.exception.CustomException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public enum Status {
 
@@ -29,6 +31,15 @@ public enum Status {
                 .filter(m -> m.getValue() == status)
                 .findAny()
                 .orElseThrow(() -> new CustomException("INVALID", "Invalid Description", Collections.singletonList("Status")));
+    }
+
+    public static List<Integer> getAllStatusAsList() {
+        List<Integer> statusList = new ArrayList<>();
+        Arrays.stream(Status.values())
+                .forEach(statusValue -> {
+                    statusList.add(statusValue.value);
+                });
+        return statusList;
     }
 
     public Integer getValue() {

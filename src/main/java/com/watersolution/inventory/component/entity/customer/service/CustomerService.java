@@ -10,9 +10,11 @@ public interface CustomerService {
 
     CustomerList searchCustomers(PageDetails pageDetails);
 
+    Customer getCustomerById(String id);
+
+    Customer getActiveCustomerById(long id);
+
     Customer saveCustomer(Customer customer);
 
     Customer updateCustomer(Customer customer);
-
-    Customer getCustomer(long id);
 }

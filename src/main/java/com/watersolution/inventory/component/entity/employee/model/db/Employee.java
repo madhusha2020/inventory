@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.sql.Blob;
 import java.time.LocalDate;
 
 @Data
@@ -58,7 +59,7 @@ public class Employee extends Auditable {
     @Column(name = "dorecruite")
     private LocalDate dorecruite;
 
-    @Column(name = "photo", length = 1000)
+    @Column(name = "photo",  columnDefinition = "LONGBLOB")
     private byte[] photo;
 
     @NotBlank(message = "Employee gender must not be blank")

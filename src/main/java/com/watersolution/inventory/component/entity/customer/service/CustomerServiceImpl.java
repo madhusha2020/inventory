@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
 
 @Service
@@ -39,6 +40,18 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Customer getCustomerById(String id) {
+        customValidator.validateNullOrEmpty(id, "id");
+        return customerRepository.findByIdAndStatusIn(Long.valueOf(id), Status.getAllStatusAsList());
+    }
+
+
+    @Override
+    public Customer getActiveCustomerById(long id) {
+        return customerRepository.findByIdAndStatus(id, Status.ACTIVE.getValue());
+    }
+
+    @Override
     public Customer saveCustomer(Customer customer) {
         customer.setStatus(Status.ACTIVE.getValue());
         customer.fillCompulsory(customer.getUserId());
@@ -47,14 +60,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer updateCustomer(Customer customer) {
-        customer.fillCompulsory(customer.getUserId());
+        customer.fillUpdateCompulsory(customer.getUserId());
         customer.setModifieddate(new Date());
         return customerRepository.save(customer);
-    }
-
-    @Override
-    public Customer getCustomer(long id) {
-        return customerRepository.findByIdAndStatus(id, Status.ACTIVE.getValue());
     }
 
     private Page<Customer> searchCustomerQuery(PageDetails pageDetails) {

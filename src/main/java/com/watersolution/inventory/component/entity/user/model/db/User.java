@@ -6,6 +6,7 @@ import com.watersolution.inventory.component.common.model.db.Auditable;
 import com.watersolution.inventory.component.management.role.model.role.UserRole;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -22,6 +23,7 @@ public class User extends Auditable {
     @Column(name = "username", nullable = false, unique = true)
     private String userName;
 
+    @ToString.Exclude
     @NotBlank(message = "Password must not be blank")
     @Column(name = "password")
     private String password;
@@ -35,6 +37,7 @@ public class User extends Auditable {
     @Transient
     private String token;
 
+    @ToString.Exclude
     @JsonManagedReference(value = "user")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<UserRole> userRoles;

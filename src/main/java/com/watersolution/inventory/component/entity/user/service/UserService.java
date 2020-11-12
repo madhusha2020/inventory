@@ -10,9 +10,17 @@ public interface UserService {
 
     UserList getAllUsers();
 
+    CustomerUser getCustomerById(String id);
+
     CustomerUser saveCustomer(CustomerUser customerUser);
 
+    CustomerUser updateCustomer(CustomerUser customerUser);
+
+    EmployeeUser getEmployeeById(String id);
+
     EmployeeUser saveEmployee(EmployeeUser employeeUser);
+
+    EmployeeUser updateEmployee(EmployeeUser employeeUser);
 
     void updateFailedAttempts(User user);
 }

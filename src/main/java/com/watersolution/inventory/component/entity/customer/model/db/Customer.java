@@ -5,6 +5,7 @@ import com.watersolution.inventory.component.common.model.db.Auditable;
 import com.watersolution.inventory.component.management.order.model.db.Order;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -55,6 +56,7 @@ public class Customer extends Auditable {
     @Transient
     private Integer orderCount;
 
+    @ToString.Exclude
     @JsonManagedReference(value = "customer")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Order> orders;

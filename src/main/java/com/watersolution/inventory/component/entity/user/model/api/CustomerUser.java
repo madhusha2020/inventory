@@ -17,4 +17,13 @@ public class CustomerUser extends ResponseDefault {
     @Valid
     private Customer customer;
     private List<String> roleNameList;
+
+    public CustomerUser() {
+    }
+
+    public CustomerUser(@Valid User user, @Valid Customer customer, List<String> roleNameList) {
+        this.user = user;
+        this.customer = customer;
+        this.roleNameList = roleNameList;
+    }
 }

@@ -29,7 +29,7 @@ public class RoleController {
 
     @ApiOperation(value = "View a list of available privileges", response = RoleList.class)
     @CrossOrigin
-    @GetMapping
+    @GetMapping(produces = "application/json")
     public ResponseEntity<RoleList> getAllRoles() {
         return ResponseCreator.successfulResponse(roleService.getAllRoles());
     }
