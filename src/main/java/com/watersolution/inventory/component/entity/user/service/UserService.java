@@ -10,6 +10,8 @@ public interface UserService {
 
     UserList getAllUsers();
 
+    UserList getAllActiveUsers();
+
     CustomerUser getCustomerById(String id);
 
     CustomerUser saveCustomer(CustomerUser customerUser);

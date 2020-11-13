@@ -8,6 +8,8 @@ public interface CustomerService {
 
     CustomerList getAllCustomers(PageDetails pageDetails);
 
+    CustomerList getAllActiveCustomers(PageDetails pageDetails);
+
     CustomerList searchCustomers(PageDetails pageDetails);
 
     Customer getCustomerById(String id);

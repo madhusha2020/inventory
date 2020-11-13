@@ -57,6 +57,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserList getAllUsers() {
+        return new UserList(userRepository.findByStatusIn(Status.getAllStatusAsList()));
+    }
+
+    @Override
+    public UserList getAllActiveUsers() {
         return new UserList(userRepository.findByStatus(Status.ACTIVE.getValue()));
     }
 

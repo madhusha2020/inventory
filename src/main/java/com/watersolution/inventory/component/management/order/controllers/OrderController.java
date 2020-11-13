@@ -28,7 +28,7 @@ public class OrderController {
     @ApiOperation(value = "Place customer order", response = OrderItemsList.class)
     @CrossOrigin
     @PostMapping(produces = "application/json")
-    public ResponseEntity<OrderItemsList> saveCustomer(@RequestBody OrderItemsList orderItemsList) {
+    public ResponseEntity<OrderItemsList> placeOrder(@RequestBody OrderItemsList orderItemsList) {
         return ResponseCreator.successfulResponse(orderService.placeOrder(orderItemsList));
     }
 

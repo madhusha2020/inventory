@@ -30,6 +30,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeList getAllEmployees(PageDetails pageDetails) {
         int page = pageDetails.getOffset() / pageDetails.getLimit();
 
+        Page<Employee> employees = employeeRepository.findAllByStatusIn(Status.getAllStatusAsList(), PageRequest.of(page, pageDetails.getLimit()));
+        employees.stream().map(this::setImage).collect(Collectors.toList());
+        return new EmployeeList(employees.getContent(), employees.getTotalPages());
+    }
+
+    @Override
+    public EmployeeList getAllActiveEmployees(PageDetails pageDetails) {
+        int page = pageDetails.getOffset() / pageDetails.getLimit();
+
         Page<Employee> employees = employeeRepository.findAllByStatus(Status.ACTIVE.getValue(), PageRequest.of(page, pageDetails.getLimit()));
         employees.stream().map(this::setImage).collect(Collectors.toList());
         return new EmployeeList(employees.getContent(), employees.getTotalPages());

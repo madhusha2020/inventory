@@ -27,6 +27,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleList getAllRoles() {
+        return new RoleList(roleRepository.findAllByStatusIn(Status.getAllStatusAsList()));
+    }
+
+    @Override
+    public RoleList getAllActiveRoles() {
         return new RoleList(roleRepository.findAllByStatus(Status.ACTIVE.getValue()));
     }
 

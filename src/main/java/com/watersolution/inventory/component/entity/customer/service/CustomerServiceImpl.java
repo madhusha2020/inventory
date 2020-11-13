@@ -27,6 +27,14 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerList getAllCustomers(PageDetails pageDetails) {
         int page = pageDetails.getOffset() / pageDetails.getLimit();
 
+        Page<Customer> customers = customerRepository.findAllByStatusIn(Status.getAllStatusAsList(), PageRequest.of(page, pageDetails.getLimit()));
+        return new CustomerList(customers.getContent(), customers.getTotalPages());
+    }
+
+    @Override
+    public CustomerList getAllActiveCustomers(PageDetails pageDetails) {
+        int page = pageDetails.getOffset() / pageDetails.getLimit();
+
         Page<Customer> customers = customerRepository.findAllByStatus(Status.ACTIVE.getValue(), PageRequest.of(page, pageDetails.getLimit()));
         return new CustomerList(customers.getContent(), customers.getTotalPages());
     }

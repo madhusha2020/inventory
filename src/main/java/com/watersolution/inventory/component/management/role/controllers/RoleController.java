@@ -27,12 +27,26 @@ public class RoleController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "View a list of available privileges", response = RoleList.class)
+    @ApiOperation(value = "View a list of available roles", response = RoleList.class)
     @CrossOrigin
     @GetMapping(produces = "application/json")
     public ResponseEntity<RoleList> getAllRoles() {
         return ResponseCreator.successfulResponse(roleService.getAllRoles());
     }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "View a list of available active roles", response = RoleList.class)
+    @CrossOrigin
+    @GetMapping(value = "/active", produces = "application/json")
+    public ResponseEntity<RoleList> getAllActiveRoles() {
+        return ResponseCreator.successfulResponse(roleService.getAllActiveRoles());
+    }
+
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved list"),

@@ -8,6 +8,8 @@ public interface EmployeeService {
 
     EmployeeList getAllEmployees(PageDetails pageDetails);
 
+    EmployeeList getAllActiveEmployees(PageDetails pageDetails);
+
     EmployeeList searchEmployees(PageDetails pageDetails);
 
     Employee saveEmployee(Employee employee);

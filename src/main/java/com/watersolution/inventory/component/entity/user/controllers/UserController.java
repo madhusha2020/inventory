@@ -28,11 +28,24 @@ public class UserController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Get All Users", response = UserList.class)
+    @ApiOperation(value = "Get all users", response = UserList.class)
     @CrossOrigin
     @GetMapping(produces = "application/json")
     public ResponseEntity<UserList> getAllUsers() {
         return ResponseCreator.successfulResponse(userService.getAllUsers());
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Get all active users", response = UserList.class)
+    @CrossOrigin
+    @GetMapping(value = "/active", produces = "application/json")
+    public ResponseEntity<UserList> getAllActiveUsers() {
+        return ResponseCreator.successfulResponse(userService.getAllActiveUsers());
     }
 
     @ApiResponses(value = {
