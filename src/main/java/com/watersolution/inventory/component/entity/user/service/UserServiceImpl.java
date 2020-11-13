@@ -11,6 +11,7 @@ import com.watersolution.inventory.component.entity.user.model.api.EmployeeUser;
 import com.watersolution.inventory.component.entity.user.model.api.UserList;
 import com.watersolution.inventory.component.entity.user.model.db.User;
 import com.watersolution.inventory.component.entity.user.repository.UserRepository;
+import com.watersolution.inventory.component.entity.user.util.UserServiceHelper;
 import com.watersolution.inventory.component.exception.CustomException;
 import com.watersolution.inventory.component.management.role.model.role.Role;
 import com.watersolution.inventory.component.management.role.model.role.UserRole;
@@ -31,6 +32,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private UserServiceHelper userServiceHelper;
+    @Autowired
     private CustomerService customerService;
     @Autowired
     private EmployeeService employeeService;
@@ -41,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(User user) {
-        validateUserName(user);
+        userServiceHelper.validateUserName(user);
         user.setStatus(Status.ACTIVE.getValue());
         user.fillCompulsory(user.getUserId());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -89,14 +92,20 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public CustomerUser saveCustomer(CustomerUser customerUser) {
-        customerUser.setUser(saveUserWithRoles(customerUser.getUser(), customerUser.getRoleNameList()));
+        customerUser.setUser(userServiceHelper.saveUserWithRoles(customerUser.getUser(), customerUser.getRoleNameList()));
         customerUser.setCustomer(customerService.saveCustomer(customerUser.getCustomer()));
         return customerUser;
     }
 
+    @Transactional
     @Override
     public CustomerUser updateCustomer(CustomerUser customerUser) {
-        return null;
+        if(customerService.getActiveCustomerById(customerUser.getCustomer().getId()) == null){
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "Invalid or inactive customer", Collections.singletonList("Invalid or inactive customer"));
+        }
+        customerUser.setUser(userServiceHelper.updateUserWithRoles(customerUser.getUser(), customerUser.getRoleNameList()));
+        customerUser.setCustomer(customerService.updateCustomer(customerUser.getCustomer()));
+        return customerUser;
     }
 
     @Override
@@ -107,7 +116,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public EmployeeUser saveEmployee(EmployeeUser employeeUser) {
-        employeeUser.setUser(saveUserWithRoles(employeeUser.getUser(), employeeUser.getRoleNameList()));
+        employeeUser.setUser(userServiceHelper.saveUserWithRoles(employeeUser.getUser(), employeeUser.getRoleNameList()));
         employeeUser.setEmployee(employeeService.saveEmployee(employeeUser.getEmployee()));
         return employeeUser;
     }
@@ -119,46 +128,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateFailedAttempts(User user) {
-        Optional<User> updatableUser = getActiveUserByUserName(user);
+        Optional<User> updatableUser = userServiceHelper.getActiveUserByUserName(user);
         if (updatableUser.isPresent()) {
             updatableUser.get().setFailedAttempts(updatableUser.get().getFailedAttempts() + 1);
             userRepository.save(updatableUser.get());
         }
-    }
-
-    private User saveUserWithRoles(User user, List<String> roles) {
-        validateUserName(user);
-        validateUserRoles(roles);
-        user.setStatus(Status.ACTIVE.getValue());
-        user.fillCompulsory(user.getUserId());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        List<UserRole> userRoleList = new ArrayList<>();
-        roles.stream().forEach(role -> {
-            UserRole userRole = new UserRole();
-            userRole.setUserRoleId(new UserRoleId(user.getUserName(), role));
-            userRole.setUser(user);
-            userRole.setRole(new Role(role));
-            userRoleList.add(userRole);
-        });
-        user.setUserRoles(userRoleList);
-
-        return userRepository.save(user);
-    }
-
-    private void validateUserName(User user) {
-        if (getActiveUserByUserName(user).isPresent()) {
-            throw new CustomException(ErrorCodes.BAD_REQUEST, "This Email is already taken", Collections.singletonList("This Email is already taken"));
-        }
-    }
-
-    private void validateUserRoles(List<String> roles) {
-        if (roles == null || roles.isEmpty()) {
-            throw new CustomException(ErrorCodes.BAD_REQUEST, "Please select at least one user role", Collections.singletonList("Please select at least one user role"));
-        }
-    }
-
-    private Optional<User> getActiveUserByUserName(User user) {
-        return userRepository.findByUserNameAndStatus(user.getUserName(), Status.ACTIVE.getValue());
     }
 }

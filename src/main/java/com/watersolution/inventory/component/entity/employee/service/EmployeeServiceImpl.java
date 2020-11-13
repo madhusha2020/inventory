@@ -63,7 +63,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee updateEmployee(Employee employee) {
         employee.setStatus(Status.ACTIVE.getValue());
-        employee.setModifieddate(new Date());
         return employeeRepository.save(employee);
     }
 

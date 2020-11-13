@@ -38,6 +38,10 @@ public class User extends Auditable {
     private String token;
 
     @ToString.Exclude
+    @Transient
+    private String oldPassword;
+
+    @ToString.Exclude
     @JsonManagedReference(value = "user")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<UserRole> userRoles;

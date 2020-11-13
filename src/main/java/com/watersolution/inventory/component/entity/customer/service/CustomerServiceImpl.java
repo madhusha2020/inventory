@@ -69,7 +69,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer updateCustomer(Customer customer) {
         customer.fillUpdateCompulsory(customer.getUserId());
-        customer.setModifieddate(new Date());
         return customerRepository.save(customer);
     }
 
