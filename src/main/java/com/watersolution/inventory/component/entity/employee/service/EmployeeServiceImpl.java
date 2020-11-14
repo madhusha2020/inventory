@@ -7,13 +7,14 @@ import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.entity.employee.model.api.EmployeeList;
 import com.watersolution.inventory.component.entity.employee.model.db.Employee;
 import com.watersolution.inventory.component.entity.employee.repository.EmployeeRepository;
+import com.watersolution.inventory.component.exception.CustomException;
 import com.watersolution.inventory.component.management.image.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,6 +56,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee saveEmployee(Employee employee) {
+        if (employeeRepository.findByCode(employee.getCode()).isPresent()) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "This employee code is already exist", Collections.singletonList("This employee code is already exist"));
+        }
         employee.setStatus(Status.ACTIVE.getValue());
         employee.fillCompulsory(employee.getUserId());
         return employeeRepository.save(employee);
@@ -73,7 +77,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
-    private Employee setImage(Employee employee){
+    private Employee setImage(Employee employee) {
         if (employee.getPhoto() != null) {
             employee.setPhoto(imageUtil.decompressBytes(employee.getPhoto()));
         }
