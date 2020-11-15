@@ -44,6 +44,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (DisabledException e) {
             throw new CustomException(ErrorCodes.UNAUTHORIZED, "Inactive User", Collections.singletonList("Incorrect username or password"));
         }
+        userService.resetFailedAttempts(user);
         final UserDetails userDetails = inventoryUserDetailsService.loadUserByUsername(user.getUserName());
         user.setToken(jwtUtil.generateToken(userDetails));
         user.setPassword(null);

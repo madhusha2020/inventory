@@ -25,4 +25,6 @@ public interface UserService {
     EmployeeUser updateEmployee(EmployeeUser employeeUser);
 
     void updateFailedAttempts(User user);
+
+    void resetFailedAttempts(User user);
 }

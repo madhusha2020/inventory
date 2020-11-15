@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -81,11 +82,7 @@ public class UserServiceImpl implements UserService {
         customValidator.validateFoundNull(user, "user");
         log.info("User : {}", user.toString());
 
-        List<String> roleNameList = new ArrayList<>();
-        user.getUserRoles().forEach(userRole -> {
-            roleNameList.add(userRole.getUserRoleId().getRoleName());
-        });
-
+        List<String> roleNameList = user.getUserRoles().stream().map(userRole -> userRole.getUserRoleId().getRoleName()).collect(Collectors.toList());
         return new CustomerUser(user, customer, roleNameList);
     }
 
@@ -131,6 +128,15 @@ public class UserServiceImpl implements UserService {
         Optional<User> updatableUser = userServiceHelper.getActiveUserByUserName(user);
         if (updatableUser.isPresent()) {
             updatableUser.get().setFailedAttempts(updatableUser.get().getFailedAttempts() + 1);
+            userRepository.save(updatableUser.get());
+        }
+    }
+
+    @Override
+    public void resetFailedAttempts(User user) {
+        Optional<User> updatableUser = userServiceHelper.getActiveUserByUserName(user);
+        if (updatableUser.isPresent()) {
+            updatableUser.get().setFailedAttempts(0);
             userRepository.save(updatableUser.get());
         }
     }
