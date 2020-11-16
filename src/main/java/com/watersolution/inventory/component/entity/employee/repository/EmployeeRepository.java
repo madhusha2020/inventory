@@ -18,11 +18,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Page<Employee> findAllByNameLikeAndStatusIn(String name, List<Integer> statusList, Pageable pageable);
 
-    Page<Employee> findAllByNicLikeAndStatusIn(String nic, List<Integer> statusList, Pageable pageable);
+    Page<Employee> findAllByCodeLikeAndStatusIn(String code, List<Integer> statusList, Pageable pageable);
 
     Page<Employee> findAllByStatusIn(List<Integer> statusList, Pageable pageable);
 
-    Page<Employee> findAllByNameLikeAndNicLikeAndStatusIn(String name, String nic, List<Integer> statusList, Pageable pageable);
+    Page<Employee> findAllByNameLikeAndCodeLikeAndStatusIn(String name, String code, List<Integer> statusList, Pageable pageable);
 
     Employee findByIdAndStatus(long id, int status);
 }

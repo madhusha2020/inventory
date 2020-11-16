@@ -88,7 +88,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         int page = pageDetails.getOffset() / pageDetails.getLimit();
 
         if (pageDetails.getSearchFilter().getName() != null && pageDetails.getSearchFilter().getType() != null) {
-            return employeeRepository.findAllByNameLikeAndNicLikeAndStatusIn(
+            return employeeRepository.findAllByNameLikeAndCodeLikeAndStatusIn(
                     pageDetails.getSearchFilter().getName(),
                     pageDetails.getSearchFilter().getType(),
                     pageDetails.getSearchFilter().getStatusList(),
@@ -99,7 +99,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     pageDetails.getSearchFilter().getStatusList(),
                     PageRequest.of(page, pageDetails.getLimit()));
         } else if (pageDetails.getSearchFilter().getType() != null) {
-            return employeeRepository.findAllByNicLikeAndStatusIn(
+            return employeeRepository.findAllByCodeLikeAndStatusIn(
                     pageDetails.getSearchFilter().getType(),
                     pageDetails.getSearchFilter().getStatusList(),
                     PageRequest.of(page, pageDetails.getLimit()));

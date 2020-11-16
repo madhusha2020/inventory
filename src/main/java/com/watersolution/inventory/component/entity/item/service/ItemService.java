@@ -8,6 +8,8 @@ public interface ItemService {
 
     ItemList getAllItems(PageDetails pageDetails);
 
+    ItemList getAllActiveItems(PageDetails pageDetails);
+
     ItemList searchItems(PageDetails pageDetails);
 
     Item saveItem(Item item);

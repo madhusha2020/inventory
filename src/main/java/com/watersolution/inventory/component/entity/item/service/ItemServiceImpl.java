@@ -25,6 +25,14 @@ public class ItemServiceImpl implements ItemService {
     public ItemList getAllItems(PageDetails pageDetails) {
         int page = pageDetails.getOffset() / pageDetails.getLimit();
 
+        Page<Item> items = itemRepository.findAllByStatusIn(Status.getAllStatusAsList(), PageRequest.of(page, pageDetails.getLimit()));
+        return new ItemList(items.getContent(), items.getTotalPages());
+    }
+
+    @Override
+    public ItemList getAllActiveItems(PageDetails pageDetails) {
+        int page = pageDetails.getOffset() / pageDetails.getLimit();
+
         Page<Item> items = itemRepository.findAllByStatus(Status.ACTIVE.getValue(), PageRequest.of(page, pageDetails.getLimit()));
         return new ItemList(items.getContent(), items.getTotalPages());
     }
@@ -48,7 +56,7 @@ public class ItemServiceImpl implements ItemService {
         int page = pageDetails.getOffset() / pageDetails.getLimit();
 
         if (pageDetails.getSearchFilter().getName() != null && pageDetails.getSearchFilter().getType() != null) {
-            return itemRepository.findAllByNameLikeAndTypeLikeAndStatusIn(
+            return itemRepository.findAllByNameLikeAndCodeLikeAndStatusIn(
                     pageDetails.getSearchFilter().getName(),
                     pageDetails.getSearchFilter().getType(),
                     pageDetails.getSearchFilter().getStatusList(),
@@ -59,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
                     pageDetails.getSearchFilter().getStatusList(),
                     PageRequest.of(page, pageDetails.getLimit()));
         } else if (pageDetails.getSearchFilter().getType() != null) {
-            return itemRepository.findAllByTypeLikeAndStatusIn(
+            return itemRepository.findAllByCodeLikeAndStatusIn(
                     pageDetails.getSearchFilter().getType(),
                     pageDetails.getSearchFilter().getStatusList(),
                     PageRequest.of(page, pageDetails.getLimit()));

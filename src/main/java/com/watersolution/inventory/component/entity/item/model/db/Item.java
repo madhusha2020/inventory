@@ -22,13 +22,33 @@ public class Item extends Auditable {
     @SequenceGenerator(initialValue = 1, sequenceName = "item_seq", name = "item_seq")
     private long id;
 
+    @NotBlank(message = "Item Code must not be blank")
+    @Column(name = "code")
+    private String code;
+
     @NotBlank(message = "Item Name must not be blank")
     @Column(name = "name")
     private String name;
 
-    @NotBlank(message = "Item type must not be blank")
-    @Column(name = "type")
-    private String type;
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "photo",  columnDefinition = "LONGBLOB")
+    private byte[] photo;
+
+    @NotBlank(message = "Item danger level must not be blank")
+    @Column(name = "dangerlevel")
+    private String dangerlevel;
+
+    @Column(name = "testperiod")
+    private Integer testperiod;
+
+    @Column(name = "lastprice")
+    private Double lastprice;
+
+    @NotBlank(message = "Item sell price must not be blank")
+    @Column(name = "sprice")
+    private Double sprice;
 
     @JsonManagedReference(value = "item")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")

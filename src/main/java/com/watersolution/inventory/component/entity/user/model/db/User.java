@@ -29,7 +29,7 @@ public class User extends Auditable {
     private String password;
 
     @Column(name = "failedattempts")
-    private int failedAttempts;
+    private Integer failedAttempts;
 
     @Transient
     private String id;

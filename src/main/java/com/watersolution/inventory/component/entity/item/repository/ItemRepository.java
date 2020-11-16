@@ -15,9 +15,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Page<Item> findAllByNameLikeAndStatusIn(String name, List<Integer> statusList, Pageable pageable);
 
-    Page<Item> findAllByTypeLikeAndStatusIn(String type, List<Integer> statusList, Pageable pageable);
+    Page<Item> findAllByCodeLikeAndStatusIn(String type, List<Integer> statusList, Pageable pageable);
 
     Page<Item> findAllByStatusIn(List<Integer> statusList, Pageable pageable);
 
-    Page<Item> findAllByNameLikeAndTypeLikeAndStatusIn(String name, String type, List<Integer> statusList, Pageable pageable);
+    Page<Item> findAllByNameLikeAndCodeLikeAndStatusIn(String name, String type, List<Integer> statusList, Pageable pageable);
 }
