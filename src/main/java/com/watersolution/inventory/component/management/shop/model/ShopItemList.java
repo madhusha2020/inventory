@@ -1,4 +1,10 @@
 package com.watersolution.inventory.component.management.shop.model;
 
-public class ShopItemList {
+import com.watersolution.inventory.component.common.exception.ResponseDefault;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class ShopItemList extends ResponseDefault {
 }

@@ -1,13 +1,12 @@
 package com.watersolution.inventory.component.entity.employee.model.db;
 
 import com.watersolution.inventory.component.common.model.db.Auditable;
-import com.watersolution.inventory.component.common.validator.DateValidateConstraint;
+import com.watersolution.inventory.component.common.validator.annotations.DateValidateConstraint;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.sql.Blob;
 import java.time.LocalDate;
 
 @Data

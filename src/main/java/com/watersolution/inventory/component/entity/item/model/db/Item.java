@@ -2,9 +2,11 @@ package com.watersolution.inventory.component.entity.item.model.db;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
+import com.watersolution.inventory.component.management.inventory.model.db.Inventory;
 import com.watersolution.inventory.component.management.order.model.db.OrderItems;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -33,7 +35,7 @@ public class Item extends Auditable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "photo",  columnDefinition = "LONGBLOB")
+    @Column(name = "photo", columnDefinition = "LONGBLOB")
     private byte[] photo;
 
     @NotBlank(message = "Item danger level must not be blank")
@@ -55,7 +57,13 @@ public class Item extends Auditable {
     @Transient
     private String lastpriceValue;
 
+    @ToString.Exclude
     @JsonManagedReference(value = "item")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
     private List<OrderItems> orderItems;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "inventory_item")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
+    private List<Inventory> inventories;
 }

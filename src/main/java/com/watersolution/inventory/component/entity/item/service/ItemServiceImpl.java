@@ -9,11 +9,14 @@ import com.watersolution.inventory.component.entity.item.model.db.Item;
 import com.watersolution.inventory.component.entity.item.repository.ItemRepository;
 import com.watersolution.inventory.component.exception.CustomException;
 import com.watersolution.inventory.component.management.image.util.ImageUtil;
+import com.watersolution.inventory.component.management.inventory.model.api.InventoryItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -54,14 +57,23 @@ public class ItemServiceImpl implements ItemService {
         return new ItemList(items.getContent(), items.getTotalPages());
     }
 
+    @Transactional
     @Override
-    public Item saveItem(Item item) {
-        if (itemRepository.findByCode(item.getCode()).isPresent()) {
+    public InventoryItem saveItem(InventoryItem inventoryItem) {
+        if (itemRepository.findByCode(inventoryItem.getItem().getCode()).isPresent()) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "This item code is already exist", Collections.singletonList("This item code is already exist"));
         }
-        item.setStatus(Status.ACTIVE.getValue());
-        item.fillCompulsory(item.getUserId());
-        return itemRepository.save(item);
+        inventoryItem.getItem().setStatus(Status.ACTIVE.getValue());
+        inventoryItem.getItem().fillCompulsory(inventoryItem.getItem().getUserId());
+
+        inventoryItem.getInventory().setStatus(Status.ACTIVE.getValue());
+        inventoryItem.getInventory().fillCompulsory(inventoryItem.getInventory().getUserId());
+
+        inventoryItem.getInventory().setItem(inventoryItem.getItem());
+        inventoryItem.getItem().setInventories(Arrays.asList(inventoryItem.getInventory()));
+
+        itemRepository.save(inventoryItem.getItem());
+        return inventoryItem;
     }
 
     private Item setImage(Item item) {

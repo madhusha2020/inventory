@@ -1,4 +1,6 @@
-package com.watersolution.inventory.component.common.validator;
+package com.watersolution.inventory.component.common.validator.annotations;
+
+import com.watersolution.inventory.component.common.validator.DateValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

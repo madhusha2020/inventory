@@ -5,8 +5,8 @@ import com.watersolution.inventory.component.common.exception.ResponseCreator;
 import com.watersolution.inventory.component.common.model.api.PageDetails;
 import com.watersolution.inventory.component.common.model.api.SearchFilter;
 import com.watersolution.inventory.component.entity.item.model.api.ItemList;
-import com.watersolution.inventory.component.entity.item.model.db.Item;
 import com.watersolution.inventory.component.entity.item.service.ItemService;
+import com.watersolution.inventory.component.management.inventory.model.api.InventoryItem;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -71,10 +71,10 @@ public class ItemController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Save item", response = Item.class)
+    @ApiOperation(value = "Save item", response = InventoryItem.class)
     @CrossOrigin
     @PostMapping(produces = "application/json")
-    public ResponseEntity<Item> saveItem(@Valid @RequestBody Item item) {
-        return ResponseCreator.successfulResponse(itemService.saveItem(item));
+    public ResponseEntity<InventoryItem> saveItem(@Valid @RequestBody InventoryItem inventoryItem) {
+        return ResponseCreator.successfulResponse(itemService.saveItem(inventoryItem));
     }
 }
