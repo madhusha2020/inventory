@@ -46,9 +46,14 @@ public class Item extends Auditable {
     @Column(name = "lastprice")
     private Double lastprice;
 
-    @NotBlank(message = "Item sell price must not be blank")
     @Column(name = "sprice")
     private Double sprice;
+
+    @Transient
+    private String spriceValue;
+
+    @Transient
+    private String lastpriceValue;
 
     @JsonManagedReference(value = "item")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
