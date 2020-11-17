@@ -63,7 +63,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemRepository.findByCode(inventoryItem.getItem().getCode()).isPresent()) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "This item code is already exist", Collections.singletonList("This item code is already exist"));
         }
-        validateItem(inventoryItem);
+        validateInventoryItem(inventoryItem);
         inventoryItem.getItem().setStatus(Status.ACTIVE.getValue());
         inventoryItem.getItem().fillCompulsory(inventoryItem.getItem().getUserId());
 
@@ -110,12 +110,24 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private void validateItem(InventoryItem inventoryItem) {
+    private void validateInventoryItem(InventoryItem inventoryItem) {
+        if (inventoryItem.getItem().getSprice() == 0) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "Item sell price cannot be zero", Collections.singletonList("Item sell price cannot be zero"));
+        }
         if (inventoryItem.getItem().getLastprice() == 0) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "Item last price cannot be zero", Collections.singletonList("Item last price cannot be zero"));
         }
         if (inventoryItem.getItem().getLastprice() > inventoryItem.getItem().getSprice()) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "Item last price cannot be greater than item sell price", Collections.singletonList("Item last price cannot be greater than item sell price"));
+        }
+        if (inventoryItem.getInventory().getInitqty() == 0) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "Item initial quantity cannot be zero", Collections.singletonList("Item initial quantity cannot be zero"));
+        }
+        if (inventoryItem.getInventory().getQty() == 0) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "Item quantity cannot be zero", Collections.singletonList("Item quantity cannot be zero"));
+        }
+        if (inventoryItem.getInventory().getQty() > inventoryItem.getInventory().getInitqty()) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "Item available quantity cannot be greater than to item initial quantity", Collections.singletonList("Item available quantity cannot be greater than to item initial quantity"));
         }
     }
 }
