@@ -32,7 +32,7 @@ public class Item extends Auditable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
+    @Lob
     private String description;
 
     @Column(name = "photo", columnDefinition = "LONGBLOB")
@@ -56,6 +56,9 @@ public class Item extends Auditable {
 
     @Transient
     private String lastpriceValue;
+
+    @Transient
+    private Integer avalableQty;
 
     @ToString.Exclude
     @JsonManagedReference(value = "item")

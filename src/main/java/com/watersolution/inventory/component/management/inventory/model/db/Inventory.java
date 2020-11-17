@@ -28,7 +28,7 @@ public class Inventory extends Auditable {
     @Column(name = "code")
     private String code;
 
-    @Column(name = "description")
+    @Lob
     private String description;
 
     @QuantityValidateConstraint(message = "Invalid quantity")
