@@ -51,6 +51,12 @@ public class Item extends Auditable {
     @Column(name = "sprice")
     private Double sprice;
 
+    @Column(name = "rop")
+    private Integer rop;
+
+    @Column(name = "unit")
+    private String unit;
+
     @Transient
     private String spriceValue;
 

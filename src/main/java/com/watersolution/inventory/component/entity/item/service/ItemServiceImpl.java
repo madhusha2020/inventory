@@ -120,6 +120,9 @@ public class ItemServiceImpl implements ItemService {
         if (inventoryItem.getItem().getLastprice() > inventoryItem.getItem().getSprice()) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "Item last price cannot be greater than item sell price", Collections.singletonList("Item last price cannot be greater than item sell price"));
         }
+        if (inventoryItem.getItem().getRop() > inventoryItem.getInventory().getInitqty()) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "Item reorder point cannot be greater than initial quantity", Collections.singletonList("Item reorder point cannot be greater than initial quantity"));
+        }
         if (inventoryItem.getInventory().getInitqty() == 0) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "Item initial quantity cannot be zero", Collections.singletonList("Item initial quantity cannot be zero"));
         }
