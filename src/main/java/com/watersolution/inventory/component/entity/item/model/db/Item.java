@@ -60,6 +60,9 @@ public class Item extends Auditable {
     @Transient
     private Integer avalableQty;
 
+    @Transient
+    private Integer orderedQty;
+
     @ToString.Exclude
     @JsonManagedReference(value = "item")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")

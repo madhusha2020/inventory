@@ -63,6 +63,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemRepository.findByCode(inventoryItem.getItem().getCode()).isPresent()) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "This item code is already exist", Collections.singletonList("This item code is already exist"));
         }
+        validateItem(inventoryItem);
         inventoryItem.getItem().setStatus(Status.ACTIVE.getValue());
         inventoryItem.getItem().fillCompulsory(inventoryItem.getItem().getUserId());
 
@@ -106,6 +107,15 @@ public class ItemServiceImpl implements ItemService {
             return itemRepository.findAllByStatusIn(
                     pageDetails.getSearchFilter().getStatusList(),
                     PageRequest.of(page, pageDetails.getLimit()));
+        }
+    }
+
+    private void validateItem(InventoryItem inventoryItem) {
+        if (inventoryItem.getItem().getLastprice() == 0) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "Item last price cannot be zero", Collections.singletonList("Item last price cannot be zero"));
+        }
+        if (inventoryItem.getItem().getLastprice() > inventoryItem.getItem().getSprice()) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "Item last price cannot be greater than item sell price", Collections.singletonList("Item last price cannot be greater than item sell price"));
         }
     }
 }
