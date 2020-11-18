@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
         userServiceHelper.validateUserName(user);
         user.setStatus(Status.ACTIVE.getValue());
         user.fillCompulsory(user.getUserId());
+        user.setFailedAttempts(0);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         UserRole userRole = new UserRole();

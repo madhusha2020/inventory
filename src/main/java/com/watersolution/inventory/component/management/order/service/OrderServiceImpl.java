@@ -3,6 +3,7 @@ package com.watersolution.inventory.component.management.order.service;
 import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
+import com.watersolution.inventory.component.management.inventory.service.InventoryService;
 import com.watersolution.inventory.component.management.order.model.api.OrderItemsList;
 import com.watersolution.inventory.component.management.order.model.api.OrderList;
 import com.watersolution.inventory.component.management.order.model.db.Order;
@@ -20,6 +21,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private CustomerService customerService;
     @Autowired
+    private InventoryService inventoryService;
+    @Autowired
     private OrderRepository orderRepository;
     @Autowired
     private OrderItemsRepository orderItemsRepository;
@@ -30,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderItemsList.getOrder().setCustomer(customerService.getCustomerByUserName(orderItemsList.getOrder().getCustomer().getEmail()));
         orderItemsList.getOrder().fillCompulsory(orderItemsList.getUserId());
-        orderItemsList.getOrder().setStatus(Status.PENDING.getValue());
+        orderItemsList.getOrder().setStatus(Status.ACTIVE.getValue());
         Order order = orderRepository.save(orderItemsList.getOrder());
 
         orderItemsList.getOrderItems().stream().forEach(orderItem -> {
@@ -40,7 +43,11 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setStatus(Status.ACTIVE.getValue());
         });
 
-        return new OrderItemsList(order, orderItemsRepository.saveAll(orderItemsList.getOrderItems()));
+        //Payment
+        OrderItemsList responseOrderItemsList = new OrderItemsList(order, orderItemsRepository.saveAll(orderItemsList.getOrderItems()));
+        inventoryService.updateInventory(orderItemsList.getOrderItems());
+
+        return responseOrderItemsList;
     }
 
     @Override

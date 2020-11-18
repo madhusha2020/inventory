@@ -30,7 +30,7 @@ public class OrderItems extends Auditable {
     private Item item;
 
     @Column(name = "qty")
-    private int qty;
+    private Integer qty;
 
     public OrderItems() {
     }

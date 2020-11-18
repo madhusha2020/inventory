@@ -21,7 +21,7 @@ public class Customer extends Auditable {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_seq")
-    @SequenceGenerator(initialValue = 1, sequenceName = "customer_seq", name = "customer_seq")
+    @SequenceGenerator(initialValue = 2, sequenceName = "customer_seq", name = "customer_seq")
     private long id;
 
     @NotBlank(message = "Customer Name must not be blank")
