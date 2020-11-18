@@ -1,13 +1,13 @@
 package com.watersolution.inventory.core.config.security.service;
 
 import com.watersolution.inventory.component.common.util.ErrorCodes;
+import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
 import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
 import com.watersolution.inventory.component.entity.user.model.db.User;
 import com.watersolution.inventory.component.entity.user.service.UserService;
 import com.watersolution.inventory.component.exception.CustomException;
 import com.watersolution.inventory.core.config.security.jwt.util.JwtUtil;
-import com.watersolution.inventory.core.config.security.model.InventoryUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,8 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new CustomException(ErrorCodes.UNAUTHORIZED, "Inactive User", Collections.singletonList("Incorrect username or password"));
         }
         userService.resetFailedAttempts(user);
-        final UserDetails userDetails = inventoryUserDetailsService.loadUserByUsername(user.getUserName());
-        user.setToken(jwtUtil.generateToken(userDetails));
+        user.setToken(jwtUtil.generateToken(inventoryUserDetailsService.loadUserByUsername(user.getUserName())));
         user.setPassword(null);
         return user;
     }

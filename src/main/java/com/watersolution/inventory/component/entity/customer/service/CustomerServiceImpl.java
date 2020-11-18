@@ -72,6 +72,11 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.save(customer);
     }
 
+    @Override
+    public Customer getCustomerByUserName(String userName) {
+        return customerRepository.findByEmail(userName);
+    }
+
     private Page<Customer> searchCustomerQuery(PageDetails pageDetails) {
         int page = pageDetails.getOffset() / pageDetails.getLimit();
 

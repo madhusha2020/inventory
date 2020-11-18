@@ -1,6 +1,7 @@
 package com.watersolution.inventory.component.management.order.controllers;
 
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.management.order.model.db.Order;
 import com.watersolution.inventory.component.management.order.model.api.OrderItemsList;
 import com.watersolution.inventory.component.management.order.model.api.OrderList;
@@ -38,11 +39,51 @@ public class OrderController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Get orders by customerId", response = OrderList.class)
+    @ApiOperation(value = "Get all orders", response = OrderList.class)
     @CrossOrigin
-    @GetMapping(value = "/customer/{customerId}", produces = "application/json")
-    public ResponseEntity<OrderList> getOrdersByCustomer(@PathVariable("customerId") long customerId) {
-        return ResponseCreator.successfulResponse(orderService.getOrdersByCustomer(customerId));
+    @GetMapping(value = "/all", produces = "application/json")
+    public ResponseEntity<OrderList> getAllOrders() {
+        return ResponseCreator.successfulResponse(orderService.getAllOrders());
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Get all active orders", response = OrderList.class)
+    @CrossOrigin
+    @GetMapping(value = "/all/active", produces = "application/json")
+    public ResponseEntity<OrderList> getAllActiveOrders() {
+        return ResponseCreator.successfulResponse(orderService.getAllActiveOrders());
+    }
+
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Get all orders by customerId", response = OrderList.class)
+    @CrossOrigin
+    @PostMapping(value = "/customer", produces = "application/json")
+    public ResponseEntity<OrderList> getOrdersByCustomer(@RequestBody TransactionRequest transactionRequest) {
+        return ResponseCreator.successfulResponse(orderService.getOrdersByCustomer(transactionRequest));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Get active orders by customerId", response = OrderList.class)
+    @CrossOrigin
+    @PostMapping(value = "/customer/active", produces = "application/json")
+    public ResponseEntity<OrderList> getActiveOrdersByCustomer(@RequestBody TransactionRequest transactionRequest) {
+        return ResponseCreator.successfulResponse(orderService.getActiveOrdersByCustomer(transactionRequest));
     }
 
     @ApiResponses(value = {
