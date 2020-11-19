@@ -9,6 +9,8 @@ public interface OrderService {
 
     OrderItemsList placeOrder(OrderItemsList orderItemsList);
 
+    Order approveOrder(Order order);
+
     OrderList getAllOrders();
 
     OrderList getAllActiveOrders();

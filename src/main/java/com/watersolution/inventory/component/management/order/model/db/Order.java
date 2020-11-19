@@ -33,6 +33,21 @@ public class Order extends Auditable {
     @ToString.Exclude
     private List<OrderItems> orderItems;
 
+    @Transient
+    private String name;
+
+    @Transient
+    private String address;
+
+    @Transient
+    private String contact1;
+
+    @Transient
+    private String email;
+
+    @Transient
+    private String type;
+
     public Order() {
     }
 }

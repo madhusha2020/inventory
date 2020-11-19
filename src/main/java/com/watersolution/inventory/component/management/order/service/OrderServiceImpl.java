@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -33,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderItemsList.getOrder().setCustomer(customerService.getCustomerByUserName(orderItemsList.getOrder().getCustomer().getEmail()));
         orderItemsList.getOrder().fillCompulsory(orderItemsList.getUserId());
-        orderItemsList.getOrder().setStatus(Status.ACTIVE.getValue());
+        orderItemsList.getOrder().setStatus(Status.PENDING.getValue());
         Order order = orderRepository.save(orderItemsList.getOrder());
 
         orderItemsList.getOrderItems().stream().forEach(orderItem -> {
@@ -51,27 +52,56 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order approveOrder(Order order) {
+        //sales
+        return null;
+    }
+
+    @Override
     public OrderList getAllOrders() {
-        return new OrderList(orderRepository.findAllByStatusIn(Status.getAllStatusAsList()));
+        return new OrderList(orderRepository.findAllByStatusIn(Status.getAllStatusAsList())
+                .stream()
+                .map(this::mapOrderDetails)
+                .collect(Collectors.toList()));
     }
 
     @Override
     public OrderList getAllActiveOrders() {
-        return new OrderList(orderRepository.findAllByStatus(Status.ACTIVE.getValue()));
+        return new OrderList(orderRepository.findAllByStatus(Status.ACTIVE.getValue())
+                .stream()
+                .map(this::mapOrderDetails)
+                .collect(Collectors.toList()));
     }
 
     @Override
     public OrderList getOrdersByCustomer(TransactionRequest transactionRequest) {
-        return new OrderList(orderRepository.findByCustomerIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList()));
+        return new OrderList(orderRepository.findByCustomerIdAndStatusIn(customerService.getCustomerByUserName(transactionRequest.getEmail())
+                .getId(), Status.getAllStatusAsList())
+                .stream()
+                .map(this::mapOrderDetails)
+                .collect(Collectors.toList()));
     }
 
     @Override
     public OrderList getActiveOrdersByCustomer(TransactionRequest transactionRequest) {
-        return new OrderList(orderRepository.findByCustomerIdAndStatus(transactionRequest.getId(), Status.ACTIVE.getValue()));
+        return new OrderList(orderRepository.findByCustomerIdAndStatus(customerService.getCustomerByUserName(transactionRequest.getEmail())
+                .getId(), Status.ACTIVE.getValue())
+                .stream()
+                .map(this::mapOrderDetails)
+                .collect(Collectors.toList()));
     }
 
     @Override
     public Order getOrderById(long orderId) {
-        return orderRepository.findByIdAndStatus(orderId, Status.ACTIVE.getValue());
+        return mapOrderDetails(orderRepository.findByIdAndStatus(orderId, Status.ACTIVE.getValue()));
+    }
+
+    private Order mapOrderDetails(Order order) {
+        order.setName(order.getCustomer().getName());
+        order.setAddress(order.getCustomer().getAddress());
+        order.setContact1(order.getCustomer().getContact1());
+        order.setEmail(order.getCustomer().getEmail());
+        order.setType(order.getCustomer().getType());
+        return order;
     }
 }
