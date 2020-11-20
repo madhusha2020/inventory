@@ -9,7 +9,9 @@ public interface OrderService {
 
     OrderItemsList placeOrder(OrderItemsList orderItemsList);
 
-    Order approveOrder(Order order);
+    Order approveOrder(TransactionRequest transactionRequest);
+
+    Order rejectOrder(TransactionRequest transactionRequest);
 
     OrderList getAllOrders();
 

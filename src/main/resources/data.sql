@@ -127,8 +127,11 @@ DELETE FROM ROLE WHERE NAME = "ROLE_CUSTOMER";
 
 DELETE FROM USER WHERE USERNAME = "admin@wsolution.com";
 
-DELETE FROM CUSTOMER WHERE EMAIL = "admin@wsolution.com";
+DELETE FROM CUSTOMERORDERITEM WHERE CREATEDBY = "admin@wsolution.com";
 
+DELETE FROM CUSTOMERORDER WHERE CREATEDBY = "admin@wsolution.com";
+
+DELETE FROM CUSTOMER WHERE EMAIL = "admin@wsolution.com";
 
 
 -- Insert Scripts

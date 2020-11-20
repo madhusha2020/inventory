@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface InventoryService {
 
-    void updateInventory(List<OrderItems> orderItems);
+    void pendingOrderUpdateInventory(List<OrderItems> orderItems);
+
+    void rejectedOrderUpdateInventory(List<OrderItems> orderItems);
 }

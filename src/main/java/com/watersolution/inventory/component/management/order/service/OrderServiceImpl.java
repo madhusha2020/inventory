@@ -44,16 +44,40 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setStatus(Status.ACTIVE.getValue());
         });
 
-        //Payment
+        //Payment init
+        inventoryService.pendingOrderUpdateInventory(orderItemsList.getOrderItems());
         OrderItemsList responseOrderItemsList = new OrderItemsList(order, orderItemsRepository.saveAll(orderItemsList.getOrderItems()));
-        inventoryService.updateInventory(orderItemsList.getOrderItems());
 
         return responseOrderItemsList;
     }
 
+    @Transactional
     @Override
-    public Order approveOrder(Order order) {
-        //sales
+    public Order approveOrder(TransactionRequest transactionRequest) {
+
+        Order order = orderRepository.findById(transactionRequest.getId());
+        Status.validateState("Order", order.getStatus(), Status.PENDING);
+        order.setStatus(Status.ACTIVE.getValue());
+
+        //product out-bound init
+        orderRepository.save(order);
+        //sales init
+
+        return null;
+    }
+
+    @Transactional
+    @Override
+    public Order rejectOrder(TransactionRequest transactionRequest) {
+
+        Order order = orderRepository.findById(transactionRequest.getId());
+        Status.validateState("Order", order.getStatus(), Status.PENDING);
+        order.setStatus(Status.REJECTED.getValue());
+
+        inventoryService.rejectedOrderUpdateInventory(order.getOrderItems());
+        //payment refund
+        orderRepository.save(order);
+
         return null;
     }
 
