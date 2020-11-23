@@ -28,9 +28,9 @@ public class Order extends Auditable {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @ToString.Exclude
     @JsonManagedReference(value = "order")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
-    @ToString.Exclude
     private List<OrderItems> orderItems;
 
     @Transient

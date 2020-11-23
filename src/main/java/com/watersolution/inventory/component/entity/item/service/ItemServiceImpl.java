@@ -49,6 +49,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public Item getItemById(String itemId) {
+        customValidator.validateFoundNull(itemId, "itemId");
+        Item item = itemRepository.findByIdAndStatusIn(Long.valueOf(itemId), Status.getAllStatusAsList());
+        customValidator.validateFoundNull(item, "item");
+        return item;
+    }
+
+    @Override
     public ItemList searchItems(PageDetails pageDetails) {
         customValidator.validateFoundNull(pageDetails.getSearchFilter(), ErrorCodes.SEARCH_FILTER);
         customValidator.validateNullOrEmpty(pageDetails.getSearchFilter().getStatusList(), ErrorCodes.STATUS_LIST);
@@ -59,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public InventoryItem saveItem(InventoryItem inventoryItem) {
+    public InventoryItem saveInventoryItem(InventoryItem inventoryItem) {
         if (itemRepository.findByCode(inventoryItem.getItem().getCode()).isPresent()) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "This item code is already exist", Collections.singletonList("This item code is already exist"));
         }
@@ -75,6 +83,11 @@ public class ItemServiceImpl implements ItemService {
 
         itemRepository.save(inventoryItem.getItem());
         return inventoryItem;
+    }
+
+    @Override
+    public Item saveItem(Item item) {
+        return itemRepository.save(item);
     }
 
     private Item setImage(Item item) {

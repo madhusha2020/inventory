@@ -16,5 +16,5 @@ public interface EmployeeService {
 
     Employee updateEmployee(Employee employee);
 
-    Employee getEmployee(long id);
+    Employee getEmployee(String employeeId);
 }

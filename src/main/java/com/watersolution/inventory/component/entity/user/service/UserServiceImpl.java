@@ -76,11 +76,9 @@ public class UserServiceImpl implements UserService {
         customValidator.validateNullOrEmpty(id, "id");
 
         Customer customer = customerService.getCustomerById(id);
-        customValidator.validateFoundNull(customer, "customer");
         log.info("Customer : {}", customer.toString());
 
         User user = userRepository.findByUserNameAndStatusIn(customer.getEmail(), Status.getAllStatusAsList());
-        customValidator.validateFoundNull(user, "user");
         log.info("User : {}", user.toString());
 
         List<String> roleNameList = user.getUserRoles().stream().map(userRole -> userRole.getUserRoleId().getRoleName()).collect(Collectors.toList());

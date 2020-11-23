@@ -2,6 +2,7 @@ package com.watersolution.inventory.component.management.order.service;
 
 import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.common.util.Status;
+import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
 import com.watersolution.inventory.component.management.inventory.service.InventoryService;
 import com.watersolution.inventory.component.management.order.model.api.OrderItemsList;
@@ -10,6 +11,7 @@ import com.watersolution.inventory.component.management.order.model.db.Order;
 import com.watersolution.inventory.component.management.order.model.db.OrderItemId;
 import com.watersolution.inventory.component.management.order.repository.OrderItemsRepository;
 import com.watersolution.inventory.component.management.order.repository.OrderRepository;
+import com.watersolution.inventory.component.management.product.outbound.service.ProductOutboundService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +26,13 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private InventoryService inventoryService;
     @Autowired
+    private ProductOutboundService productOutboundService;
+    @Autowired
     private OrderRepository orderRepository;
     @Autowired
     private OrderItemsRepository orderItemsRepository;
+    @Autowired
+    private CustomValidator customValidator;
 
     @Transactional
     @Override
@@ -44,9 +50,16 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setStatus(Status.ACTIVE.getValue());
         });
 
-        //Payment init
+        /**
+         * Payment Init
+         * Inventory Update
+         * Order Init
+         * Sale Init
+         */
+        //payment save
         inventoryService.pendingOrderUpdateInventory(orderItemsList.getOrderItems());
         OrderItemsList responseOrderItemsList = new OrderItemsList(order, orderItemsRepository.saveAll(orderItemsList.getOrderItems()));
+        //sales init
 
         return responseOrderItemsList;
     }
@@ -56,14 +69,20 @@ public class OrderServiceImpl implements OrderService {
     public Order approveOrder(TransactionRequest transactionRequest) {
 
         Order order = orderRepository.findById(transactionRequest.getId());
+        customValidator.validateFoundNull(order, "order");
         Status.validateState("Order", order.getStatus(), Status.PENDING);
         order.setStatus(Status.ACTIVE.getValue());
 
-        //product out-bound init
+        /**
+         * Product Outbound Update
+         * Order Update
+         * Sales Update
+         */
+        productOutboundService.updateProductOutbound(order);
         orderRepository.save(order);
-        //sales init
+        //sales update
 
-        return null;
+        return order;
     }
 
     @Transactional
@@ -71,14 +90,18 @@ public class OrderServiceImpl implements OrderService {
     public Order rejectOrder(TransactionRequest transactionRequest) {
 
         Order order = orderRepository.findById(transactionRequest.getId());
+        customValidator.validateFoundNull(order, "order");
         Status.validateState("Order", order.getStatus(), Status.PENDING);
         order.setStatus(Status.REJECTED.getValue());
 
+        /**
+         * Inventory Update
+         * Order Update
+         */
         inventoryService.rejectedOrderUpdateInventory(order.getOrderItems());
-        //payment refund
         orderRepository.save(order);
 
-        return null;
+        return order;
     }
 
     @Override
@@ -116,8 +139,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getOrderById(long orderId) {
-        return mapOrderDetails(orderRepository.findByIdAndStatus(orderId, Status.ACTIVE.getValue()));
+    public Order getOrderById(String orderId) {
+        customValidator.validateNullOrEmpty(orderId, "orderId");
+        Order order = orderRepository.findByIdAndStatus(Long.valueOf(orderId), Status.ACTIVE.getValue());
+        customValidator.validateFoundNull(order, "order");
+        return mapOrderDetails(order);
     }
 
     private Order mapOrderDetails(Order order) {

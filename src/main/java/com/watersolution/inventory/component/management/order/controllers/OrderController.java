@@ -121,7 +121,7 @@ public class OrderController {
     @ApiOperation(value = "Get orders by orderId", response = Order.class)
     @CrossOrigin
     @GetMapping(value = "/{orderId}", produces = "application/json")
-    public ResponseEntity<Order> getOrderById(@PathVariable("orderId") long orderId) {
+    public ResponseEntity<Order> getOrderById(@PathVariable("orderId") String orderId) {
         return ResponseCreator.successfulResponse(orderService.getOrderById(orderId));
     }
 }

@@ -50,7 +50,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getCustomerById(String id) {
         customValidator.validateNullOrEmpty(id, "id");
-        return customerRepository.findByIdAndStatusIn(Long.valueOf(id), Status.getAllStatusAsList());
+        Customer customer = customerRepository.findByIdAndStatusIn(Long.valueOf(id), Status.getAllStatusAsList());
+        customValidator.validateFoundNull(customer, "customer");
+        return customer;
     }
 
 

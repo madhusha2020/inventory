@@ -4,6 +4,8 @@ import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import com.watersolution.inventory.component.entity.employee.model.db.Employee;
 import com.watersolution.inventory.component.entity.employee.service.EmployeeService;
+import com.watersolution.inventory.component.entity.item.model.db.Item;
+import com.watersolution.inventory.component.entity.item.service.ItemService;
 import com.watersolution.inventory.component.exception.CustomException;
 import com.watersolution.inventory.component.management.image.model.ImageModel;
 import com.watersolution.inventory.component.management.image.util.ImageCategory;
@@ -17,8 +19,10 @@ public class ImageFactory {
 
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private ItemService itemService;
 
-    public ImageModel uploadImage(ImageModel imageModel, String category, long id) {
+    public ImageModel uploadImage(ImageModel imageModel, String category, String id) {
 
         ImageCategory imageCategory = ImageCategory.fromValue(category);
         switch (imageCategory) {
@@ -31,12 +35,17 @@ public class ImageFactory {
             case SUPPLIER:
             case VEHICLE:
             case ITEM:
+                Item item = itemService.getItemById(id);
+                item.setPhoto(imageModel.getPhoto());
+                itemService.saveItem(item);
+                imageModel.setPhoto(item.getPhoto());
+                return imageModel;
             default:
                 throw new CustomException(ErrorCodes.BAD_REQUEST, "Invalid image category", Collections.singletonList("Invalid image category"));
         }
     }
 
-    public ImageModel getImage(String category, long id) {
+    public ImageModel getImage(String category, String id) {
 
         ImageCategory imageCategory = ImageCategory.fromValue(category);
         switch (imageCategory) {

@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
@@ -21,13 +21,13 @@ public class Auditable extends ResponseDefault {
     private String createdby;
 
     @Column(name = "createddate")
-    private Date createddate;
+    private LocalDateTime createddate;
 
     @Column(name = "modifiedby")
     private String modifiedby;
 
     @Column(name = "modifieddate")
-    private Date modifieddate;
+    private LocalDateTime modifieddate;
 
     @Transient
     private String userId;
@@ -36,16 +36,14 @@ public class Auditable extends ResponseDefault {
     private String statusDescription;
 
     public void fillCompulsory(String userName) {
-        Date now = new Date();
         this.createdby = userName;
         this.modifiedby = userName;
-        this.createddate = now;
-        this.modifieddate = now;
+        this.createddate = LocalDateTime.now();
+        this.modifieddate = LocalDateTime.now();
     }
 
     public void fillUpdateCompulsory(String userName) {
-        Date now = new Date();
         this.modifiedby = userName;
-        this.modifieddate = now;
+        this.modifieddate = LocalDateTime.now();
     }
 }

@@ -5,6 +5,7 @@ import com.watersolution.inventory.component.common.exception.ResponseCreator;
 import com.watersolution.inventory.component.common.model.api.PageDetails;
 import com.watersolution.inventory.component.common.model.api.SearchFilter;
 import com.watersolution.inventory.component.entity.item.model.api.ItemList;
+import com.watersolution.inventory.component.entity.item.model.db.Item;
 import com.watersolution.inventory.component.entity.item.service.ItemService;
 import com.watersolution.inventory.component.management.inventory.model.api.InventoryItem;
 import io.swagger.annotations.ApiOperation;
@@ -58,6 +59,19 @@ public class ItemController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
+    @ApiOperation(value = "Get item by id", response = Item.class)
+    @CrossOrigin
+    @GetMapping(value = "/{itemId}", produces = "application/json")
+    public ResponseEntity<Item> getItemById(@PathVariable("itemId") String itemId) {
+        return ResponseCreator.successfulResponse(itemService.getItemById(itemId));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
     @ApiOperation(value = "Search items", response = ItemList.class)
     @CrossOrigin
     @PostMapping(value = "search", produces = "application/json")
@@ -71,10 +85,10 @@ public class ItemController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Save item", response = InventoryItem.class)
+    @ApiOperation(value = "Save inventory item", response = InventoryItem.class)
     @CrossOrigin
     @PostMapping(produces = "application/json")
-    public ResponseEntity<InventoryItem> saveItem(@Valid @RequestBody InventoryItem inventoryItem) {
-        return ResponseCreator.successfulResponse(itemService.saveItem(inventoryItem));
+    public ResponseEntity<InventoryItem> saveInventoryItem(@Valid @RequestBody InventoryItem inventoryItem) {
+        return ResponseCreator.successfulResponse(itemService.saveInventoryItem(inventoryItem));
     }
 }

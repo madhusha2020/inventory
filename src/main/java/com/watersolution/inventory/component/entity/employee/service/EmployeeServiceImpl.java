@@ -71,8 +71,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getEmployee(long id) {
-        Employee employee = employeeRepository.findByIdAndStatus(id, Status.ACTIVE.getValue());
+    public Employee getEmployee(String employeeId) {
+        customValidator.validateFoundNull(employeeId, "employeeId");
+        Employee employee = employeeRepository.findByIdAndStatus(Long.valueOf(employeeId), Status.ACTIVE.getValue());
+        customValidator.validateFoundNull(employee, "employee");
         setImage(employee);
         return employee;
     }

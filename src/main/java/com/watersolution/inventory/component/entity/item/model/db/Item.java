@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
 import com.watersolution.inventory.component.management.inventory.model.db.Inventory;
 import com.watersolution.inventory.component.management.order.model.db.OrderItems;
+import com.watersolution.inventory.component.management.product.outbound.model.db.ProductOutboundItem;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -78,4 +79,12 @@ public class Item extends Auditable {
     @JsonManagedReference(value = "inventory_item")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
     private List<Inventory> inventories;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "productOutboundItem")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
+    private List<ProductOutboundItem> productOutboundItems;
+
+    public Item() {
+    }
 }

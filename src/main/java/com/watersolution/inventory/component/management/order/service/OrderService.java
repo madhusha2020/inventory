@@ -21,5 +21,5 @@ public interface OrderService {
 
     OrderList getActiveOrdersByCustomer(TransactionRequest transactionRequest);
 
-    Order getOrderById(long orderId);
+    Order getOrderById(String orderId);
 }

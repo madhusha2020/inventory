@@ -11,7 +11,11 @@ public interface ItemService {
 
     ItemList getAllActiveItems(PageDetails pageDetails);
 
+    Item getItemById(String itemId);
+
     ItemList searchItems(PageDetails pageDetails);
 
-    InventoryItem saveItem(InventoryItem inventoryItem);
+    InventoryItem saveInventoryItem(InventoryItem inventoryItem);
+
+    Item saveItem(Item item);
 }

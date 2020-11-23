@@ -29,7 +29,7 @@ public class ImageUploadServiceImpl implements ImageUploadService {
         customValidator.validateNullOrEmpty(category, "category");
         customValidator.validateNullOrEmpty(id, "id");
         imageModel.setPhoto(imageUtil.compressBytes(imageModel.getPhoto()));
-        imageFactory.uploadImage(imageModel, category, Long.valueOf(id));
+        imageFactory.uploadImage(imageModel, category, id);
         imageModel.setPhoto(imageUtil.decompressBytes(imageModel.getPhoto()));
         return imageModel;
     }
@@ -37,6 +37,6 @@ public class ImageUploadServiceImpl implements ImageUploadService {
     @Override
     public ImageModel getImage(String category, String id) {
         customValidator.validateNullOrEmpty(id, "id");
-        return imageFactory.getImage(category, Long.valueOf(id));
+        return imageFactory.getImage(category, id);
     }
 }

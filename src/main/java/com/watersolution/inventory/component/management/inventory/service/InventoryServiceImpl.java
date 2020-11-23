@@ -21,6 +21,12 @@ public class InventoryServiceImpl implements InventoryService {
     @Autowired
     private CustomValidator customValidator;
 
+
+    @Override
+    public Inventory getByItemId(Long itemId) {
+        return inventoryRepository.findByIdAndStatus(itemId, Status.ACTIVE.getValue());
+    }
+
     @Override
     public void pendingOrderUpdateInventory(List<OrderItems> orderItems) {
         orderItems.stream().forEach(orderItem -> {
@@ -31,6 +37,7 @@ public class InventoryServiceImpl implements InventoryService {
                 throw new CustomException(ErrorCodes.BAD_REQUEST, errorMessage, Collections.singletonList(errorMessage));
             }
             inventory.setQty(inventory.getQty() - orderItem.getQty());
+            inventory.fillUpdateCompulsory(orderItem.getCreatedby());
             inventoryRepository.save(inventory);
         });
     }
@@ -41,6 +48,7 @@ public class InventoryServiceImpl implements InventoryService {
             Inventory inventory = inventoryRepository.findByIdAndStatus(orderItem.getItem().getId(), Status.ACTIVE.getValue());
             customValidator.validateFoundNull(inventory, "inventory");
             inventory.setQty(inventory.getQty() + orderItem.getQty());
+            inventory.fillUpdateCompulsory(orderItem.getCreatedby());
             inventoryRepository.save(inventory);
         });
     }
