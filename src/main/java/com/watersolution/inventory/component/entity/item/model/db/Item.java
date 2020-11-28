@@ -58,6 +58,9 @@ public class Item extends Auditable {
     @Column(name = "unit")
     private String unit;
 
+    @Column(name = "weightvolume")
+    private String weightvolume;
+
     @ToString.Exclude
     @JsonManagedReference(value = "item")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
