@@ -51,7 +51,7 @@ public class Employee extends Auditable {
     @Column(name = "land")
     private String land;
 
-    @Column(name = "description")
+    @Lob
     private String description;
 
     @DateValidateConstraint(message = "Invalid recruited date")
@@ -72,4 +72,10 @@ public class Employee extends Auditable {
     @NotBlank(message = "Employee title must not be blank")
     @Column(name = "nametitle")
     private String nametitle;
+
+    @Column(name = "designation")
+    private String designation;
+
+    public Employee() {
+    }
 }

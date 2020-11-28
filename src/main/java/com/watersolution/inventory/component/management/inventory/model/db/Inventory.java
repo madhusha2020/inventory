@@ -1,16 +1,19 @@
 package com.watersolution.inventory.component.management.inventory.model.db;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
-import com.watersolution.inventory.component.common.validator.annotations.FutureDateValidateConstraint;
 import com.watersolution.inventory.component.common.validator.annotations.QuantityValidateConstraint;
 import com.watersolution.inventory.component.entity.item.model.db.Item;
+import com.watersolution.inventory.component.management.sales.model.db.SaleInventory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -39,7 +42,6 @@ public class Inventory extends Auditable {
     @Column(name = "qty")
     private Integer qty;
 
-    @FutureDateValidateConstraint(message = "Invalid expiry date")
     @Column(name = "doexpire")
     private LocalDate doexpire;
 
@@ -47,4 +49,12 @@ public class Inventory extends Auditable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "inventorysale")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "inventory", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<SaleInventory> saleInventoryList;
+
+    public Inventory() {
+    }
 }

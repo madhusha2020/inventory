@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
 import com.watersolution.inventory.component.entity.customer.model.db.Customer;
+import com.watersolution.inventory.component.management.sales.model.db.Sale;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -23,6 +25,30 @@ public class Order extends Auditable {
     @SequenceGenerator(initialValue = 1, sequenceName = "customer_order_seq", name = "customer_order_seq")
     private long id;
 
+    @Column(name = "code")
+    private String code;
+
+    @Lob
+    private String description;
+
+    @Column(name = "doordered")
+    private LocalDate doordered;
+
+    @Column(name = "dorequired")
+    private LocalDate dorequired;
+
+    @Column(name = "dosold")
+    private LocalDate dosold;
+
+    @Lob
+    private String deliveryaddress;
+
+    @Column(name = "deliverycost")
+    private Double deliverycost;
+
+    @Column(name = "type")
+    private String orderType;
+
     @JsonBackReference(value = "customer")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
@@ -33,6 +59,17 @@ public class Order extends Auditable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<OrderItems> orderItems;
 
+    @JsonManagedReference(value = "customcompound")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
+    private CustomerCompound customerCompound;
+
+    @JsonBackReference(value = "sale")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
+    private Sale sale;
+
+    /**
+     * Customer Data
+     */
     @Transient
     private String name;
 
@@ -47,6 +84,12 @@ public class Order extends Auditable {
 
     @Transient
     private String type;
+
+    @Transient
+    private Double discount;
+
+    @Transient
+    private Double amountWithDiscount;
 
     public Order() {
     }

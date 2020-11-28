@@ -58,18 +58,6 @@ public class Item extends Auditable {
     @Column(name = "unit")
     private String unit;
 
-    @Transient
-    private String spriceValue;
-
-    @Transient
-    private String lastpriceValue;
-
-    @Transient
-    private Integer avalableQty;
-
-    @Transient
-    private Integer orderedQty;
-
     @ToString.Exclude
     @JsonManagedReference(value = "item")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
@@ -84,6 +72,18 @@ public class Item extends Auditable {
     @JsonManagedReference(value = "productOutboundItem")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
     private List<ProductOutboundItem> productOutboundItems;
+
+    @Transient
+    private String spriceValue;
+
+    @Transient
+    private String lastpriceValue;
+
+    @Transient
+    private Integer avalableQty;
+
+    @Transient
+    private Integer orderedQty;
 
     public Item() {
     }

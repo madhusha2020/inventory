@@ -3,19 +3,25 @@ package com.watersolution.inventory.component.management.order.service;
 import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
+import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
 import com.watersolution.inventory.component.management.inventory.service.InventoryService;
 import com.watersolution.inventory.component.management.order.model.api.OrderItemsList;
 import com.watersolution.inventory.component.management.order.model.api.OrderList;
+import com.watersolution.inventory.component.management.order.model.db.CustomerCompound;
 import com.watersolution.inventory.component.management.order.model.db.Order;
 import com.watersolution.inventory.component.management.order.model.db.OrderItemId;
 import com.watersolution.inventory.component.management.order.repository.OrderItemsRepository;
 import com.watersolution.inventory.component.management.order.repository.OrderRepository;
+import com.watersolution.inventory.component.management.payment.customer.service.CustomerPaymentService;
 import com.watersolution.inventory.component.management.product.outbound.service.ProductOutboundService;
+import com.watersolution.inventory.component.management.sales.service.SaleService;
+import com.watersolution.inventory.component.management.test.service.ChemicalTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +31,12 @@ public class OrderServiceImpl implements OrderService {
     private CustomerService customerService;
     @Autowired
     private InventoryService inventoryService;
+    @Autowired
+    private SaleService saleService;
+    @Autowired
+    private ChemicalTestService chemicalTestService;
+    @Autowired
+    private CustomerPaymentService customerPaymentService;
     @Autowired
     private ProductOutboundService productOutboundService;
     @Autowired
@@ -38,9 +50,22 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderItemsList placeOrder(OrderItemsList orderItemsList) {
 
-        orderItemsList.getOrder().setCustomer(customerService.getCustomerByUserName(orderItemsList.getOrder().getCustomer().getEmail()));
+        Customer customer = customerService.getCustomerByUserName(orderItemsList.getOrder().getCustomer().getEmail());
+
+        orderItemsList.getOrder().setCustomer(customer);
+        orderItemsList.getOrder().setDoordered(LocalDate.now());
+        orderItemsList.getOrder().setDeliveryaddress(customer.getAddress());
         orderItemsList.getOrder().fillCompulsory(orderItemsList.getUserId());
         orderItemsList.getOrder().setStatus(Status.PENDING.getValue());
+
+        CustomerCompound customerCompound = new CustomerCompound();
+        customerCompound.setName(customer.getName());
+        customerCompound.setDescription(customer.getDescription());
+        customerCompound.fillCompulsory(orderItemsList.getUserId());
+        customerCompound.setStatus(Status.ACTIVE.getValue());
+        customerCompound.setOrder(orderItemsList.getOrder());
+        orderItemsList.getOrder().setCustomerCompound(customerCompound);
+
         Order order = orderRepository.save(orderItemsList.getOrder());
 
         orderItemsList.getOrderItems().stream().forEach(orderItem -> {
@@ -51,17 +76,19 @@ public class OrderServiceImpl implements OrderService {
         });
 
         /**
-         * Payment Init
          * Inventory Update
          * Order Init
          * Sale Init
+         * Chemical Test Init
+         * Payment Init
          */
-        //payment save
         inventoryService.pendingOrderUpdateInventory(orderItemsList.getOrderItems());
-        OrderItemsList responseOrderItemsList = new OrderItemsList(order, orderItemsRepository.saveAll(orderItemsList.getOrderItems()));
-        //sales init
+        orderItemsRepository.saveAll(orderItemsList.getOrderItems());
+        orderItemsList.setSale(saleService.saveSale(orderItemsList));
+        orderItemsList.setChemicalTest(chemicalTestService.saveChemicalTest(orderItemsList));
+        customerPaymentService.savePayment(orderItemsList);
 
-        return responseOrderItemsList;
+        return orderItemsList;
     }
 
     @Transactional
@@ -71,18 +98,28 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(transactionRequest.getId());
         customValidator.validateFoundNull(order, "order");
         Status.validateState("Order", order.getStatus(), Status.PENDING);
-        order.setStatus(Status.ACTIVE.getValue());
+        order.setStatus(Status.AWAITING.getValue());
+        order.setDosold(LocalDate.now());
+        order.fillUpdateCompulsory(transactionRequest.getUserId());
+
+        Status.validateState("Sale",  order.getSale().getStatus(), Status.PENDING);
+        order.getSale().setStatus(Status.ACTIVE.getValue());
+        order.getSale().fillUpdateCompulsory(transactionRequest.getUserId());
+
+        Status.validateState("Chemical Test",  order.getSale().getCustomerPayment().getChemicalTest().getStatus(), Status.PENDING);
+        order.getSale().getCustomerPayment().getChemicalTest().setStatus(Status.ACTIVE.getValue());
+        order.getSale().getCustomerPayment().getChemicalTest().fillUpdateCompulsory(transactionRequest.getUserId());
 
         /**
          * Product Outbound Update
          * Order Update
          * Sales Update
+         * Chemical Test Update
          */
         productOutboundService.updateProductOutbound(order);
         orderRepository.save(order);
-        //sales update
 
-        return order;
+        return mapOrderDetails(order);
     }
 
     @Transactional
@@ -93,15 +130,26 @@ public class OrderServiceImpl implements OrderService {
         customValidator.validateFoundNull(order, "order");
         Status.validateState("Order", order.getStatus(), Status.PENDING);
         order.setStatus(Status.REJECTED.getValue());
+        order.fillUpdateCompulsory(transactionRequest.getUserId());
+
+        Status.validateState("Sale",  order.getSale().getStatus(), Status.PENDING);
+        order.getSale().setStatus(Status.REJECTED.getValue());
+        order.getSale().fillUpdateCompulsory(transactionRequest.getUserId());
+
+        Status.validateState("Chemical Test",  order.getSale().getCustomerPayment().getChemicalTest().getStatus(), Status.PENDING);
+        order.getSale().getCustomerPayment().getChemicalTest().setStatus(Status.REJECTED.getValue());
+        order.getSale().getCustomerPayment().getChemicalTest().fillUpdateCompulsory(transactionRequest.getUserId());
 
         /**
          * Inventory Update
          * Order Update
+         * Sales Update
+         * Chemical Test Update
          */
         inventoryService.rejectedOrderUpdateInventory(order.getOrderItems());
         orderRepository.save(order);
 
-        return order;
+        return mapOrderDetails(order);
     }
 
     @Override

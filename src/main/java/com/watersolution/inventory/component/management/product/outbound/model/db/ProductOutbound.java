@@ -18,14 +18,14 @@ public class ProductOutbound extends Auditable {
 
     @Id
     @Column(name = "id", nullable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "productoutbound_seq")
-    @SequenceGenerator(initialValue = 1, sequenceName = "productoutbound_seq", name = "productoutbound_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_outbound_seq")
+    @SequenceGenerator(initialValue = 1, sequenceName = "product_outbound_seq", name = "product_outbound_seq")
     private long id;
 
     @Column(name = "code")
     private String code;
 
-    @Column(name = "description")
+    @Lob
     private String description;
 
     @Column(name = "date")

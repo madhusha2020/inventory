@@ -31,6 +31,11 @@ public class User extends Auditable {
     @Column(name = "failedattempts")
     private Integer failedAttempts;
 
+    @ToString.Exclude
+    @JsonManagedReference(value = "user")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    private List<UserRole> userRoles;
+
     @Transient
     private String id;
 
@@ -40,11 +45,6 @@ public class User extends Auditable {
     @ToString.Exclude
     @Transient
     private String oldPassword;
-
-    @ToString.Exclude
-    @JsonManagedReference(value = "user")
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
-    private List<UserRole> userRoles;
 
     public User() {
     }

@@ -4,7 +4,10 @@ import com.watersolution.inventory.component.common.model.db.Auditable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Lob;
+import javax.persistence.MappedSuperclass;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -22,17 +25,14 @@ public class Payment extends Auditable {
     private LocalDate date;
 
     @Column(name = "amount")
-    private Double amount;
+    private BigDecimal amount;
 
-    @Column(name = "chequeno")
-    private String chequeno;
+    @Column(name = "paymenttype")
+    private String paymenttype;
 
-    @Column(name = "chequebank")
-    private String chequebank;
+    @Column(name = "ref")
+    private String ref;
 
-    @Column(name = "chequebanch")
-    private String chequebanch;
-
-    @Column(name = "chequedate")
-    private String chequedate;
+    public Payment() {
+    }
 }

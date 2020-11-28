@@ -3,6 +3,8 @@ package com.watersolution.inventory.component.entity.customer.model.db;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
 import com.watersolution.inventory.component.management.order.model.db.Order;
+import com.watersolution.inventory.component.management.sales.model.db.Sale;
+import com.watersolution.inventory.component.management.test.model.db.ChemicalTest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -31,7 +33,7 @@ public class Customer extends Auditable {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "description")
+    @Lob
     private String description;
 
     @NotBlank(message = "Contact must not be blank")
@@ -41,6 +43,9 @@ public class Customer extends Auditable {
     @Column(name = "contact2")
     private String contact2;
 
+    @Column(name = "type")
+    private String type;
+
     @NotBlank(message = "Email must not be blank")
     @Email
     @Column(name = "email")
@@ -49,17 +54,23 @@ public class Customer extends Auditable {
     @Column(name = "fax")
     private String fax;
 
-    @NotBlank(message = "Customer type must not be blank")
-    @Column(name = "type")
-    private String type;
-
-    @Transient
-    private Integer orderCount;
-
     @ToString.Exclude
     @JsonManagedReference(value = "customer")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Order> orders;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "customersale")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Sale> sales;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "customerchemicaltest")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<ChemicalTest> chemicalTests;
+
+    @Transient
+    private Integer orderCount;
 
     public Customer() {
     }
