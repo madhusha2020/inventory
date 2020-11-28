@@ -36,6 +36,7 @@ public class UserServiceHelperImpl implements UserServiceHelper {
         user.setStatus(Status.ACTIVE.getValue());
         user.fillCompulsory(user.getUserId());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setFailedAttempts(0);
 
         List<UserRole> userRoleList = new ArrayList<>();
         roles.stream().forEach(role -> {
@@ -57,6 +58,7 @@ public class UserServiceHelperImpl implements UserServiceHelper {
 
         user.fillUpdateCompulsory(user.getUserId());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setFailedAttempts(0);
 
         List<UserRole> userRoleList = new ArrayList<>();
         roles.stream().forEach(role -> {
