@@ -28,7 +28,6 @@ public class ChemicalTestServiceImpl implements ChemicalTestService {
         chemicalTest.setAddress(orderItemsList.getOrder().getCustomer().getAddress());
         chemicalTest.setStatus(Status.PENDING.getValue());
         chemicalTest.fillCompulsory(orderItemsList.getUserId());
-        chemicalTest.setCustomer(orderItemsList.getOrder().getCustomer());
 
         return chemicalTestRepository.save(chemicalTest);
     }
