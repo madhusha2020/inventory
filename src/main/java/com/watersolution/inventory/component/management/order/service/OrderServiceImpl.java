@@ -115,9 +115,11 @@ public class OrderServiceImpl implements OrderService {
          * Order Update
          * Sales Update
          * Chemical Test Update
+         * Delivery Init
          */
         productOutboundService.updateProductOutbound(order);
         orderRepository.save(order);
+        //delivery
 
         return mapOrderDetails(order);
     }

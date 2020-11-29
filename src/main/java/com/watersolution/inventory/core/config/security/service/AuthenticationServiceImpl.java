@@ -1,7 +1,6 @@
 package com.watersolution.inventory.core.config.security.service;
 
 import com.watersolution.inventory.component.common.util.ErrorCodes;
-import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
 import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
 import com.watersolution.inventory.component.entity.user.model.db.User;
@@ -10,7 +9,6 @@ import com.watersolution.inventory.component.exception.CustomException;
 import com.watersolution.inventory.core.config.security.jwt.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -25,6 +23,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private InventoryUserDetailsService inventoryUserDetailsService;
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private TokenService tokenService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -47,6 +47,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userService.resetFailedAttempts(user);
         user.setToken(jwtUtil.generateToken(inventoryUserDetailsService.loadUserByUsername(user.getUserName())));
         user.setPassword(null);
+        tokenService.saveToken(user);
+        return user;
+    }
+
+    @Transactional
+    @Override
+    public User logout(User user) {
+        tokenService.deleteToken(user);
         return user;
     }
 

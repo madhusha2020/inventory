@@ -7,5 +7,7 @@ public interface AuthenticationService {
 
     User login(User user);
 
+    User logout(User user);
+
     CustomerUser registerUser(CustomerUser customerUser);
 }
