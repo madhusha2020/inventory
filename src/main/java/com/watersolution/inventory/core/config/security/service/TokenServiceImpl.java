@@ -1,7 +1,6 @@
 package com.watersolution.inventory.core.config.security.service;
 
 import com.watersolution.inventory.component.common.util.Status;
-import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.entity.user.model.db.User;
 import com.watersolution.inventory.core.config.security.model.Token;
 import com.watersolution.inventory.core.config.security.repository.TokenRepository;
@@ -16,8 +15,6 @@ public class TokenServiceImpl implements TokenService {
     private TokenRepository tokenRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private CustomValidator customValidator;
 
     @Override
     public void saveToken(User user) {
@@ -31,8 +28,8 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public void deleteToken(User user) {
-        Token token = tokenRepository.findByUserNameAndStatus(user.getUserName(), Status.ACTIVE.getValue());
-        customValidator.validateFoundNull(token, "Token");
-        tokenRepository.delete(token);
+        tokenRepository.findByUserNameAndStatus(user.getUserName(), Status.ACTIVE.getValue()).ifPresent(token -> {
+            tokenRepository.delete(token);
+        });
     }
 }

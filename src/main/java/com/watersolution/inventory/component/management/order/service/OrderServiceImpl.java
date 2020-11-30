@@ -54,6 +54,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderItemsList placeOrder(OrderItemsList orderItemsList) {
 
         Customer customer = customerService.getCustomerByUserName(orderItemsList.getOrder().getCustomer().getEmail());
+        customValidator.validateFoundNull(customer, "customer");
 
         orderItemsList.getOrder().setCustomer(customer);
         orderItemsList.getOrder().setDoordered(LocalDate.now());
@@ -201,6 +202,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Order mapOrderDetails(Order order) {
+        order.getOrderItems().stream().forEach(orderItems -> {
+
+        });
         order.setName(order.getCustomer().getName());
         order.setAddress(order.getCustomer().getAddress());
         order.setContact1(order.getCustomer().getContact1());

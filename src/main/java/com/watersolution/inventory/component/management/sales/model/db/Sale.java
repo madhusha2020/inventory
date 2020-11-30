@@ -76,6 +76,24 @@ public class Sale extends Auditable {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "sale", fetch = FetchType.LAZY, orphanRemoval = true)
     private Delivery delivery;
 
+    /**
+     * Customer Data
+     */
+    @Transient
+    private String name;
+
+    @Transient
+    private String email;
+
+    @Transient
+    private String contact1;
+
+    @Transient
+    private String totalValue;
+
+    @Transient
+    private String discountValue;
+
     public Sale() {
     }
 }

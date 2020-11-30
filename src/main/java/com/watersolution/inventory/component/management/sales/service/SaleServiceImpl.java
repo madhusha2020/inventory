@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,7 +37,7 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public SaleList getAllSales() {
-        return new SaleList(saleRepository.findAllByStatusIn(Status.getAllStatusAsList()));
+        return new SaleList(saleRepository.findAllByStatusIn(Status.getAllStatusAsList()).stream().map(this::mapSaleDetails).collect(Collectors.toList()));
     }
 
     @Transactional
@@ -47,6 +48,7 @@ public class SaleServiceImpl implements SaleService {
         sale.setCode("");
         sale.setDescription("");
         sale.setDate(LocalDate.now());
+        sale.setDeliveryaddress(orderItemsList.getOrder().getCustomer().getAddress());
         sale.fillCompulsory(orderItemsList.getUserId());
         sale.setStatus(Status.PENDING.getValue());
 
@@ -89,6 +91,13 @@ public class SaleServiceImpl implements SaleService {
         customValidator.validateNullOrEmpty(saleId, "saleId");
         Sale sale = saleRepository.findByIdAndStatus(Long.valueOf(saleId), Status.ACTIVE.getValue());
         customValidator.validateFoundNull(sale, "sale");
+        return sale;
+    }
+
+    private Sale mapSaleDetails(Sale sale) {
+        sale.setName(sale.getCustomer().getName());
+        sale.setEmail(sale.getCustomer().getEmail());
+        sale.setContact1(sale.getCustomer().getContact1());
         return sale;
     }
 }
