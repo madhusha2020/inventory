@@ -1,13 +1,17 @@
 package com.watersolution.inventory.component.entity.employee.model.db;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
 import com.watersolution.inventory.component.common.validator.annotations.DateValidateConstraint;
+import com.watersolution.inventory.component.management.delivery.model.db.DeliveryEmployee;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -75,6 +79,11 @@ public class Employee extends Auditable {
 
     @Column(name = "designation")
     private String designation;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "deliveryemployee")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<DeliveryEmployee> deliveryEmployeeList;
 
     public Employee() {
     }

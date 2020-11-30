@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
 import com.watersolution.inventory.component.entity.customer.model.db.Customer;
+import com.watersolution.inventory.component.management.delivery.model.db.Delivery;
 import com.watersolution.inventory.component.management.order.model.db.Order;
 import com.watersolution.inventory.component.management.payment.customer.model.db.CustomerPayment;
 import lombok.Data;
@@ -53,7 +54,7 @@ public class Sale extends Auditable {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @JsonManagedReference(value = "sale")
+    @JsonBackReference(value = "sale")
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "order_id")
     private Order order;
@@ -70,6 +71,10 @@ public class Sale extends Auditable {
     @JsonBackReference(value = "customerpaymentsale")
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "sale", fetch = FetchType.LAZY, orphanRemoval = true)
     private CustomerPayment customerPayment;
+
+    @JsonManagedReference(value = "deliverysale")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "sale", fetch = FetchType.LAZY, orphanRemoval = true)
+    private Delivery delivery;
 
     public Sale() {
     }

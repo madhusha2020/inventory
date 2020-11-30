@@ -5,6 +5,7 @@ import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
+import com.watersolution.inventory.component.management.delivery.service.DeliveryService;
 import com.watersolution.inventory.component.management.inventory.service.InventoryService;
 import com.watersolution.inventory.component.management.order.model.api.OrderItemsList;
 import com.watersolution.inventory.component.management.order.model.api.OrderList;
@@ -39,6 +40,8 @@ public class OrderServiceImpl implements OrderService {
     private CustomerPaymentService customerPaymentService;
     @Autowired
     private ProductOutboundService productOutboundService;
+    @Autowired
+    private DeliveryService deliveryService;
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -109,6 +112,7 @@ public class OrderServiceImpl implements OrderService {
         Status.validateState("Chemical Test",  order.getSale().getCustomerPayment().getChemicalTest().getStatus(), Status.PENDING);
         order.getSale().getCustomerPayment().getChemicalTest().setStatus(Status.ACTIVE.getValue());
         order.getSale().getCustomerPayment().getChemicalTest().fillUpdateCompulsory(transactionRequest.getUserId());
+        order.setUserId(transactionRequest.getUserId());
 
         /**
          * Product Outbound Update
@@ -119,7 +123,7 @@ public class OrderServiceImpl implements OrderService {
          */
         productOutboundService.updateProductOutbound(order);
         orderRepository.save(order);
-        //delivery
+        deliveryService.saveDelivery(order);
 
         return mapOrderDetails(order);
     }

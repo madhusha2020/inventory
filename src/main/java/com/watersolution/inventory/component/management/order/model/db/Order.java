@@ -63,7 +63,7 @@ public class Order extends Auditable {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
     private CustomerCompound customerCompound;
 
-    @JsonBackReference(value = "sale")
+    @JsonManagedReference(value = "sale")
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.LAZY, orphanRemoval = true)
     private Sale sale;
 
@@ -84,12 +84,6 @@ public class Order extends Auditable {
 
     @Transient
     private String type;
-
-    @Transient
-    private Double discount;
-
-    @Transient
-    private Double amountWithDiscount;
 
     public Order() {
     }

@@ -129,6 +129,8 @@ DELETE FROM TOKEN WHERE USERNAME = "admin@wsolution.com";
 
 DELETE FROM USER WHERE USERNAME = "admin@wsolution.com";
 
+DELETE FROM DELIVERY WHERE CREATEDBY = "admin@wsolution.com";
+
 DELETE FROM CUSTOMERPAYMENT WHERE CREATEDBY = "admin@wsolution.com";
 
 DELETE FROM CHEMICALTEST WHERE CREATEDBY = "admin@wsolution.com";

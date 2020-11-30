@@ -5,6 +5,7 @@ import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.management.inventory.model.db.Inventory;
 import com.watersolution.inventory.component.management.inventory.service.InventoryService;
 import com.watersolution.inventory.component.management.order.model.api.OrderItemsList;
+import com.watersolution.inventory.component.management.sales.model.api.SaleList;
 import com.watersolution.inventory.component.management.sales.model.db.Sale;
 import com.watersolution.inventory.component.management.sales.model.db.SaleCustomCompound;
 import com.watersolution.inventory.component.management.sales.model.db.SaleInventory;
@@ -32,6 +33,11 @@ public class SaleServiceImpl implements SaleService {
     private SaleServiceHelper saleServiceHelper;
     @Autowired
     private CustomValidator customValidator;
+
+    @Override
+    public SaleList getAllSales() {
+        return new SaleList(saleRepository.findAllByStatusIn(Status.getAllStatusAsList()));
+    }
 
     @Transactional
     @Override
