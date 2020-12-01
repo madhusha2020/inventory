@@ -26,6 +26,19 @@ public class OrderController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
+    @ApiOperation(value = "Pre order validate", response = OrderItemsList.class)
+    @CrossOrigin
+    @PostMapping(value = "/preorder", produces = "application/json")
+    public ResponseEntity<OrderItemsList> preOrderValidate(@RequestBody OrderItemsList orderItemsList) {
+        return ResponseCreator.successfulResponse(orderService.preOrderValidate(orderItemsList));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
     @ApiOperation(value = "Place customer order", response = OrderItemsList.class)
     @CrossOrigin
     @PostMapping(produces = "application/json")

@@ -51,6 +51,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
+    public OrderItemsList preOrderValidate(OrderItemsList orderItemsList) {
+        inventoryService.preOrderValidate(orderItemsList.getOrderItems());
+        return orderItemsList;
+    }
+
+    @Transactional
+    @Override
     public OrderItemsList placeOrder(OrderItemsList orderItemsList) {
 
         Customer customer = customerService.getCustomerByUserName(orderItemsList.getOrder().getCustomer().getEmail());

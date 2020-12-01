@@ -7,6 +7,8 @@ import com.watersolution.inventory.component.management.order.model.api.OrderLis
 
 public interface OrderService {
 
+    OrderItemsList preOrderValidate(OrderItemsList orderItemsList);
+
     OrderItemsList placeOrder(OrderItemsList orderItemsList);
 
     Order approveOrder(TransactionRequest transactionRequest);

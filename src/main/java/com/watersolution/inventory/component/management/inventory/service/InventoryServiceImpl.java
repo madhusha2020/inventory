@@ -33,19 +33,24 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public void pendingOrderUpdateInventory(List<OrderItems> orderItems) {
+    public void preOrderValidate(List<OrderItems> orderItems) {
         orderItems.stream().forEach(orderItem -> {
             Inventory inventory = inventoryRepository.findByIdAndStatus(orderItem.getItem().getId(), Status.ACTIVE.getValue());
             customValidator.validateFoundNull(inventory, "inventory");
-
             if (inventory.getQty() < orderItem.getQty()) {
                 final String errorMessage = "Insufficient quantity of item {0} on inventory".replace("{0}", orderItem.getItem().getName());
                 throw new CustomException(ErrorCodes.BAD_REQUEST, errorMessage, Collections.singletonList(errorMessage));
             }
+        });
+    }
 
+    @Override
+    public void pendingOrderUpdateInventory(List<OrderItems> orderItems) {
+        orderItems.stream().forEach(orderItem -> {
+            Inventory inventory = inventoryRepository.findByIdAndStatus(orderItem.getItem().getId(), Status.ACTIVE.getValue());
+            customValidator.validateFoundNull(inventory, "inventory");
             inventory.setQty(inventory.getQty() - orderItem.getQty());
             inventory.fillUpdateCompulsory(orderItem.getCreatedby());
-
             if(inventory.getQty() <= orderItem.getItem().getRop()){
                 log.info("Item is about to out of stock");
                 notificationService.inventoryNotification(inventory);

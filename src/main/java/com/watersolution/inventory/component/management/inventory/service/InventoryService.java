@@ -9,6 +9,8 @@ public interface InventoryService {
 
     Inventory getByItemId(Long itemId);
 
+    void preOrderValidate(List<OrderItems> orderItems);
+
     void pendingOrderUpdateInventory(List<OrderItems> orderItems);
 
     void rejectedOrderUpdateInventory(List<OrderItems> orderItems);
