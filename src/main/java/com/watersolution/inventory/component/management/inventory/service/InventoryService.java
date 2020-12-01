@@ -12,4 +12,6 @@ public interface InventoryService {
     void pendingOrderUpdateInventory(List<OrderItems> orderItems);
 
     void rejectedOrderUpdateInventory(List<OrderItems> orderItems);
+
+    List<Inventory> getAllItems();
 }

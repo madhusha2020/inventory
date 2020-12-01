@@ -6,16 +6,21 @@ import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.exception.CustomException;
 import com.watersolution.inventory.component.management.inventory.model.db.Inventory;
 import com.watersolution.inventory.component.management.inventory.repository.InventoryRepository;
+import com.watersolution.inventory.component.management.notification.service.NotificationService;
 import com.watersolution.inventory.component.management.order.model.db.OrderItems;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @Service
 public class InventoryServiceImpl implements InventoryService {
 
+    @Autowired
+    private NotificationService notificationService;
     @Autowired
     private InventoryRepository inventoryRepository;
     @Autowired
@@ -32,12 +37,19 @@ public class InventoryServiceImpl implements InventoryService {
         orderItems.stream().forEach(orderItem -> {
             Inventory inventory = inventoryRepository.findByIdAndStatus(orderItem.getItem().getId(), Status.ACTIVE.getValue());
             customValidator.validateFoundNull(inventory, "inventory");
+
             if (inventory.getQty() < orderItem.getQty()) {
                 final String errorMessage = "Insufficient quantity of item {0} on inventory".replace("{0}", orderItem.getItem().getName());
                 throw new CustomException(ErrorCodes.BAD_REQUEST, errorMessage, Collections.singletonList(errorMessage));
             }
+
             inventory.setQty(inventory.getQty() - orderItem.getQty());
             inventory.fillUpdateCompulsory(orderItem.getCreatedby());
+
+            if(inventory.getQty() <= orderItem.getItem().getRop()){
+                log.info("Item is about to out of stock");
+                notificationService.inventoryNotification(inventory);
+            }
             inventoryRepository.save(inventory);
         });
     }
@@ -51,5 +63,10 @@ public class InventoryServiceImpl implements InventoryService {
             inventory.fillUpdateCompulsory(orderItem.getCreatedby());
             inventoryRepository.save(inventory);
         });
+    }
+
+    @Override
+    public List<Inventory> getAllItems() {
+        return inventoryRepository.findAllByStatus(Status.ACTIVE.getValue());
     }
 }
