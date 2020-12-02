@@ -25,4 +25,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Page<Employee> findAllByNameLikeAndCodeLikeAndStatusIn(String name, String code, List<Integer> statusList, Pageable pageable);
 
     Employee findByIdAndStatus(long id, int status);
+
+    Employee findByIdAndStatusIn(long id, List<Integer> statusList);
 }

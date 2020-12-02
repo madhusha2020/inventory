@@ -1,6 +1,7 @@
 package com.watersolution.inventory.component.entity.customer.service;
 
 import com.watersolution.inventory.component.common.model.api.PageDetails;
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.entity.customer.model.api.CustomerList;
 import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 
@@ -21,4 +22,8 @@ public interface CustomerService {
     Customer updateCustomer(Customer customer);
 
     Customer getCustomerByUserName(String userName);
+
+    Customer suspendCustomer(TransactionRequest transactionRequest);
+
+    Customer activateCustomer(TransactionRequest transactionRequest);
 }

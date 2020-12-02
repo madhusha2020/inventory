@@ -1,6 +1,7 @@
 package com.watersolution.inventory.component.entity.customer.service;
 
 import com.watersolution.inventory.component.common.model.api.PageDetails;
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
@@ -11,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.Date;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -77,6 +75,27 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getCustomerByUserName(String userName) {
         return customerRepository.findByEmail(userName);
+    }
+
+
+    @Override
+    public Customer suspendCustomer(TransactionRequest transactionRequest) {
+        Customer customer = customerRepository.findByIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList());
+        customValidator.validateFoundNull(customer, "customer");
+        Status.validateState("Customer", customer.getStatus(), Status.ACTIVE);
+        customer.setStatus(Status.SUSPENDED.getValue());
+        customer.fillUpdateCompulsory(transactionRequest.getUserId());
+        return customerRepository.save(customer);
+    }
+
+    @Override
+    public Customer activateCustomer(TransactionRequest transactionRequest) {
+        Customer customer = customerRepository.findByIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList());
+        customValidator.validateFoundNull(customer, "customer");
+        Status.validateState("Customer", customer.getStatus(), Status.SUSPENDED);
+        customer.setStatus(Status.ACTIVE.getValue());
+        customer.fillUpdateCompulsory(transactionRequest.getUserId());
+        return customerRepository.save(customer);
     }
 
     private Page<Customer> searchCustomerQuery(PageDetails pageDetails) {

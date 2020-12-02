@@ -8,8 +8,6 @@ public interface NotificationService {
 
     NotificationList getNotificationsByUser(TransactionRequest transactionRequest);
 
-    NotificationList getAwaitingNotificationsByUser(TransactionRequest transactionRequest);
-
     NotificationList getNewNotificationsByUser(TransactionRequest transactionRequest);
 
     void inventoryNotification(Inventory inventory);

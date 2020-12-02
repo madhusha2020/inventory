@@ -30,16 +30,11 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public NotificationList getAwaitingNotificationsByUser(TransactionRequest transactionRequest) {
-        return new NotificationList(notificationRepository.findAllByUserNameAndStatus(transactionRequest.getUserId(), Status.AWAITING.getValue()));
-    }
-
-    @Override
     public NotificationList getNewNotificationsByUser(TransactionRequest transactionRequest) {
         List<Notification> updatableNotificationList = new ArrayList<>();
         List<Notification> notificationList = notificationRepository.findAllByUserNameAndStatus(transactionRequest.getUserId(), Status.PENDING.getValue());
         notificationList.stream().forEach(notification -> {
-            notification.setStatus(Status.AWAITING.getValue());
+            notification.setStatus(Status.ACTIVE.getValue());
             updatableNotificationList.add(notification);
         });
         notificationRepository.saveAll(updatableNotificationList);

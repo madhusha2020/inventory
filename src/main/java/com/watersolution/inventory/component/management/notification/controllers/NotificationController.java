@@ -37,19 +37,6 @@ public class NotificationController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "View a list of awaiting notifications", response = NotificationList.class)
-    @CrossOrigin
-    @PostMapping(value = "/user/awaiting", produces = "application/json")
-    public ResponseEntity<NotificationList> getAwaitingNotificationsByUser(@RequestBody TransactionRequest transactionRequest) {
-        return ResponseCreator.successfulResponse(notificationService.getAwaitingNotificationsByUser(transactionRequest));
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved list"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
-
     @ApiOperation(value = "View a list of new notifications", response = NotificationList.class)
     @CrossOrigin
     @PostMapping(value = "/user/pending", produces = "application/json")

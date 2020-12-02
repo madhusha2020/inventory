@@ -1,6 +1,7 @@
 package com.watersolution.inventory.component.entity.employee.service;
 
 import com.watersolution.inventory.component.common.model.api.PageDetails;
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
@@ -77,6 +78,26 @@ public class EmployeeServiceImpl implements EmployeeService {
         customValidator.validateFoundNull(employee, "employee");
         setImage(employee);
         return employee;
+    }
+
+    @Override
+    public Employee suspendEmployee(TransactionRequest transactionRequest) {
+        Employee employee = employeeRepository.findByIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList());
+        customValidator.validateFoundNull(employee, "employee");
+        Status.validateState("Employee", employee.getStatus(), Status.ACTIVE);
+        employee.setStatus(Status.SUSPENDED.getValue());
+        employee.fillUpdateCompulsory(transactionRequest.getUserId());
+        return employeeRepository.save(employee);
+    }
+
+    @Override
+    public Employee activateEmployee(TransactionRequest transactionRequest) {
+        Employee employee = employeeRepository.findByIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList());
+        customValidator.validateFoundNull(employee, "employee");
+        Status.validateState("Employee", employee.getStatus(), Status.SUSPENDED);
+        employee.setStatus(Status.ACTIVE.getValue());
+        employee.fillUpdateCompulsory(transactionRequest.getUserId());
+        return employeeRepository.save(employee);
     }
 
     private Employee setImage(Employee employee) {
