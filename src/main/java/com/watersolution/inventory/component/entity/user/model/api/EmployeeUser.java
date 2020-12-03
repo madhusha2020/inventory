@@ -17,4 +17,13 @@ public class EmployeeUser extends ResponseDefault {
     @Valid
     private Employee employee;
     private List<String> roleNameList;
+
+    public EmployeeUser() {
+    }
+
+    public EmployeeUser(@Valid User user, @Valid Employee employee, List<String> roleNameList) {
+        this.user = user;
+        this.employee = employee;
+        this.roleNameList = roleNameList;
+    }
 }

@@ -93,7 +93,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Get employee by id", response = CustomerUser.class)
+    @ApiOperation(value = "Get employee by id", response = EmployeeUser.class)
     @CrossOrigin
     @GetMapping(path = {"/employee/{id}"}, produces = "application/json")
     public ResponseEntity<EmployeeUser> getEmployeeById(@PathVariable("id") String id) {

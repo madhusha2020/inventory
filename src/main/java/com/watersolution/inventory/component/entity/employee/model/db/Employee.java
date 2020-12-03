@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
@@ -28,6 +29,11 @@ public class Employee extends Auditable {
     @NotBlank(message = "Employee code must not be blank")
     @Column(name = "code")
     private String code;
+
+    @NotBlank(message = "Email must not be blank")
+    @Email
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "callingname")
     private String callingname;

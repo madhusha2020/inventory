@@ -5,6 +5,7 @@ import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
+import com.watersolution.inventory.component.entity.employee.model.db.Employee;
 import com.watersolution.inventory.component.entity.employee.service.EmployeeService;
 import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
 import com.watersolution.inventory.component.entity.user.model.api.EmployeeUser;
@@ -104,9 +105,19 @@ public class UserServiceImpl implements UserService {
         return customerUser;
     }
 
+    @Transactional
     @Override
     public EmployeeUser getEmployeeById(String id) {
-        return null;
+        customValidator.validateNullOrEmpty(id, "id");
+
+        Employee employee = employeeService.getEmployee(id);
+        log.info("Employee : {}", employee.toString());
+
+        User user = userRepository.findByUserNameAndStatusIn(employee.getEmail(), Status.getAllStatusAsList());
+        log.info("User : {}", user.toString());
+
+        List<String> roleNameList = user.getUserRoles().stream().map(userRole -> userRole.getUserRoleId().getRoleName()).collect(Collectors.toList());
+        return new EmployeeUser(user, employee, roleNameList);
     }
 
     @Transactional
@@ -117,9 +128,15 @@ public class UserServiceImpl implements UserService {
         return employeeUser;
     }
 
+    @Transactional
     @Override
     public EmployeeUser updateEmployee(EmployeeUser employeeUser) {
-        return null;
+        if(employeeService.getActiveEmployeeById(employeeUser.getEmployee().getId()) == null){
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "Invalid or inactive employee", Collections.singletonList("Invalid or inactive employee"));
+        }
+        employeeUser.setUser(userServiceHelper.updateUserWithRoles(employeeUser.getUser(), employeeUser.getRoleNameList()));
+        employeeUser.setEmployee(employeeService.updateEmployee(employeeUser.getEmployee()));
+        return employeeUser;
     }
 
     @Override

@@ -19,6 +19,8 @@ public interface EmployeeService {
 
     Employee getEmployee(String employeeId);
 
+    Employee getActiveEmployeeById(long id);
+
     Employee suspendEmployee(TransactionRequest transactionRequest);
 
     Employee activateEmployee(TransactionRequest transactionRequest);

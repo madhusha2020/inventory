@@ -36,7 +36,10 @@ public class ImageUploadServiceImpl implements ImageUploadService {
 
     @Override
     public ImageModel getImage(String category, String id) {
+        customValidator.validateNullOrEmpty(category, "category");
         customValidator.validateNullOrEmpty(id, "id");
-        return imageFactory.getImage(category, id);
+        ImageModel imageModel = new ImageModel();
+        imageModel.setPhoto(imageUtil.decompressBytes(imageFactory.getImage(category, id).getPhoto()));
+        return imageModel;
     }
 }
