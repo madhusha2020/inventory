@@ -36,6 +36,9 @@ public class ProductOutbound extends Auditable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "productOutbound", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<ProductOutboundItem> productOutboundItems;
 
+    @Transient
+    private Integer itemCount;
+
     public ProductOutbound() {
 
     }
