@@ -203,7 +203,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrderById(String orderId) {
         customValidator.validateNullOrEmpty(orderId, "orderId");
-        Order order = orderRepository.findByIdAndStatus(Long.valueOf(orderId), Status.ACTIVE.getValue());
+        Order order = orderRepository.findByIdAndStatusIn(Long.valueOf(orderId), Status.getAllStatusAsList());
         customValidator.validateFoundNull(order, "order");
         return mapOrderDetails(order);
     }
