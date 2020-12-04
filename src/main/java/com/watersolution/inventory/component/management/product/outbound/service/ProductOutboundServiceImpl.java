@@ -1,6 +1,7 @@
 package com.watersolution.inventory.component.management.product.outbound.service;
 
 import com.watersolution.inventory.component.common.util.Status;
+import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.management.inventory.service.InventoryService;
 import com.watersolution.inventory.component.management.order.model.db.Order;
 import com.watersolution.inventory.component.management.product.outbound.model.api.ProductOutboundList;
@@ -22,10 +23,19 @@ public class ProductOutboundServiceImpl implements ProductOutboundService {
     private InventoryService inventoryService;
     @Autowired
     private ProductOutboundRepository productOutboundRepository;
+    @Autowired
+    private CustomValidator customValidator;
 
     @Override
     public ProductOutboundList getAllProductOutbounds() {
         return new ProductOutboundList(productOutboundRepository.findAllByStatusIn(Status.getAllStatusAsList()));
+    }
+
+    @Override
+    public ProductOutbound getProductOutboundById(String productOutboundById) {
+        ProductOutbound productOutbound = productOutboundRepository.findByIdAndStatusIn(Long.valueOf(productOutboundById), Status.getAllStatusAsList());
+        customValidator.validateFoundNull(productOutbound, "ProductOutbound");
+        return productOutbound;
     }
 
     @Override

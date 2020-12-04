@@ -10,4 +10,6 @@ import java.util.List;
 public interface ProductOutboundRepository extends JpaRepository<ProductOutbound, Long> {
 
     List<ProductOutbound> findAllByStatusIn(List<Integer> statusList);
+
+    ProductOutbound findByIdAndStatusIn(Long id, List<Integer> statusList);
 }

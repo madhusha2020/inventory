@@ -38,8 +38,13 @@ public class ImageUploadServiceImpl implements ImageUploadService {
     public ImageModel getImage(String category, String id) {
         customValidator.validateNullOrEmpty(category, "category");
         customValidator.validateNullOrEmpty(id, "id");
+
         ImageModel imageModel = new ImageModel();
-        imageModel.setPhoto(imageUtil.decompressBytes(imageFactory.getImage(category, id).getPhoto()));
+        imageModel = imageFactory.getImage(category, id);
+
+        if(imageModel.getPhoto() != null){
+            imageModel.setPhoto(imageUtil.decompressBytes(imageModel.getPhoto()));
+        }
         return imageModel;
     }
 }

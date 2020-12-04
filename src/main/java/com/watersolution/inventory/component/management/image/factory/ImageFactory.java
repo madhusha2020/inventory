@@ -55,6 +55,8 @@ public class ImageFactory {
             case SUPPLIER:
             case VEHICLE:
             case ITEM:
+                Item item = itemService.getItemById(id);
+                return new ImageModel(item.getPhoto());
             default:
                 throw new CustomException(ErrorCodes.BAD_REQUEST, "Invalid image category", Collections.singletonList("Invalid image category"));
         }
