@@ -29,7 +29,7 @@ public class ProductOutboundController {
     @ApiOperation(value = "Get all outbound products", response = ProductOutboundList.class)
     @CrossOrigin
     @GetMapping(produces = "application/json")
-    public ResponseEntity<ProductOutboundList> placeOrder() {
+    public ResponseEntity<ProductOutboundList> getAllProductOutbounds() {
         return ResponseCreator.successfulResponse(productOutboundService.getAllProductOutbounds());
     }
 }
