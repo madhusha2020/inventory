@@ -35,6 +35,9 @@ public class SaleInventory extends Auditable {
     @Column(name = "unitprice")
     private Double unitprice;
 
+    @Transient
+    private long itemId;
+
     public SaleInventory() {
     }
 }

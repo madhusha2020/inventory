@@ -11,5 +11,5 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     List<Sale> findAllByStatusIn(List<Integer> statusList);
 
-    Sale findByIdAndStatus(long saleId, int status);
+    Sale findByIdAndStatusIn(long saleId, List<Integer> statusList);
 }

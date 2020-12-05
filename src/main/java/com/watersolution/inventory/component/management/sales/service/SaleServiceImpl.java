@@ -89,8 +89,11 @@ public class SaleServiceImpl implements SaleService {
     @Override
     public Sale getSaleById(String saleId) {
         customValidator.validateNullOrEmpty(saleId, "saleId");
-        Sale sale = saleRepository.findByIdAndStatus(Long.valueOf(saleId), Status.ACTIVE.getValue());
+        Sale sale = saleRepository.findByIdAndStatusIn(Long.valueOf(saleId), Status.getAllStatusAsList());
         customValidator.validateFoundNull(sale, "sale");
+        sale.getSaleInventoryList().stream().forEach(saleInventory -> {
+            saleInventory.setItemId(saleInventory.getInventory().getItem().getId());
+        });
         return sale;
     }
 
