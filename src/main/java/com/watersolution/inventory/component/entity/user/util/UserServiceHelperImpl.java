@@ -39,6 +39,7 @@ public class UserServiceHelperImpl implements UserServiceHelper {
         roles.stream().forEach(role -> {
             UserRole userRole = new UserRole();
             userRole.setUserRoleId(new UserRoleId(user.getUserName(), role));
+            userRole.setStatus(Status.ACTIVE.getValue());
             userRole.fillCompulsory(user.getUserId());
             userRole.setUser(user);
             userRole.setRole(new Role(role));
@@ -62,6 +63,7 @@ public class UserServiceHelperImpl implements UserServiceHelper {
         roles.stream().forEach(role -> {
             UserRole userRole = new UserRole();
             userRole.setUserRoleId(new UserRoleId(user.getUserName(), role));
+            userRole.setStatus(Status.ACTIVE.getValue());
             userRole.fillCompulsory(user.getUserId());
             userRole.setUser(user);
             userRole.setRole(new Role(role));
