@@ -91,9 +91,6 @@ public class SaleServiceImpl implements SaleService {
         customValidator.validateNullOrEmpty(saleId, "saleId");
         Sale sale = saleRepository.findByIdAndStatusIn(Long.valueOf(saleId), Status.getAllStatusAsList());
         customValidator.validateFoundNull(sale, "sale");
-        sale.getSaleInventoryList().stream().forEach(saleInventory -> {
-            saleInventory.setItemId(saleInventory.getInventory().getItem().getId());
-        });
         return sale;
     }
 

@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
         UserRole userRole = new UserRole();
         userRole.setUserRoleId(new UserRoleId(user.getUserName(), Roles.ROLE_CUSTOMER.getValue()));
         userRole.setUser(user);
+        userRole.fillCompulsory(user.getUserId());
         userRole.setRole(new Role(Roles.ROLE_CUSTOMER.getValue()));
 
         user.setUserRoles(Arrays.asList(userRole));

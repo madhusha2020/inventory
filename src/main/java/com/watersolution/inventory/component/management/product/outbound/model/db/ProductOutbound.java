@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -29,7 +29,7 @@ public class ProductOutbound extends Auditable {
     private String description;
 
     @Column(name = "date")
-    private LocalDateTime date;
+    private LocalDate date;
 
     @ToString.Exclude
     @JsonManagedReference(value = "productOutbound")

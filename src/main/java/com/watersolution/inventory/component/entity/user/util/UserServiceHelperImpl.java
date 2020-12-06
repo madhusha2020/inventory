@@ -8,7 +8,6 @@ import com.watersolution.inventory.component.exception.CustomException;
 import com.watersolution.inventory.component.management.role.model.role.Role;
 import com.watersolution.inventory.component.management.role.model.role.UserRole;
 import com.watersolution.inventory.component.management.role.model.role.UserRoleId;
-import com.watersolution.inventory.component.management.role.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,8 +22,6 @@ public class UserServiceHelperImpl implements UserServiceHelper {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private UserRoleRepository userRoleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -42,6 +39,7 @@ public class UserServiceHelperImpl implements UserServiceHelper {
         roles.stream().forEach(role -> {
             UserRole userRole = new UserRole();
             userRole.setUserRoleId(new UserRoleId(user.getUserName(), role));
+            userRole.fillCompulsory(user.getUserId());
             userRole.setUser(user);
             userRole.setRole(new Role(role));
             userRoleList.add(userRole);
@@ -64,6 +62,7 @@ public class UserServiceHelperImpl implements UserServiceHelper {
         roles.stream().forEach(role -> {
             UserRole userRole = new UserRole();
             userRole.setUserRoleId(new UserRoleId(user.getUserName(), role));
+            userRole.fillCompulsory(user.getUserId());
             userRole.setUser(user);
             userRole.setRole(new Role(role));
             userRoleList.add(userRole);
@@ -91,7 +90,7 @@ public class UserServiceHelperImpl implements UserServiceHelper {
     public void validatePassword(User user) {
         Optional<User> dbUser = userRepository.findByUserNameAndStatus(user.getUserName(), Status.ACTIVE.getValue());
         if (dbUser.isPresent()) {
-            if(user.getOldPassword() != null) {
+            if (user.getOldPassword() != null) {
                 if (!passwordEncoder.matches(user.getOldPassword(), dbUser.get().getPassword())) {
                     throw new CustomException(ErrorCodes.BAD_REQUEST, "Your old password is wrong", Collections.singletonList("Your old password is wrong"));
                 }

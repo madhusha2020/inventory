@@ -12,6 +12,7 @@ import com.watersolution.inventory.component.management.product.outbound.reposit
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class ProductOutboundServiceImpl implements ProductOutboundService {
 
         productOutbound.setCode("");
         productOutbound.setDescription("");
-        productOutbound.setDate(LocalDateTime.now());
+        productOutbound.setDate(LocalDate.now());
         productOutbound.setStatus(Status.ACTIVE.getValue());
         productOutbound.fillCompulsory(order.getCreatedby());
         productOutboundRepository.save(productOutbound);

@@ -104,6 +104,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.save(employee);
     }
 
+    @Override
+    public EmployeeList getByEmployeeDesignation(PageDetails pageDetails, String designation) {
+        int page = pageDetails.getOffset() / pageDetails.getLimit();
+
+        Page<Employee> employees = employeeRepository.findAllByDesignationAndStatus(designation, Status.ACTIVE.getValue(), PageRequest.of(page, pageDetails.getLimit()));
+        employees.stream().map(this::setImage).collect(Collectors.toList());
+        return new EmployeeList(employees.getContent(), employees.getTotalPages());
+    }
+
     private Employee setImage(Employee employee) {
         if (employee.getPhoto() != null) {
             employee.setPhoto(imageUtil.decompressBytes(employee.getPhoto()));

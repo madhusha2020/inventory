@@ -88,6 +88,9 @@ public class Sale extends Auditable {
     @Transient
     private String contact1;
 
+    /**
+     * Order Data
+     */
     @Transient
     private String totalValue;
 
