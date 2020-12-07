@@ -1,10 +1,12 @@
 package com.watersolution.inventory.component.entity.user.controllers;
 
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
-import com.watersolution.inventory.component.entity.employee.model.db.Employee;
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
 import com.watersolution.inventory.component.entity.user.model.api.EmployeeUser;
 import com.watersolution.inventory.component.entity.user.model.api.UserList;
+import com.watersolution.inventory.component.entity.user.model.api.UserWithUserRoles;
+import com.watersolution.inventory.component.entity.user.model.db.User;
 import com.watersolution.inventory.component.entity.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -54,6 +56,45 @@ public class UserController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
+    @ApiOperation(value = "Get user by user name", response = UserWithUserRoles.class)
+    @CrossOrigin
+    @GetMapping(value = "/{userName}", produces = "application/json")
+    public ResponseEntity<UserWithUserRoles> getUserByUserName(@PathVariable("userName") String userName) {
+        return ResponseCreator.successfulResponse(userService.getUserByUserName(userName));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Activate user", response = User.class)
+    @CrossOrigin
+    @PutMapping(value = "/activate", produces = "application/json")
+    public ResponseEntity<User> activateUser(@RequestBody TransactionRequest transactionRequest) {
+        return ResponseCreator.successfulResponse(userService.activateUser(transactionRequest));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Suspend user", response = User.class)
+    @CrossOrigin
+    @PutMapping(value = "/suspend", produces = "application/json")
+    public ResponseEntity<User> suspendUser(@RequestBody TransactionRequest transactionRequest) {
+        return ResponseCreator.successfulResponse(userService.suspendUser(transactionRequest));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
     @ApiOperation(value = "Get customer by id", response = CustomerUser.class)
     @CrossOrigin
     @GetMapping(path = {"/customer/{id}"}, produces = "application/json")
@@ -82,7 +123,7 @@ public class UserController {
 
     @ApiOperation(value = "Update customer", response = CustomerUser.class)
     @CrossOrigin
-    @PutMapping(value = "/customer",produces = "application/json")
+    @PutMapping(value = "/customer", produces = "application/json")
     public ResponseEntity<CustomerUser> updateCustomer(@Valid @RequestBody CustomerUser customerUser) {
         return ResponseCreator.successfulResponse(userService.updateCustomer(customerUser));
     }

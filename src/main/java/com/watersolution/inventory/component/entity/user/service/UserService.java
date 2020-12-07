@@ -1,8 +1,10 @@
 package com.watersolution.inventory.component.entity.user.service;
 
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
 import com.watersolution.inventory.component.entity.user.model.api.EmployeeUser;
 import com.watersolution.inventory.component.entity.user.model.api.UserList;
+import com.watersolution.inventory.component.entity.user.model.api.UserWithUserRoles;
 import com.watersolution.inventory.component.entity.user.model.db.User;
 
 public interface UserService {
@@ -11,6 +13,12 @@ public interface UserService {
     UserList getAllUsers();
 
     UserList getAllActiveUsers();
+
+    UserWithUserRoles getUserByUserName(String userName);
+
+    User activateUser(TransactionRequest transactionRequest);
+
+    User suspendUser(TransactionRequest transactionRequest);
 
     CustomerUser getCustomerById(String id);
 

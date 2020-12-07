@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceHelperImpl implements UserServiceHelper {
@@ -59,7 +56,19 @@ public class UserServiceHelperImpl implements UserServiceHelper {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setFailedAttempts(0);
 
+        Map<String, UserRole> userRoleMap = new HashMap<>();
         List<UserRole> userRoleList = new ArrayList<>();
+
+        user.getUserRoles().stream().forEach(role -> {
+            UserRole userRole = new UserRole();
+            userRole.setUserRoleId(new UserRoleId(user.getUserName(), role.getUserRoleId().getRoleName()));
+            userRole.setStatus(Status.DELETED.getValue());
+            userRole.fillCompulsory(user.getUserId());
+            userRole.setUser(user);
+            userRole.setRole(new Role(role.getUserRoleId().getRoleName()));
+            userRoleMap.put(role.getUserRoleId().getRoleName(), userRole);
+        });
+
         roles.stream().forEach(role -> {
             UserRole userRole = new UserRole();
             userRole.setUserRoleId(new UserRoleId(user.getUserName(), role));
@@ -67,7 +76,10 @@ public class UserServiceHelperImpl implements UserServiceHelper {
             userRole.fillCompulsory(user.getUserId());
             userRole.setUser(user);
             userRole.setRole(new Role(role));
-            userRoleList.add(userRole);
+            userRoleMap.put(role, userRole);
+        });
+        userRoleMap.entrySet().stream().forEach(role -> {
+            userRoleList.add(role.getValue());
         });
         user.setUserRoles(userRoleList);
 

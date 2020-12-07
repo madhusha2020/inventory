@@ -1,5 +1,6 @@
 package com.watersolution.inventory.component.entity.user.service;
 
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
@@ -10,6 +11,7 @@ import com.watersolution.inventory.component.entity.employee.service.EmployeeSer
 import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
 import com.watersolution.inventory.component.entity.user.model.api.EmployeeUser;
 import com.watersolution.inventory.component.entity.user.model.api.UserList;
+import com.watersolution.inventory.component.entity.user.model.api.UserWithUserRoles;
 import com.watersolution.inventory.component.entity.user.model.db.User;
 import com.watersolution.inventory.component.entity.user.repository.UserRepository;
 import com.watersolution.inventory.component.entity.user.util.UserServiceHelper;
@@ -74,6 +76,39 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    public UserWithUserRoles getUserByUserName(String userName) {
+        customValidator.validateNullOrEmpty(userName, "userName");
+
+        User user = userRepository.findByUserNameAndStatusIn(userName, Status.getAllStatusAsList());
+        customValidator.validateFoundNull(user, "user");
+
+        return new UserWithUserRoles(user, getRoleNameList(user));
+    }
+
+    @Override
+    public User activateUser(TransactionRequest transactionRequest) {
+        customValidator.validateNullOrEmpty(transactionRequest.getEmail(), "userName");
+        User user = userRepository.findByUserNameAndStatusIn(transactionRequest.getEmail(), Status.getAllStatusAsList());
+        customValidator.validateFoundNull(user, "user");
+        Status.validateState("User", user.getStatus(), Status.SUSPENDED);
+        user.setStatus(Status.ACTIVE.getValue());
+        user.fillUpdateCompulsory(transactionRequest.getUserId());
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User suspendUser(TransactionRequest transactionRequest) {
+        customValidator.validateNullOrEmpty(transactionRequest.getEmail(), "userName");
+        User user = userRepository.findByUserNameAndStatusIn(transactionRequest.getEmail(), Status.getAllStatusAsList());
+        customValidator.validateFoundNull(user, "user");
+        Status.validateState("User", user.getStatus(), Status.ACTIVE);
+        user.setStatus(Status.SUSPENDED.getValue());
+        user.fillUpdateCompulsory(transactionRequest.getUserId());
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
     public CustomerUser getCustomerById(String id) {
         customValidator.validateNullOrEmpty(id, "id");
 
@@ -83,8 +118,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserNameAndStatusIn(customer.getEmail(), Status.getAllStatusAsList());
         log.info("User : {}", user.toString());
 
-        List<String> roleNameList = user.getUserRoles().stream().map(userRole -> userRole.getUserRoleId().getRoleName()).collect(Collectors.toList());
-        return new CustomerUser(user, customer, roleNameList);
+        return new CustomerUser(user, customer, getRoleNameList(user));
     }
 
     @Transactional
@@ -98,7 +132,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public CustomerUser updateCustomer(CustomerUser customerUser) {
-        if(customerService.getActiveCustomerById(customerUser.getCustomer().getId()) == null){
+        if (customerService.getActiveCustomerById(customerUser.getCustomer().getId()) == null) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "Invalid or inactive customer", Collections.singletonList("Invalid or inactive customer"));
         }
         customerUser.setUser(userServiceHelper.updateUserWithRoles(customerUser.getUser(), customerUser.getRoleNameList()));
@@ -117,8 +151,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserNameAndStatusIn(employee.getEmail(), Status.getAllStatusAsList());
         log.info("User : {}", user.toString());
 
-        List<String> roleNameList = user.getUserRoles().stream().map(userRole -> userRole.getUserRoleId().getRoleName()).collect(Collectors.toList());
-        return new EmployeeUser(user, employee, roleNameList);
+        return new EmployeeUser(user, employee, getRoleNameList(user));
     }
 
     @Transactional
@@ -132,7 +165,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public EmployeeUser updateEmployee(EmployeeUser employeeUser) {
-        if(employeeService.getActiveEmployeeById(employeeUser.getEmployee().getId()) == null){
+        if (employeeService.getActiveEmployeeById(employeeUser.getEmployee().getId()) == null) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "Invalid or inactive employee", Collections.singletonList("Invalid or inactive employee"));
         }
         employeeUser.setUser(userServiceHelper.updateUserWithRoles(employeeUser.getUser(), employeeUser.getRoleNameList()));
@@ -156,5 +189,15 @@ public class UserServiceImpl implements UserService {
             updatableUser.get().setFailedAttempts(0);
             userRepository.save(updatableUser.get());
         }
+    }
+
+    private List<String> getRoleNameList(User user) {
+        List<String> roleNameList = new ArrayList<>();
+        user.getUserRoles().stream().forEach(userRole -> {
+            if (userRole.getStatus() != Status.DELETED.getValue()) {
+                roleNameList.add(userRole.getUserRoleId().getRoleName());
+            }
+        });
+        return roleNameList;
     }
 }

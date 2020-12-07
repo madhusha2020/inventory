@@ -54,7 +54,7 @@ public class OrderController {
 
     @ApiOperation(value = "Approve customer order", response = Order.class)
     @CrossOrigin
-    @PostMapping(value = "/approve", produces = "application/json")
+    @PutMapping(value = "/approve", produces = "application/json")
     public ResponseEntity<Order> approveOrder(@RequestBody TransactionRequest transactionRequest) {
         return ResponseCreator.successfulResponse(orderService.approveOrder(transactionRequest));
     }
@@ -67,7 +67,7 @@ public class OrderController {
 
     @ApiOperation(value = "Reject customer order", response = Order.class)
     @CrossOrigin
-    @PostMapping(value = "/reject", produces = "application/json")
+    @PutMapping(value = "/reject", produces = "application/json")
     public ResponseEntity<Order> rejectOrder(@RequestBody TransactionRequest transactionRequest) {
         return ResponseCreator.successfulResponse(orderService.rejectOrder(transactionRequest));
     }
