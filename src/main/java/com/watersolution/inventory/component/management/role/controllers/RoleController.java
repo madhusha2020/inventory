@@ -47,6 +47,19 @@ public class RoleController {
         return ResponseCreator.successfulResponse(roleService.getAllActiveRoles());
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Get role by role name", response = Role.class)
+    @CrossOrigin
+    @GetMapping(value = "/{roleName}", produces = "application/json")
+    public ResponseEntity<Role> getRoleByRoleName(@PathVariable("roleName") String roleName) {
+        return ResponseCreator.successfulResponse(roleService.getRoleByRoleName(roleName));
+    }
+
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved list"),
@@ -72,5 +85,18 @@ public class RoleController {
     @PostMapping(produces = "application/json")
     public ResponseEntity<Role> saveUserRole(@Valid @RequestBody Role role) {
         return ResponseCreator.successfulResponse(roleService.saveRole(role));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Update role", response = Role.class)
+    @CrossOrigin
+    @PutMapping(produces = "application/json")
+    public ResponseEntity<Role> updateUserRole(@Valid @RequestBody Role role) {
+        return ResponseCreator.successfulResponse(roleService.updateRole(role));
     }
 }

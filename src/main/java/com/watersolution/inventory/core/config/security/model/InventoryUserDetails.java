@@ -27,7 +27,9 @@ public class InventoryUserDetails implements UserDetails {
         user.getUserRoles().stream().forEach(userRole -> {
             if (userRole.getStatus() != Status.DELETED.getValue()) {
                 userRole.getRole().getPrivileges().stream().forEach(privilege -> {
-                    authorities.add(new SimpleGrantedAuthority(privilege.getModule().getPermissionCode()));
+                    if (privilege.getStatus() != Status.DELETED.getValue()) {
+                        authorities.add(new SimpleGrantedAuthority(privilege.getModule().getPermissionCode()));
+                    }
                 });
             }
         });

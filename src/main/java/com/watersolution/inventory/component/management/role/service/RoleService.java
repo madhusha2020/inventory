@@ -9,7 +9,11 @@ public interface RoleService {
 
     RoleList getAllActiveRoles();
 
+    Role getRoleByRoleName(String roleName);
+
     ModuleList getAllModules();
 
     Role saveRole(Role role);
+
+    Role updateRole(Role role);
 }
