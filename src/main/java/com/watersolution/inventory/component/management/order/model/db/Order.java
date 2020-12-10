@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class Order extends Auditable {
     private String deliveryaddress;
 
     @Column(name = "deliverycost")
-    private Double deliverycost;
+    private BigDecimal deliverycost;
 
     @Column(name = "type")
     private String orderType;
@@ -84,6 +85,12 @@ public class Order extends Auditable {
 
     @Transient
     private String type;
+
+    /**
+     * Order Date
+     */
+    @Transient
+    private long saleId;
 
     public Order() {
     }
