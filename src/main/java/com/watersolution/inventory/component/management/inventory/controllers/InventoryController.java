@@ -29,7 +29,7 @@ public class InventoryController {
     @ApiOperation(value = "View a list of available items in the inventory", response = InventoryList.class)
     @CrossOrigin
     @GetMapping(produces = "application/json")
-    public ResponseEntity<InventoryList> getAllItems() {
+    public ResponseEntity<InventoryList> getAllInventoryItems() {
         return ResponseCreator.successfulResponse(inventoryService.getAllItems());
     }
 }
