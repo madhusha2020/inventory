@@ -3,6 +3,7 @@ package com.watersolution.inventory.component.management.notification.service;
 import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.common.util.AlertType;
 import com.watersolution.inventory.component.common.util.Status;
+import com.watersolution.inventory.component.management.delivery.model.db.Delivery;
 import com.watersolution.inventory.component.management.inventory.model.db.Inventory;
 import com.watersolution.inventory.component.management.notification.model.api.NotificationList;
 import com.watersolution.inventory.component.management.notification.model.db.Notification;
@@ -50,8 +51,27 @@ public class NotificationServiceImpl implements NotificationService {
             Notification notification = new Notification();
             notification.setDosend(LocalDate.now());
             notification.setUserName(userName);
-            notification.setMessage("Item " + inventory.getItem().getCode() + " is out of stock!");
+            notification.setMessage("Item #" + inventory.getItem().getCode() + " is out of stock!");
             notification.setType(AlertType.INVENTORY_ALERT.getValue());
+            notification.fillCompulsory("SYSTEM");
+            notification.setStatus(Status.PENDING.getValue());
+            notificationList.add(notification);
+        });
+
+        notificationRepository.saveAll(notificationList);
+    }
+
+    @Override
+    public void deliveryNotification(Delivery delivery) {
+
+        List<Notification> notificationList = new ArrayList<>();
+
+        getUserList("INV-DEL-CR").stream().forEach(userName -> {
+            Notification notification = new Notification();
+            notification.setDosend(LocalDate.now());
+            notification.setUserName(userName);
+            notification.setMessage("Delivery #" + delivery.getId() + " is awaiting for approval!");
+            notification.setType(AlertType.DELIVERY_ALERT.getValue());
             notification.fillCompulsory("SYSTEM");
             notification.setStatus(Status.PENDING.getValue());
             notificationList.add(notification);

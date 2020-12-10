@@ -4,6 +4,7 @@ import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.exception.CustomException;
+import com.watersolution.inventory.component.management.inventory.model.api.InventoryList;
 import com.watersolution.inventory.component.management.inventory.model.db.Inventory;
 import com.watersolution.inventory.component.management.inventory.repository.InventoryRepository;
 import com.watersolution.inventory.component.management.notification.service.NotificationService;
@@ -51,7 +52,7 @@ public class InventoryServiceImpl implements InventoryService {
             customValidator.validateFoundNull(inventory, "inventory");
             inventory.setQty(inventory.getQty() - orderItem.getQty());
             inventory.fillUpdateCompulsory(orderItem.getCreatedby());
-            if(inventory.getQty() <= orderItem.getItem().getRop()){
+            if (inventory.getQty() <= orderItem.getItem().getRop()) {
                 log.info("Item is about to out of stock");
                 notificationService.inventoryNotification(inventory);
             }
@@ -71,7 +72,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<Inventory> getAllItems() {
-        return inventoryRepository.findAllByStatus(Status.ACTIVE.getValue());
+    public InventoryList getAllItems() {
+        return new InventoryList(inventoryRepository.findAllByStatus(Status.ACTIVE.getValue()));
     }
 }

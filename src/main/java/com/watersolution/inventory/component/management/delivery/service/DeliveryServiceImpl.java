@@ -7,6 +7,7 @@ import com.watersolution.inventory.component.entity.vehicle.service.VehicleServi
 import com.watersolution.inventory.component.management.delivery.model.api.DeliveryList;
 import com.watersolution.inventory.component.management.delivery.model.db.Delivery;
 import com.watersolution.inventory.component.management.delivery.repository.DeliveryRepository;
+import com.watersolution.inventory.component.management.notification.service.NotificationService;
 import com.watersolution.inventory.component.management.order.model.db.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class DeliveryServiceImpl implements DeliveryService {
     private EmployeeService employeeService;
     @Autowired
     private VehicleService vehicleService;
+    @Autowired
+    private NotificationService notificationService;
     @Autowired
     private DeliveryRepository deliveryRepository;
     @Autowired
@@ -42,6 +45,9 @@ public class DeliveryServiceImpl implements DeliveryService {
         delivery.setStatus(Status.PENDING.getValue());
         delivery.fillCompulsory(order.getUserId());
         deliveryRepository.save(delivery);
+
+        notificationService.deliveryNotification(delivery);
+
         return delivery;
     }
 
