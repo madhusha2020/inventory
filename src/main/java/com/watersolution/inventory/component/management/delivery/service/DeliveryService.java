@@ -8,7 +8,9 @@ public interface DeliveryService {
 
     DeliveryList getAllDeliveries();
 
+    Delivery getDeliveryById(String deliveryId);
+
     Delivery saveDelivery(Order order);
 
-    Delivery updateDelivery(Order order);
+    Delivery updateDelivery(Delivery delivery);
 }

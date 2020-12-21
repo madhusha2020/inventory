@@ -66,7 +66,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         List<Notification> notificationList = new ArrayList<>();
 
-        getUserList("INV-DEL-CR").stream().forEach(userName -> {
+        getUserList("INV-DEL-VW").stream().forEach(userName -> {
             Notification notification = new Notification();
             notification.setDosend(LocalDate.now());
             notification.setUserName(userName);

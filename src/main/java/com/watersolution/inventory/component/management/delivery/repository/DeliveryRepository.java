@@ -10,4 +10,6 @@ import java.util.List;
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
 
     List<Delivery> findAllByStatusIn(List<Integer> statusList);
+
+    Delivery findByIdAndStatusIn(long id, List<Integer> statusList);
 }

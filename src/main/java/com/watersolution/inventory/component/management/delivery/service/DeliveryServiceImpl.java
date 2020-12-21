@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.stream.Collectors;
 
 @Service
 public class DeliveryServiceImpl implements DeliveryService {
@@ -31,7 +32,16 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public DeliveryList getAllDeliveries() {
-        return new DeliveryList(deliveryRepository.findAllByStatusIn(Status.getAllStatusAsList()));
+        return new DeliveryList(deliveryRepository.findAllByStatusIn(Status.getAllStatusAsList()).stream().map(this::mapDeliveryDetails).collect(Collectors.toList()));
+    }
+
+
+    @Override
+    public Delivery getDeliveryById(String deliveryId) {
+        customValidator.validateNullOrEmpty(deliveryId, "deliveryId");
+        Delivery delivery = deliveryRepository.findByIdAndStatusIn(Long.valueOf(deliveryId), Status.getAllStatusAsList());
+        customValidator.validateFoundNull(delivery, "delivery");
+        return mapDeliveryDetails(delivery);
     }
 
     @Transactional
@@ -53,7 +63,18 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Transactional
     @Override
-    public Delivery updateDelivery(Order order) {
-        return null;
+    public Delivery updateDelivery(Delivery delivery) {
+        delivery.fillUpdateCompulsory(delivery.getUserId());
+        return mapDeliveryDetails(deliveryRepository.save(delivery));
+    }
+
+    private Delivery mapDeliveryDetails(Delivery delivery) {
+        if (delivery.getStatus().equals(Status.ACTIVE.getValue()) || delivery.getStatus().equals(Status.SUSPENDED.getValue())) {
+            delivery.setDeliveryempname(delivery.getDeliveryEmployeeList().stream().findAny().get().getEmployee().getName());
+            delivery.setDeliverycontactno(delivery.getDeliveryEmployeeList().stream().findAny().get().getEmployee().getMobile());
+            delivery.setDeliveryvehicletype(delivery.getVehicle().getModal());
+            delivery.setDeliverycontactno(delivery.getVehicle().getNo());
+        }
+        return delivery;
     }
 }

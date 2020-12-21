@@ -61,6 +61,18 @@ public class Delivery extends Auditable {
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
+    @Transient
+    private String deliveryempname;
+
+    @Transient
+    private String deliveryempcontactno;
+
+    @Transient
+    private String deliveryvehicletype;
+
+    @Transient
+    private String deliveryvehicleno;
+
     public Delivery() {
     }
 }

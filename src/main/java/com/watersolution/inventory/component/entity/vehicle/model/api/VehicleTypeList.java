@@ -1,7 +1,7 @@
 package com.watersolution.inventory.component.entity.vehicle.model.api;
 
 import com.watersolution.inventory.component.common.exception.ResponseDefault;
-import com.watersolution.inventory.component.entity.vehicle.model.db.Vehicle;
+import com.watersolution.inventory.component.entity.vehicle.model.db.VehicleType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,11 +10,12 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class VehicleList extends ResponseDefault {
-    @Valid
-    private List<Vehicle> vehicleList;
+public class VehicleTypeList extends ResponseDefault {
 
-    public VehicleList(@Valid List<Vehicle> vehicleList) {
-        this.vehicleList = vehicleList;
+    @Valid
+    private List<VehicleType> vehicleTypeList;
+
+    public VehicleTypeList(@Valid List<VehicleType> vehicleTypeList) {
+        this.vehicleTypeList = vehicleTypeList;
     }
 }
