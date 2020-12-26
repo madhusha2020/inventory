@@ -80,6 +80,20 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.saveAll(notificationList);
     }
 
+    @Override
+    public void deliverySuspendNotification(Delivery delivery) {
+
+        Notification notification = new Notification();
+        notification.setDosend(LocalDate.now());
+        notification.setUserName(delivery.getEmployee().getEmail());
+        notification.setMessage("Delivery #" + delivery.getId() + " is canceled!");
+        notification.setType(AlertType.DELIVERY_ALERT.getValue());
+        notification.fillCompulsory("SYSTEM");
+        notification.setStatus(Status.PENDING.getValue());
+
+        notificationRepository.save(notification);
+    }
+
     private List<String> getUserList(String permission) {
         List<String> userNameList = new ArrayList<>();
         Module module = moduleRepository.findByPermissionCode(permission);

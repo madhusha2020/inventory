@@ -62,6 +62,7 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleFacilityList.getVehicleFacilityList().stream().forEach(vehicleFacility -> {
             VehicleVehicleFacility vehicleVehicleFacility = new VehicleVehicleFacility();
             vehicleVehicleFacility.setVehicle(vehicle);
+            vehicleVehicleFacility.setVehicleFacility(vehicleFacility);
             vehicleVehicleFacility.setVehicleVechileFacilityId(new VehicleVechileFacilityId(vehicle.getId(), vehicleFacility.getId()));
             vehicleVehicleFacility.setStatus(Status.ACTIVE.getValue());
             vehicleVehicleFacility.fillCompulsory(vehicle.getUserId());
@@ -107,6 +108,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     private Vehicle mapVehicleDetails(Vehicle vehicle) {
+        vehicle.setType(vehicle.getVehicleType().getName());
         return vehicle;
     }
 

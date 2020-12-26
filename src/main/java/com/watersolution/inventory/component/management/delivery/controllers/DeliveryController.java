@@ -1,6 +1,7 @@
 package com.watersolution.inventory.component.management.delivery.controllers;
 
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.management.delivery.model.api.DeliveryList;
 import com.watersolution.inventory.component.management.delivery.model.db.Delivery;
 import com.watersolution.inventory.component.management.delivery.service.DeliveryService;
@@ -50,10 +51,23 @@ public class DeliveryController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Update delivery details", response = Delivery.class)
+    @ApiOperation(value = "Update/Approve delivery details", response = Delivery.class)
     @CrossOrigin
     @PutMapping(produces = "application/json")
     public ResponseEntity<Delivery> updateDelivery(@RequestBody Delivery delivery) {
         return ResponseCreator.successfulResponse(deliveryService.updateDelivery(delivery));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Suspend delivery details", response = Delivery.class)
+    @CrossOrigin
+    @PutMapping(value = "/suspend", produces = "application/json")
+    public ResponseEntity<Delivery> suspendDelivery(@RequestBody TransactionRequest transactionRequest) {
+        return ResponseCreator.successfulResponse(deliveryService.suspendDelivery(transactionRequest));
     }
 }

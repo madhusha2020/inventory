@@ -45,9 +45,13 @@ public class Vehicle extends Auditable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "vehicle", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<VehicleVehicleFacility> vehicleFacilityList;
 
-    @JsonBackReference(value = "deliveryvehicle")
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "vehicle", fetch = FetchType.LAZY, orphanRemoval = true)
-    private Delivery delivery;
+    @ToString.Exclude
+    @JsonManagedReference(value = "deliveryvehicle")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vehicle", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Delivery> deliveryList;
+
+    @Transient
+    private String type;
 
     public Vehicle() {
     }

@@ -1,17 +1,15 @@
 package com.watersolution.inventory.component.management.delivery.model.db;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
+import com.watersolution.inventory.component.entity.employee.model.db.Employee;
 import com.watersolution.inventory.component.entity.vehicle.model.db.Vehicle;
 import com.watersolution.inventory.component.management.sales.model.db.Sale;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Entity
@@ -46,20 +44,20 @@ public class Delivery extends Auditable {
     @Lob
     private String deliverynote;
 
-    @ToString.Exclude
-    @JsonManagedReference(value = "deliverydelivery")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "delivery", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<DeliveryEmployee> deliveryEmployeeList;
-
     @JsonBackReference(value = "deliverysale")
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "sale_id")
     private Sale sale;
 
-    @JsonManagedReference(value = "deliveryvehicle")
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonBackReference(value = "deliveryvehicle")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
+
+    @JsonBackReference(value = "deliveryemployee")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
     @Transient
     private String deliveryempname;
@@ -72,6 +70,12 @@ public class Delivery extends Auditable {
 
     @Transient
     private String deliveryvehicleno;
+
+    @Transient
+    private long vehicleId;
+
+    @Transient
+    private long employeeId;
 
     public Delivery() {
     }
