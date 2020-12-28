@@ -1,5 +1,6 @@
 package com.watersolution.inventory.component.entity.vehicle.service;
 
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.entity.vehicle.model.api.FacilityList;
@@ -99,12 +100,54 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleFacilityList updateVehicle(VehicleFacilityList vehicleFacilityList) {
-        return null;
+
+        vehicleFacilityList.getVehicle().setStatus(Status.ACTIVE.getValue());
+        vehicleFacilityList.getVehicle().fillUpdateCompulsory(vehicleFacilityList.getVehicle().getUserId());
+        vehicleFacilityList.getVehicle().setVehicleType(vehicleFacilityList.getVehicleType());
+        Vehicle vehicle = vehicleRepository.save(vehicleFacilityList.getVehicle());
+
+        List<VehicleVehicleFacility> vehicleVehicleFacilityList = new ArrayList<>();
+
+        vehicleFacilityList.getVehicleFacilityList().stream().forEach(vehicleFacility -> {
+            VehicleVehicleFacility vehicleVehicleFacility = new VehicleVehicleFacility();
+            vehicleVehicleFacility.setVehicle(vehicle);
+            vehicleVehicleFacility.setVehicleFacility(vehicleFacility);
+            vehicleVehicleFacility.setVehicleVechileFacilityId(new VehicleVechileFacilityId(vehicle.getId(), vehicleFacility.getId()));
+            vehicleVehicleFacility.setStatus(Status.ACTIVE.getValue());
+            vehicleVehicleFacility.fillCompulsory(vehicle.getUserId());
+            vehicleVehicleFacilityList.add(vehicleVehicleFacility);
+        });
+        vehicleFacilityList.getVehicle().setVehicleFacilityList(vehicleVehicleFacilityList);
+        vehicleRepository.save(vehicleFacilityList.getVehicle());
+
+        return vehicleFacilityList;
     }
 
     @Override
     public VehicleFacility updateVehicleFacility(VehicleFacility vehicleFacility) {
         return null;
+    }
+
+    @Override
+    public Vehicle suspendVehicle(TransactionRequest transactionRequest) {
+
+        Vehicle vehicle = vehicleRepository.findByIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList());
+        vehicle.setStatus(Status.SUSPENDED.getValue());
+        vehicle.fillUpdateCompulsory(transactionRequest.getUserId());
+        vehicleRepository.save(vehicle);
+
+        return vehicle;
+    }
+
+    @Override
+    public Vehicle activateVehicle(TransactionRequest transactionRequest) {
+
+        Vehicle vehicle = vehicleRepository.findByIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList());
+        vehicle.setStatus(Status.ACTIVE.getValue());
+        vehicle.fillUpdateCompulsory(transactionRequest.getUserId());
+        vehicleRepository.save(vehicle);
+
+        return vehicle;
     }
 
     private Vehicle mapVehicleDetails(Vehicle vehicle) {

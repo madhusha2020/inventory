@@ -1,6 +1,7 @@
 package com.watersolution.inventory.component.entity.vehicle.controllers;
 
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.entity.vehicle.model.api.FacilityList;
 import com.watersolution.inventory.component.entity.vehicle.model.api.VehicleFacilityList;
 import com.watersolution.inventory.component.entity.vehicle.model.api.VehicleList;
@@ -137,5 +138,31 @@ public class VehicleController {
     @PutMapping(value = "/facility", produces = "application/json")
     public ResponseEntity<VehicleFacility> updateVehicleFacility(@RequestBody VehicleFacility vehicleFacility) {
         return ResponseCreator.successfulResponse(vehicleService.updateVehicleFacility(vehicleFacility));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Suspend vehicle", response = Vehicle.class)
+    @CrossOrigin
+    @PutMapping(value = "/suspend", produces = "application/json")
+    public ResponseEntity<Vehicle> suspendVehicle(@RequestBody TransactionRequest transactionRequest) {
+        return ResponseCreator.successfulResponse(vehicleService.suspendVehicle(transactionRequest));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Activate vehicle", response = Vehicle.class)
+    @CrossOrigin
+    @PutMapping(value = "/activate", produces = "application/json")
+    public ResponseEntity<Vehicle> activateVehicle(@RequestBody TransactionRequest transactionRequest) {
+        return ResponseCreator.successfulResponse(vehicleService.activateVehicle(transactionRequest));
     }
 }

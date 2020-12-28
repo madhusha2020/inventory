@@ -1,5 +1,6 @@
 package com.watersolution.inventory.component.entity.vehicle.service;
 
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.entity.vehicle.model.api.FacilityList;
 import com.watersolution.inventory.component.entity.vehicle.model.api.VehicleFacilityList;
 import com.watersolution.inventory.component.entity.vehicle.model.api.VehicleList;
@@ -26,4 +27,8 @@ public interface VehicleService {
     VehicleFacilityList updateVehicle(VehicleFacilityList vehicleFacilityList);
 
     VehicleFacility updateVehicleFacility(VehicleFacility vehicleFacility);
+
+    Vehicle suspendVehicle(TransactionRequest transactionRequest);
+
+    Vehicle activateVehicle(TransactionRequest transactionRequest);
 }
