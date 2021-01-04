@@ -65,13 +65,13 @@ public class DisposalServiceImpl implements DisposalService {
          * Inventory Update
          * Disposal Init
          */
-        inventoryService.disposalUpdateInventory(disposalInventoryList.getDisposalInventoryList());
+        inventoryService.pendingDisposalUpdateInventory(disposalInventoryList.getDisposalInventoryList());
         disposalInventoryRepository.saveAll(disposalInventoryList.getDisposalInventoryList());
 
         return disposalInventoryList;
     }
 
-
+    @Transactional
     @Override
     public Disposal approveDisposal(TransactionRequest transactionRequest) {
         customValidator.validateFoundNull(transactionRequest.getId(), "disposalId");
@@ -85,14 +85,19 @@ public class DisposalServiceImpl implements DisposalService {
         return disposal;
     }
 
+    @Transactional
     @Override
     public Disposal suspendDisposal(TransactionRequest transactionRequest) {
         customValidator.validateFoundNull(transactionRequest.getId(), "disposalId");
 
         Disposal disposal = disposalRepository.findByIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList());
-        disposal.setDate(LocalDate.now());
         disposal.setStatus(Status.SUSPENDED.getValue());
         disposal.fillUpdateCompulsory(transactionRequest.getUserId());
+
+        /**
+         * Inventory Update
+         */
+        inventoryService.rejectDisposalUpdateInventory(disposal.getDisposalInventoryList());
 
         disposalRepository.save(disposal);
         return disposal;

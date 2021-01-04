@@ -89,7 +89,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public void disposalUpdateInventory(List<DisposalInventory> disposalInventories) {
+    public void pendingDisposalUpdateInventory(List<DisposalInventory> disposalInventories) {
         disposalInventories.stream().forEach(disposalInventory -> {
             Inventory inventory = inventoryRepository.findByIdAndStatus(disposalInventory.getInventory().getId(), Status.ACTIVE.getValue());
             customValidator.validateFoundNull(inventory, "inventory");
@@ -109,6 +109,18 @@ public class InventoryServiceImpl implements InventoryService {
                 inventory.fillUpdateCompulsory(disposalInventory.getCreatedby());
             }
 
+            inventoryRepository.save(inventory);
+        });
+    }
+
+    @Override
+    public void rejectDisposalUpdateInventory(List<DisposalInventory> disposalInventories) {
+        disposalInventories.stream().forEach(disposalInventory -> {
+            Inventory inventory = inventoryRepository.findByIdAndStatus(disposalInventory.getInventory().getId(), Status.ACTIVE.getValue());
+            customValidator.validateFoundNull(inventory, "inventory");
+            inventory.setDisposedQty(disposalInventory.getQty());
+            inventory.setQty(inventory.getQty() + disposalInventory.getQty());
+            inventory.fillUpdateCompulsory(disposalInventory.getCreatedby());
             inventoryRepository.save(inventory);
         });
     }

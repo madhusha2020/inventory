@@ -21,5 +21,7 @@ public interface InventoryService {
 
     void preDisposalValidate(List<DisposalInventory> disposalInventories);
 
-    void disposalUpdateInventory(List<DisposalInventory> disposalInventories);
+    void pendingDisposalUpdateInventory(List<DisposalInventory> disposalInventories);
+
+    void rejectDisposalUpdateInventory(List<DisposalInventory> disposalInventories);
 }
