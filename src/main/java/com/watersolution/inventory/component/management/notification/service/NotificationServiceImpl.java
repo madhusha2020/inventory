@@ -62,6 +62,25 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    public void disposalInventoryNotification(Inventory inventory) {
+
+        List<Notification> notificationList = new ArrayList<>();
+
+        getUserList("INV-INV").stream().forEach(userName -> {
+            Notification notification = new Notification();
+            notification.setDosend(LocalDate.now());
+            notification.setUserName(userName);
+            notification.setMessage(inventory.getDisposedQty() + " units of Item #" + inventory.getItem().getCode() + " was disposed!");
+            notification.setType(AlertType.INVENTORY_ALERT.getValue());
+            notification.fillCompulsory("SYSTEM");
+            notification.setStatus(Status.PENDING.getValue());
+            notificationList.add(notification);
+        });
+
+        notificationRepository.saveAll(notificationList);
+    }
+
+    @Override
     public void deliveryNotification(Delivery delivery) {
 
         List<Notification> notificationList = new ArrayList<>();

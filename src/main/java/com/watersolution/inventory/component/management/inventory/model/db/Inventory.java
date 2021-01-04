@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
 import com.watersolution.inventory.component.common.validator.annotations.QuantityValidateConstraint;
 import com.watersolution.inventory.component.entity.item.model.db.Item;
+import com.watersolution.inventory.component.management.product.disposal.model.db.DisposalInventory;
 import com.watersolution.inventory.component.management.sales.model.db.SaleInventory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -54,6 +55,14 @@ public class Inventory extends Auditable {
     @JsonManagedReference(value = "inventorysale")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "inventory", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<SaleInventory> saleInventoryList;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "disposalInventory")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "inventory")
+    private List<DisposalInventory> disposalInventoryList;
+
+    @Transient
+    private int disposedQty;
 
     public Inventory() {
     }

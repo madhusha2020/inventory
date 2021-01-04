@@ -9,6 +9,7 @@ import com.watersolution.inventory.component.management.inventory.model.db.Inven
 import com.watersolution.inventory.component.management.inventory.repository.InventoryRepository;
 import com.watersolution.inventory.component.management.notification.service.NotificationService;
 import com.watersolution.inventory.component.management.order.model.db.OrderItems;
+import com.watersolution.inventory.component.management.product.disposal.model.db.DisposalInventory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,10 @@ public class InventoryServiceImpl implements InventoryService {
     @Autowired
     private CustomValidator customValidator;
 
+    @Override
+    public InventoryList getAllItems() {
+        return new InventoryList(inventoryRepository.findAllByStatus(Status.ACTIVE.getValue()));
+    }
 
     @Override
     public Inventory getByItemId(Long itemId) {
@@ -72,7 +77,39 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public InventoryList getAllItems() {
-        return new InventoryList(inventoryRepository.findAllByStatus(Status.ACTIVE.getValue()));
+    public void preDisposalValidate(List<DisposalInventory> disposalInventories) {
+        disposalInventories.stream().forEach(disposalInventory -> {
+            Inventory inventory = inventoryRepository.findByIdAndStatus(disposalInventory.getInventory().getId(), Status.ACTIVE.getValue());
+            customValidator.validateFoundNull(inventory, "inventory");
+            if (inventory.getQty() < disposalInventory.getQty()) {
+                final String errorMessage = "Insufficient quantity of item {0} on inventory".replace("{0}", disposalInventory.getInventory().getCode());
+                throw new CustomException(ErrorCodes.BAD_REQUEST, errorMessage, Collections.singletonList(errorMessage));
+            }
+        });
+    }
+
+    @Override
+    public void disposalUpdateInventory(List<DisposalInventory> disposalInventories) {
+        disposalInventories.stream().forEach(disposalInventory -> {
+            Inventory inventory = inventoryRepository.findByIdAndStatus(disposalInventory.getInventory().getId(), Status.ACTIVE.getValue());
+            customValidator.validateFoundNull(inventory, "inventory");
+            inventory.setDisposedQty(disposalInventory.getQty());
+
+            if (inventory.getQty() >= disposalInventory.getQty()) {
+                if (inventory.getQty() > disposalInventory.getQty()) {
+                    log.info("Disposal item");
+                    notificationService.disposalInventoryNotification(inventory);
+                } else if (inventory.getQty() == disposalInventory.getQty()) {
+                    log.info("Disposal item");
+                    notificationService.disposalInventoryNotification(inventory);
+                    log.info("Item is about to out of stock");
+                    notificationService.inventoryNotification(inventory);
+                }
+                inventory.setQty(inventory.getQty() - disposalInventory.getQty());
+                inventory.fillUpdateCompulsory(disposalInventory.getCreatedby());
+            }
+
+            inventoryRepository.save(inventory);
+        });
     }
 }

@@ -13,6 +13,8 @@ public interface NotificationService {
 
     void inventoryNotification(Inventory inventory);
 
+    void disposalInventoryNotification(Inventory inventory);
+
     void deliveryNotification(Delivery delivery);
 
     void deliverySuspendNotification(Delivery delivery);
