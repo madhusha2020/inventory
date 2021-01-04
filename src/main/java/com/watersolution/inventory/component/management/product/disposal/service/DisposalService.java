@@ -9,6 +9,8 @@ public interface DisposalService {
 
     DisposalList getAllDisposalProducts();
 
+    Disposal getDisposalById(String disposalId);
+
     DisposalInventoryList createDisposalProduct(DisposalInventoryList disposalInventoryList);
 
     Disposal approveDisposal(TransactionRequest transactionRequest);

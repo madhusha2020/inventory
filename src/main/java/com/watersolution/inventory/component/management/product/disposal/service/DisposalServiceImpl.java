@@ -34,6 +34,12 @@ public class DisposalServiceImpl implements DisposalService {
         return new DisposalList(disposalRepository.findAllByStatusIn(Status.getAllStatusAsList()).stream().map(this::mapDisposalDetails).collect(Collectors.toList()));
     }
 
+    @Override
+    public Disposal getDisposalById(String disposalId) {
+        customValidator.validateNullOrEmpty(disposalId, "disposalId");
+        return mapDisposalDetails(disposalRepository.findByIdAndStatusIn(Long.valueOf(disposalId), Status.getAllStatusAsList()));
+    }
+
     @Transactional
     @Override
     public DisposalInventoryList createDisposalProduct(DisposalInventoryList disposalInventoryList) {
