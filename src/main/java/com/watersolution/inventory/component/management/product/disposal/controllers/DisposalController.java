@@ -1,8 +1,10 @@
 package com.watersolution.inventory.component.management.product.disposal.controllers;
 
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.management.product.disposal.model.api.DisposalInventoryList;
 import com.watersolution.inventory.component.management.product.disposal.model.api.DisposalList;
+import com.watersolution.inventory.component.management.product.disposal.model.db.Disposal;
 import com.watersolution.inventory.component.management.product.disposal.service.DisposalService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -17,19 +19,6 @@ public class DisposalController {
 
     @Autowired
     private DisposalService disposalService;
-
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved list"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
-
-    @ApiOperation(value = "Pre disposal validate", response = DisposalInventoryList.class)
-    @CrossOrigin
-    @PostMapping(value = "/predisposal", produces = "application/json")
-    public ResponseEntity<DisposalInventoryList> preDisposalValidate(@RequestBody DisposalInventoryList disposalInventoryList) {
-        return ResponseCreator.successfulResponse(disposalService.preDisposalValidate(disposalInventoryList));
-    }
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved list"),
@@ -55,5 +44,31 @@ public class DisposalController {
     @PostMapping(produces = "application/json")
     public ResponseEntity<DisposalInventoryList> createDisposalProduct(@RequestBody DisposalInventoryList disposalInventoryList) {
         return ResponseCreator.successfulResponse(disposalService.createDisposalProduct(disposalInventoryList));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Approve disposal product", response = DisposalInventoryList.class)
+    @CrossOrigin
+    @PutMapping(value = "/approve", produces = "application/json")
+    public ResponseEntity<Disposal> approveDispose(@RequestBody TransactionRequest transactionRequest) {
+        return ResponseCreator.successfulResponse(disposalService.approveDisposal(transactionRequest));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Suspend disposal product", response = DisposalInventoryList.class)
+    @CrossOrigin
+    @PutMapping(value = "/suspend", produces = "application/json")
+    public ResponseEntity<Disposal> suspendDispose(@RequestBody TransactionRequest transactionRequest) {
+        return ResponseCreator.successfulResponse(disposalService.suspendDisposal(transactionRequest));
     }
 }

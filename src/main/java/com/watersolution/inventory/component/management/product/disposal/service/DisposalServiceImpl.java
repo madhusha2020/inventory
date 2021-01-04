@@ -1,6 +1,8 @@
 package com.watersolution.inventory.component.management.product.disposal.service;
 
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.common.util.Status;
+import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.management.inventory.service.InventoryService;
 import com.watersolution.inventory.component.management.product.disposal.model.api.DisposalInventoryList;
 import com.watersolution.inventory.component.management.product.disposal.model.api.DisposalList;
@@ -24,6 +26,8 @@ public class DisposalServiceImpl implements DisposalService {
     private DisposalInventoryRepository disposalInventoryRepository;
     @Autowired
     private InventoryService inventoryService;
+    @Autowired
+    private CustomValidator customValidator;
 
     @Override
     public DisposalList getAllDisposalProducts() {
@@ -32,17 +36,14 @@ public class DisposalServiceImpl implements DisposalService {
 
     @Transactional
     @Override
-    public DisposalInventoryList preDisposalValidate(DisposalInventoryList disposalInventoryList) {
-        inventoryService.preDisposalValidate(disposalInventoryList.getDisposalInventoryList());
-        return disposalInventoryList;
-    }
-
-    @Transactional
-    @Override
     public DisposalInventoryList createDisposalProduct(DisposalInventoryList disposalInventoryList) {
 
-        disposalInventoryList.getDisposal().setDate(LocalDate.now());
-        disposalInventoryList.getDisposal().setStatus(Status.ACTIVE.getValue());
+        /**
+         * Pre Validate Disposal
+         */
+        inventoryService.preDisposalValidate(disposalInventoryList.getDisposalInventoryList());
+
+        disposalInventoryList.getDisposal().setStatus(Status.PENDING.getValue());
         disposalInventoryList.getDisposal().fillCompulsory(disposalInventoryList.getDisposal().getUserId());
 
         Disposal disposal = disposalRepository.save(disposalInventoryList.getDisposal());
@@ -62,6 +63,33 @@ public class DisposalServiceImpl implements DisposalService {
         disposalInventoryRepository.saveAll(disposalInventoryList.getDisposalInventoryList());
 
         return disposalInventoryList;
+    }
+
+
+    @Override
+    public Disposal approveDisposal(TransactionRequest transactionRequest) {
+        customValidator.validateFoundNull(transactionRequest.getId(), "disposalId");
+
+        Disposal disposal = disposalRepository.findByIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList());
+        disposal.setDate(LocalDate.now());
+        disposal.setStatus(Status.ACTIVE.getValue());
+        disposal.fillUpdateCompulsory(transactionRequest.getUserId());
+
+        disposalRepository.save(disposal);
+        return disposal;
+    }
+
+    @Override
+    public Disposal suspendDisposal(TransactionRequest transactionRequest) {
+        customValidator.validateFoundNull(transactionRequest.getId(), "disposalId");
+
+        Disposal disposal = disposalRepository.findByIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList());
+        disposal.setDate(LocalDate.now());
+        disposal.setStatus(Status.SUSPENDED.getValue());
+        disposal.fillUpdateCompulsory(transactionRequest.getUserId());
+
+        disposalRepository.save(disposal);
+        return disposal;
     }
 
     private Disposal mapDisposalDetails(Disposal disposal) {

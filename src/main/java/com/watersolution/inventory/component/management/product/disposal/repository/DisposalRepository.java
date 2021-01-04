@@ -10,4 +10,6 @@ import java.util.List;
 public interface DisposalRepository extends JpaRepository<Disposal, Long> {
 
     List<Disposal> findAllByStatusIn(List<Integer> statusList);
+
+    Disposal findByIdAndStatusIn(long disposalId, List<Integer> statusList);
 }

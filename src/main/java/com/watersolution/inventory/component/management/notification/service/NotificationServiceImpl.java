@@ -70,7 +70,7 @@ public class NotificationServiceImpl implements NotificationService {
             Notification notification = new Notification();
             notification.setDosend(LocalDate.now());
             notification.setUserName(userName);
-            notification.setMessage(inventory.getDisposedQty() + " units of Item #" + inventory.getItem().getCode() + " was disposed!");
+            notification.setMessage(inventory.getDisposedQty() + " units of Item #" + inventory.getItem().getCode() + " awaiting for disposal approval!");
             notification.setType(AlertType.INVENTORY_ALERT.getValue());
             notification.fillCompulsory("SYSTEM");
             notification.setStatus(Status.PENDING.getValue());

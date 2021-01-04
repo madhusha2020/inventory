@@ -82,7 +82,7 @@ public class InventoryServiceImpl implements InventoryService {
             Inventory inventory = inventoryRepository.findByIdAndStatus(disposalInventory.getInventory().getId(), Status.ACTIVE.getValue());
             customValidator.validateFoundNull(inventory, "inventory");
             if (inventory.getQty() < disposalInventory.getQty()) {
-                final String errorMessage = "Insufficient quantity of item {0} on inventory".replace("{0}", disposalInventory.getInventory().getCode());
+                final String errorMessage = "Insufficient quantity of item {0} on inventory".replace("{0}", inventory.getItem().getName());
                 throw new CustomException(ErrorCodes.BAD_REQUEST, errorMessage, Collections.singletonList(errorMessage));
             }
         });
