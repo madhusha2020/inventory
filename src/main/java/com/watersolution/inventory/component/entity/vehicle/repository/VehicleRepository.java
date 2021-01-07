@@ -11,5 +11,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     List<Vehicle> findAllByStatusIn(List<Integer> statusList);
 
+    List<Vehicle> findAllByStatus(int status);
+
     Vehicle findByIdAndStatusIn(long id, List<Integer> statusList);
 }

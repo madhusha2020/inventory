@@ -42,6 +42,19 @@ public class VehicleController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
+    @ApiOperation(value = "View a list of available active vehicles", response = VehicleList.class)
+    @CrossOrigin
+    @GetMapping(value = "/activeVehicles", produces = "application/json")
+    public ResponseEntity<VehicleList> getAllActiveVehicles() {
+        return ResponseCreator.successfulResponse(vehicleService.getAllActiveVehicles());
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
     @ApiOperation(value = "View a list of available vehicle facilities", response = FacilityList.class)
     @CrossOrigin
     @GetMapping(value = "/facilities", produces = "application/json")
@@ -60,6 +73,19 @@ public class VehicleController {
     @GetMapping(value = "/types", produces = "application/json")
     public ResponseEntity<VehicleTypeList> getAllVehicleTypes() {
         return ResponseCreator.successfulResponse(vehicleService.getAllVehicleTypes());
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "View a list of available active vehicle types", response = VehicleTypeList.class)
+    @CrossOrigin
+    @GetMapping(value = "/activeTypes", produces = "application/json")
+    public ResponseEntity<VehicleTypeList> getAllActiveVehicleTypes() {
+        return ResponseCreator.successfulResponse(vehicleService.getAllActiveVehicleTypes());
     }
 
     @ApiResponses(value = {

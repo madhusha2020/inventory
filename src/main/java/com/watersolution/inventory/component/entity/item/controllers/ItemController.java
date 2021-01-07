@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
 import com.watersolution.inventory.component.common.model.api.PageDetails;
 import com.watersolution.inventory.component.common.model.api.SearchFilter;
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.entity.item.model.api.ItemList;
 import com.watersolution.inventory.component.entity.item.model.db.Item;
 import com.watersolution.inventory.component.entity.item.service.ItemService;
@@ -90,5 +91,44 @@ public class ItemController {
     @PostMapping(produces = "application/json")
     public ResponseEntity<InventoryItem> saveInventoryItem(@Valid @RequestBody InventoryItem inventoryItem) {
         return ResponseCreator.successfulResponse(itemService.saveInventoryItem(inventoryItem));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Update inventory item", response = InventoryItem.class)
+    @CrossOrigin
+    @PutMapping(produces = "application/json")
+    public ResponseEntity<InventoryItem> updateInventoryItem(@Valid @RequestBody InventoryItem inventoryItem) {
+        return ResponseCreator.successfulResponse(itemService.updateInventoryItem(inventoryItem));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Suspend item", response = Item.class)
+    @CrossOrigin
+    @PutMapping(value = "/suspend", produces = "application/json")
+    public ResponseEntity<Item> suspendItem(@RequestBody TransactionRequest transactionRequest) {
+        return ResponseCreator.successfulResponse(itemService.suspendItem(transactionRequest));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Activate item", response = Item.class)
+    @CrossOrigin
+    @PutMapping(value = "/activate", produces = "application/json")
+    public ResponseEntity<Item> activateItem(@RequestBody TransactionRequest transactionRequest) {
+        return ResponseCreator.successfulResponse(itemService.activateItem(transactionRequest));
     }
 }

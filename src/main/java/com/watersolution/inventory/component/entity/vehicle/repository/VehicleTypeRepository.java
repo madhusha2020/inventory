@@ -10,4 +10,6 @@ import java.util.List;
 public interface VehicleTypeRepository extends JpaRepository<VehicleType, Long> {
 
     List<VehicleType> findAllByStatusIn(List<Integer> statusList);
+
+    List<VehicleType> findAllByStatus(int status);
 }

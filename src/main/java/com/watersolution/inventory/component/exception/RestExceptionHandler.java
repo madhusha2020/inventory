@@ -38,7 +38,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         log.info("Executing MaxUploadSizeExceededException.handleException");
         ResponseDefault responseDefault = new ResponseDefault();
         responseDefault.setResponseCode("05");
-        responseDefault.setDescription("Maximum upload size exceeded");
+        responseDefault.setResponseDescription("Maximum upload size exceeded");
         responseDefault.setResponseValues(Collections.singletonList("Maximum upload size exceeded"));
         printFailedResponse(responseDefault);
         return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
@@ -66,7 +66,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         log.info("Executing MethodArgumentNotValidException.handleException");
         ResponseDefault responseDefault = new ResponseDefault();
         responseDefault.setResponseCode("05");
-        responseDefault.setDescription("Invalid Request");
+        responseDefault.setResponseDescription("Invalid Request");
         responseDefault.setResponseValues(errorList);
         printFailedResponse(responseDefault);
         return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);

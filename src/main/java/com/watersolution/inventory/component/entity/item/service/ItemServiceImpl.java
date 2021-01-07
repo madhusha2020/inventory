@@ -1,6 +1,7 @@
 package com.watersolution.inventory.component.entity.item.service;
 
 import com.watersolution.inventory.component.common.model.api.PageDetails;
+import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -68,21 +68,13 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public InventoryItem saveInventoryItem(InventoryItem inventoryItem) {
-        if (itemRepository.findByCode(inventoryItem.getItem().getCode()).isPresent()) {
-            throw new CustomException(ErrorCodes.BAD_REQUEST, "This item code is already exist", Collections.singletonList("This item code is already exist"));
-        }
-        validateInventoryItem(inventoryItem);
-        inventoryItem.getItem().setStatus(Status.ACTIVE.getValue());
-        inventoryItem.getItem().fillCompulsory(inventoryItem.getItem().getUserId());
+        return validateSaveUpdateInventoryItem(inventoryItem);
+    }
 
-        inventoryItem.getInventory().setStatus(Status.ACTIVE.getValue());
-        inventoryItem.getInventory().fillCompulsory(inventoryItem.getInventory().getUserId());
-
-        inventoryItem.getInventory().setItem(inventoryItem.getItem());
-        inventoryItem.getItem().setInventories(Arrays.asList(inventoryItem.getInventory()));
-
-        itemRepository.save(inventoryItem.getItem());
-        return inventoryItem;
+    @Transactional
+    @Override
+    public InventoryItem updateInventoryItem(InventoryItem inventoryItem) {
+        return validateSaveUpdateInventoryItem(inventoryItem);
     }
 
     @Override
@@ -94,6 +86,28 @@ public class ItemServiceImpl implements ItemService {
         if (item.getPhoto() != null) {
             item.setPhoto(imageUtil.decompressBytes(item.getPhoto()));
         }
+        return item;
+    }
+
+    @Override
+    public Item suspendItem(TransactionRequest transactionRequest) {
+
+        Item item = itemRepository.findByIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList());
+        item.setStatus(Status.SUSPENDED.getValue());
+        item.fillUpdateCompulsory(transactionRequest.getUserId());
+        itemRepository.save(item);
+
+        return item;
+    }
+
+    @Override
+    public Item activateItem(TransactionRequest transactionRequest) {
+
+        Item item = itemRepository.findByIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList());
+        item.setStatus(Status.ACTIVE.getValue());
+        item.fillUpdateCompulsory(transactionRequest.getUserId());
+        itemRepository.save(item);
+
         return item;
     }
 
@@ -123,7 +137,10 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private void validateInventoryItem(InventoryItem inventoryItem) {
+    private InventoryItem validateSaveUpdateInventoryItem(InventoryItem inventoryItem) {
+        if (itemRepository.findByCode(inventoryItem.getItem().getCode()).isPresent()) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "This item code is already exist", Collections.singletonList("This item code is already exist"));
+        }
         if (inventoryItem.getItem().getSprice() == 0) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "Item sell price cannot be zero", Collections.singletonList("Item sell price cannot be zero"));
         }
@@ -145,5 +162,20 @@ public class ItemServiceImpl implements ItemService {
 //        if (inventoryItem.getInventory().getQty() > inventoryItem.getInventory().getInitqty()) {
 //            throw new CustomException(ErrorCodes.BAD_REQUEST, "Item available quantity cannot be greater than to item initial quantity", Collections.singletonList("Item available quantity cannot be greater than to item initial quantity"));
 //        }
+
+        /**
+         * Save Update Item
+         */
+        inventoryItem.getItem().setStatus(Status.ACTIVE.getValue());
+        inventoryItem.getItem().fillCompulsory(inventoryItem.getItem().getUserId());
+
+        inventoryItem.getInventory().setStatus(Status.ACTIVE.getValue());
+        inventoryItem.getInventory().fillCompulsory(inventoryItem.getInventory().getUserId());
+
+        inventoryItem.getInventory().setItem(inventoryItem.getItem());
+        inventoryItem.getItem().setInventory(inventoryItem.getInventory());
+
+        itemRepository.save(inventoryItem.getItem());
+        return inventoryItem;
     }
 }

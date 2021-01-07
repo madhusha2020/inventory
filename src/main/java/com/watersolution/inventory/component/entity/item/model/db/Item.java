@@ -63,14 +63,14 @@ public class Item extends Auditable {
     private String weightvolume;
 
     @ToString.Exclude
+    @JsonManagedReference(value = "inventory_item")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
+    private Inventory inventory;
+
+    @ToString.Exclude
     @JsonManagedReference(value = "item")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
     private List<OrderItems> orderItems;
-
-    @ToString.Exclude
-    @JsonManagedReference(value = "inventory_item")
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
-    private List<Inventory> inventories;
 
     @ToString.Exclude
     @JsonManagedReference(value = "productOutboundItem")

@@ -40,6 +40,11 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    public VehicleList getAllActiveVehicles() {
+        return new VehicleList(vehicleRepository.findAllByStatus(Status.ACTIVE.getValue()).stream().map(this::mapVehicleDetails).collect(Collectors.toList()));
+    }
+
+    @Override
     public FacilityList getAllVehicleFacilities() {
         return new FacilityList(facilityRepository.findAllByStatusIn(Status.getAllStatusAsList()).stream().map(this::mapVehicleFacilityDetails).collect(Collectors.toList()));
     }
@@ -47,6 +52,11 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public VehicleTypeList getAllVehicleTypes() {
         return new VehicleTypeList(vehicleTypeRepository.findAllByStatusIn(Status.getAllStatusAsList()));
+    }
+
+    @Override
+    public VehicleTypeList getAllActiveVehicleTypes() {
+        return new VehicleTypeList(vehicleTypeRepository.findAllByStatus(Status.ACTIVE.getValue()));
     }
 
     @Transactional

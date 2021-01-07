@@ -12,9 +12,13 @@ public interface VehicleService {
 
     VehicleList getAllVehicles();
 
+    VehicleList getAllActiveVehicles();
+
     FacilityList getAllVehicleFacilities();
 
     VehicleTypeList getAllVehicleTypes();
+
+    VehicleTypeList getAllActiveVehicleTypes();
 
     VehicleFacilityList saveVehicle(VehicleFacilityList vehicleFacilityList);
 

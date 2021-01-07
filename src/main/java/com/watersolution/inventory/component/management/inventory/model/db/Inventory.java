@@ -47,7 +47,7 @@ public class Inventory extends Auditable {
     private LocalDate doexpire;
 
     @JsonBackReference(value = "inventory_item")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "item_id")
     private Item item;
 

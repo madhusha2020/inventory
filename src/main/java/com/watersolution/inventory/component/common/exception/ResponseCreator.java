@@ -13,63 +13,63 @@ public class ResponseCreator {
     public static ResponseEntity<ResponseDefault> successfulResponse() {
         ResponseDefault responseDefault = new ResponseDefault();
         responseDefault.setResponseCode("00");
-        responseDefault.setDescription("Success");
+        responseDefault.setResponseDescription("Success");
         return new ResponseEntity<>(responseDefault, getResponseByCode("00"));
     }
 
     public static <T extends ResponseDefault> ResponseEntity<T> successfulResponse(T responseDefault) {
         responseDefault.setResponseCode("00");
-        responseDefault.setDescription("Success");
+        responseDefault.setResponseDescription("Success");
         return new ResponseEntity<>(responseDefault, getResponseByCode("00"));
     }
 
     public static <T extends ResponseDefault> ResponseEntity<T> successfulResponse(T responseDefault, String resCode) {
         responseDefault.setResponseCode(resCode);
-        responseDefault.setDescription("Success");
+        responseDefault.setResponseDescription("Success");
         return new ResponseEntity<>(responseDefault, getResponseByCode(resCode));
     }
 
     public static <T extends ResponseDefault> ResponseEntity<T> successfulResponse(T responseDefault, String resCode, String resDesc) {
         responseDefault.setResponseCode(resCode);
-        responseDefault.setDescription(resDesc);
+        responseDefault.setResponseDescription(resDesc);
         return new ResponseEntity<>(responseDefault, getResponseByCode(resCode));
     }
 
     public static <T extends ResponseDefault> ResponseEntity<T> successfulResponse(T responseDefault, String resCode, String resDesc, List<String> params) {
         responseDefault.setResponseCode(resCode);
-        responseDefault.setDescription(resDesc);
+        responseDefault.setResponseDescription(resDesc);
         responseDefault.setResponseValues(params);
         return new ResponseEntity<>(responseDefault, getResponseByCode(resCode));
     }
 
     public static <T extends ResponseDefault> ResponseEntity<T> failedResponse(T responseDefault) {
         responseDefault.setResponseCode("ER001");
-        responseDefault.setDescription("Error");
+        responseDefault.setResponseDescription("Error");
         return new ResponseEntity<>(responseDefault, getResponseByCode("ER001"));
     }
 
     public static <T extends ResponseDefault, E extends CustomException> ResponseEntity<T> failedResponse(T responseDefault, E se) {
         responseDefault.setResponseCode(se.getErrorCode().orElse("ER001"));
-        responseDefault.setDescription(se.getErrorDescription().orElse("Error"));
+        responseDefault.setResponseDescription(se.getErrorDescription().orElse("Error"));
         responseDefault.setResponseValues(se.getErrorValues().orElse(new ArrayList<>()));
         return new ResponseEntity<>(responseDefault, getResponseByCode(responseDefault.getResponseCode()));
     }
 
     public static <T extends ResponseDefault> ResponseEntity<T> failedResponse(T responseDefault, Exception ex) {
         responseDefault.setResponseCode("ER001");
-        responseDefault.setDescription("Error");
+        responseDefault.setResponseDescription("Error");
         return new ResponseEntity<>(responseDefault, getResponseByCode(responseDefault.getResponseCode()));
     }
 
     public static <T extends ResponseDefault> ResponseEntity<T> failedResponse(T responseDefault, String resCode, String resDesc) {
         responseDefault.setResponseCode(resCode);
-        responseDefault.setDescription(resDesc);
+        responseDefault.setResponseDescription(resDesc);
         return new ResponseEntity<>(responseDefault, getResponseByCode(resCode));
     }
 
     public static <T extends ResponseDefault> ResponseEntity<T> failedResponse(T responseDefault, String resCode, String resDesc, List<String> params) {
         responseDefault.setResponseCode(resCode);
-        responseDefault.setDescription(resDesc);
+        responseDefault.setResponseDescription(resDesc);
         responseDefault.setResponseValues(params);
         return new ResponseEntity<>(responseDefault, getResponseByCode(resCode));
     }

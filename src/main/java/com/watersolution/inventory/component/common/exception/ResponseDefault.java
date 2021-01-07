@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class ResponseDefault {
     private String responseCode;
-    private String description;
+    private String responseDescription;
     private List<String> responseValues;
 
     public ResponseDefault addResponseValuesItem(String responseValuesItem) {
