@@ -2,10 +2,12 @@ package com.watersolution.inventory.component.entity.item.model.db;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
+import com.watersolution.inventory.component.management.grn.model.db.PurchaseItems;
 import com.watersolution.inventory.component.management.inventory.model.db.Inventory;
 import com.watersolution.inventory.component.management.order.model.db.OrderItems;
 import com.watersolution.inventory.component.management.product.inbound.model.db.ProductInboundItem;
 import com.watersolution.inventory.component.management.product.outbound.model.db.ProductOutboundItem;
+import com.watersolution.inventory.component.management.purchase.model.db.PurchaseOrderItems;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -81,6 +83,16 @@ public class Item extends Auditable {
     @JsonManagedReference(value = "productInboundItem")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
     private List<ProductInboundItem> productInboundItems;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "purchaseorderitem")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
+    private List<PurchaseOrderItems> purchaseOrderItems;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "purchaseitem")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "item")
+    private List<PurchaseItems> purchaseItems;
 
     @Transient
     private String spriceValue;
