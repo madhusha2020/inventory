@@ -2,6 +2,7 @@ package com.watersolution.inventory.component.entity.customer.model.db;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
+import com.watersolution.inventory.component.management.complain.model.db.Complain;
 import com.watersolution.inventory.component.management.order.model.db.Order;
 import com.watersolution.inventory.component.management.sales.model.db.Sale;
 import lombok.Data;
@@ -62,6 +63,11 @@ public class Customer extends Auditable {
     @JsonManagedReference(value = "customersale")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Sale> sales;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "complain")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Complain> complainList;
 
     @Transient
     private Integer orderCount;
