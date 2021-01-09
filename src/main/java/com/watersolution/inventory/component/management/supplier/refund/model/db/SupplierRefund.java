@@ -1,17 +1,20 @@
 package com.watersolution.inventory.component.management.supplier.refund.model.db;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "supplier")
+@Table(name = "supplierrefund")
 @EqualsAndHashCode(callSuper = false)
 public class SupplierRefund extends Auditable {
 
@@ -38,6 +41,9 @@ public class SupplierRefund extends Auditable {
     @Lob
     private String description;
 
+    @Column(name = "paymenttype")
+    private String paymenttype;
+
     @Column(name = "chequeno")
     private String chequeno;
 
@@ -49,6 +55,11 @@ public class SupplierRefund extends Auditable {
 
     @Column(name = "chequedate")
     private LocalDate chequedate;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "supplierrefund")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplierRefund", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<SupplierRefundInventory> supplierRefundInventories;
 
     public SupplierRefund() {
 

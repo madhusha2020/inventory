@@ -1,16 +1,21 @@
 package com.watersolution.inventory.component.management.supplier.returns.model.db;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
+import com.watersolution.inventory.component.entity.supplier.model.db.Supplier;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "supplier")
+@Table(name = "supplierreturn")
 @EqualsAndHashCode(callSuper = false)
 public class SupplierReturn extends Auditable {
 
@@ -33,6 +38,21 @@ public class SupplierReturn extends Auditable {
 
     @Column(name = "dorecived")
     private LocalDate dorecived;
+
+    @JsonBackReference(value = "suppliereturn")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "supplierreturn")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplierReturn", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<SupplierReturnInventory> supplierReturnInventories;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "supplierreplace")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplierReturn", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<SupplierReplaceInventory> supplierReplaceInventories;
 
     public SupplierReturn() {
 

@@ -7,6 +7,8 @@ import com.watersolution.inventory.component.common.validator.annotations.Quanti
 import com.watersolution.inventory.component.entity.item.model.db.Item;
 import com.watersolution.inventory.component.management.product.disposal.model.db.DisposalInventory;
 import com.watersolution.inventory.component.management.sales.model.db.SaleInventory;
+import com.watersolution.inventory.component.management.supplier.refund.model.db.SupplierRefundInventory;
+import com.watersolution.inventory.component.management.supplier.returns.model.db.SupplierReturnInventory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -60,6 +62,21 @@ public class Inventory extends Auditable {
     @JsonManagedReference(value = "disposalInventory")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "inventory")
     private List<DisposalInventory> disposalInventoryList;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "supplierreturninventory")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "inventory")
+    private List<SupplierReturnInventory> supplierReturnInventories;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "supplierreplaceinventory")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "inventory")
+    private List<SupplierReturnInventory> supplierReplaceInventories;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "supplierrefundinventory")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "inventory")
+    private List<SupplierRefundInventory> supplierRefundInventories;
 
     @Transient
     private int disposedQty;

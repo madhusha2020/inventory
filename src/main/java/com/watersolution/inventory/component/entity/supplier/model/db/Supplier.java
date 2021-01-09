@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
 import com.watersolution.inventory.component.management.grn.model.db.Purchase;
 import com.watersolution.inventory.component.management.purchase.model.db.PurchaseOrder;
+import com.watersolution.inventory.component.management.supplier.returns.model.db.SupplierReturn;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -66,6 +67,11 @@ public class Supplier extends Auditable {
     @JsonManagedReference(value = "supplierpurchase")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplier", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Purchase> purchaseList;
+
+    @ToString.Exclude
+    @JsonManagedReference(value = "suppliereturn")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplier", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<SupplierReturn> supplierReturns;
 
     public Supplier() {
 

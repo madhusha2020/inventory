@@ -19,7 +19,7 @@ public class PurchaseOrderItems extends Auditable {
 
     @JsonBackReference(value = "purchaseorder")
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("purchaseorderId")
+    @MapsId("purchaseOrderId")
     @JoinColumn(name = "purchaseorder_id")
     private PurchaseOrder purchaseOrder;
 

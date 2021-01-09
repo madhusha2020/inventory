@@ -10,8 +10,8 @@ import java.io.Serializable;
 @Embeddable
 public class SupplierReplaceInventoryId implements Serializable {
 
-    @Column(name = "supplier_id")
-    private long supplierId;
+    @Column(name = "supplierreturn_id")
+    private long supplierReturnId;
 
     @Column(name = "inventory_id")
     private long inventoryId;
@@ -19,8 +19,8 @@ public class SupplierReplaceInventoryId implements Serializable {
     public SupplierReplaceInventoryId() {
     }
 
-    public SupplierReplaceInventoryId(long supplierId, long inventoryId) {
-        this.supplierId = supplierId;
+    public SupplierReplaceInventoryId(long supplierReturnId, long inventoryId) {
+        this.supplierReturnId = supplierReturnId;
         this.inventoryId = inventoryId;
     }
 }
