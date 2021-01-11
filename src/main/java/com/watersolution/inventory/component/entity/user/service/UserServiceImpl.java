@@ -8,10 +8,9 @@ import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
 import com.watersolution.inventory.component.entity.employee.model.db.Employee;
 import com.watersolution.inventory.component.entity.employee.service.EmployeeService;
-import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
-import com.watersolution.inventory.component.entity.user.model.api.EmployeeUser;
-import com.watersolution.inventory.component.entity.user.model.api.UserList;
-import com.watersolution.inventory.component.entity.user.model.api.UserWithUserRoles;
+import com.watersolution.inventory.component.entity.supplier.model.db.Supplier;
+import com.watersolution.inventory.component.entity.supplier.service.SupplierService;
+import com.watersolution.inventory.component.entity.user.model.api.*;
 import com.watersolution.inventory.component.entity.user.model.db.User;
 import com.watersolution.inventory.component.entity.user.repository.UserRepository;
 import com.watersolution.inventory.component.entity.user.util.UserServiceHelper;
@@ -27,7 +26,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,6 +39,8 @@ public class UserServiceImpl implements UserService {
     private CustomerService customerService;
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private SupplierService supplierService;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -171,6 +171,39 @@ public class UserServiceImpl implements UserService {
         employeeUser.setUser(userServiceHelper.updateUserWithRoles(employeeUser.getUser(), employeeUser.getRoleNameList()));
         employeeUser.setEmployee(employeeService.updateEmployee(employeeUser.getEmployee()));
         return employeeUser;
+    }
+
+    @Transactional
+    @Override
+    public SupplierUser getSupplierById(String id) {
+        customValidator.validateNullOrEmpty(id, "id");
+
+        Supplier supplier = supplierService.getSupplier(id);
+        log.info("Supplier : {}", supplier.toString());
+
+        User user = userRepository.findByUserNameAndStatusIn(supplier.getEmail(), Status.getAllStatusAsList());
+        log.info("User : {}", user.toString());
+
+        return new SupplierUser(user, supplier, getRoleNameList(user));
+    }
+
+    @Transactional
+    @Override
+    public SupplierUser saveSupplier(SupplierUser supplierUser) {
+        supplierUser.setUser(userServiceHelper.saveUserWithRoles(supplierUser.getUser(), supplierUser.getRoleNameList()));
+        supplierUser.setSupplier(supplierService.saveSupplier(supplierUser.getSupplier()));
+        return supplierUser;
+    }
+
+    @Transactional
+    @Override
+    public SupplierUser updateSupplier(SupplierUser supplierUser) {
+        if (supplierService.getActiveSupplierById(supplierUser.getSupplier().getId()) == null) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "Invalid or inactive supplier", Collections.singletonList("Invalid or inactive supplier"));
+        }
+        supplierUser.setUser(userServiceHelper.updateUserWithRoles(supplierUser.getUser(), supplierUser.getRoleNameList()));
+        supplierUser.setSupplier(supplierService.updateSupplier(supplierUser.getSupplier()));
+        return supplierUser;
     }
 
     @Override

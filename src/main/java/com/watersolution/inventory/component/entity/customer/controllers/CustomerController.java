@@ -73,7 +73,7 @@ public class CustomerController {
 
     @ApiOperation(value = "Customer suspend", response = Customer.class)
     @CrossOrigin
-    @PutMapping(path = {"/suspend"}, produces = "application/json")
+    @PutMapping(value = "/suspend", produces = "application/json")
     public ResponseEntity<Customer> suspendCustomer(@RequestBody TransactionRequest transactionRequest) {
         return ResponseCreator.successfulResponse(customerService.suspendCustomer(transactionRequest));
     }
@@ -86,7 +86,7 @@ public class CustomerController {
 
     @ApiOperation(value = "Customer activate", response = Customer.class)
     @CrossOrigin
-    @PutMapping(path = {"/activate"}, produces = "application/json")
+    @PutMapping(value = "/activate", produces = "application/json")
     public ResponseEntity<Customer> activateCustomer(@RequestBody TransactionRequest transactionRequest) {
         return ResponseCreator.successfulResponse(customerService.activateCustomer(transactionRequest));
     }

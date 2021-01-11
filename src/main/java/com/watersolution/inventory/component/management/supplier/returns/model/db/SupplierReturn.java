@@ -49,11 +49,6 @@ public class SupplierReturn extends Auditable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplierReturn", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<SupplierReturnInventory> supplierReturnInventories;
 
-    @ToString.Exclude
-    @JsonManagedReference(value = "supplierreplace")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplierReturn", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<SupplierReplaceInventory> supplierReplaceInventories;
-
     public SupplierReturn() {
 
     }

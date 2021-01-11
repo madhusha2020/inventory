@@ -73,7 +73,7 @@ public class EmployeeController {
 
     @ApiOperation(value = "Employee suspend", response = Employee.class)
     @CrossOrigin
-    @PutMapping(path = {"/suspend"}, produces = "application/json")
+    @PutMapping(value = "/suspend", produces = "application/json")
     public ResponseEntity<Employee> suspendEmployee(@RequestBody TransactionRequest transactionRequest) {
         return ResponseCreator.successfulResponse(employeeService.suspendEmployee(transactionRequest));
     }
@@ -86,7 +86,7 @@ public class EmployeeController {
 
     @ApiOperation(value = "Employee activate", response = Employee.class)
     @CrossOrigin
-    @PutMapping(path = {"/activate"}, produces = "application/json")
+    @PutMapping(value = "/activate", produces = "application/json")
     public ResponseEntity<Employee> activateEmployee(@RequestBody TransactionRequest transactionRequest) {
         return ResponseCreator.successfulResponse(employeeService.activateEmployee(transactionRequest));
     }

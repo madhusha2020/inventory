@@ -7,6 +7,7 @@ import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import com.watersolution.inventory.component.entity.customer.service.CustomerService;
 import com.watersolution.inventory.component.management.delivery.service.DeliveryService;
 import com.watersolution.inventory.component.management.inventory.service.InventoryService;
+import com.watersolution.inventory.component.management.notification.service.NotificationService;
 import com.watersolution.inventory.component.management.order.model.api.OrderItemsList;
 import com.watersolution.inventory.component.management.order.model.api.OrderList;
 import com.watersolution.inventory.component.management.order.model.db.CustomerCompound;
@@ -42,6 +43,8 @@ public class OrderServiceImpl implements OrderService {
     private ProductOutboundService productOutboundService;
     @Autowired
     private DeliveryService deliveryService;
+    @Autowired
+    private NotificationService notificationService;
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -92,11 +95,13 @@ public class OrderServiceImpl implements OrderService {
          * Sale Init
          * Chemical Test Init
          * Payment Init
+         * Notification Init
          */
         inventoryService.pendingOrderUpdateInventory(orderItemsList.getOrderItems());
         orderItemsRepository.saveAll(orderItemsList.getOrderItems());
         orderItemsList.setSale(saleService.saveSale(orderItemsList));
         orderItemsList.setChemicalTest(chemicalTestService.saveChemicalTest(orderItemsList));
+        notificationService.orderNotification(order);
         customerPaymentService.savePayment(orderItemsList);
 
         return orderItemsList;

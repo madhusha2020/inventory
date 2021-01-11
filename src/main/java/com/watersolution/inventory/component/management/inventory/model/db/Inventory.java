@@ -69,11 +69,6 @@ public class Inventory extends Auditable {
     private List<SupplierReturnInventory> supplierReturnInventories;
 
     @ToString.Exclude
-    @JsonManagedReference(value = "supplierreplaceinventory")
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "inventory")
-    private List<SupplierReturnInventory> supplierReplaceInventories;
-
-    @ToString.Exclude
     @JsonManagedReference(value = "supplierrefundinventory")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "inventory")
     private List<SupplierRefundInventory> supplierRefundInventories;

@@ -2,10 +2,7 @@ package com.watersolution.inventory.component.entity.user.controllers;
 
 import com.watersolution.inventory.component.common.exception.ResponseCreator;
 import com.watersolution.inventory.component.common.model.api.TransactionRequest;
-import com.watersolution.inventory.component.entity.user.model.api.CustomerUser;
-import com.watersolution.inventory.component.entity.user.model.api.EmployeeUser;
-import com.watersolution.inventory.component.entity.user.model.api.UserList;
-import com.watersolution.inventory.component.entity.user.model.api.UserWithUserRoles;
+import com.watersolution.inventory.component.entity.user.model.api.*;
 import com.watersolution.inventory.component.entity.user.model.db.User;
 import com.watersolution.inventory.component.entity.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -97,7 +94,7 @@ public class UserController {
 
     @ApiOperation(value = "Get customer by id", response = CustomerUser.class)
     @CrossOrigin
-    @GetMapping(path = {"/customer/{id}"}, produces = "application/json")
+    @GetMapping(value = "/customer/{id}", produces = "application/json")
     public ResponseEntity<CustomerUser> getCustomerById(@PathVariable("id") String id) {
         return ResponseCreator.successfulResponse(userService.getCustomerById(id));
     }
@@ -136,7 +133,7 @@ public class UserController {
 
     @ApiOperation(value = "Get employee by id", response = EmployeeUser.class)
     @CrossOrigin
-    @GetMapping(path = {"/employee/{id}"}, produces = "application/json")
+    @GetMapping(value = "/employee/{id}", produces = "application/json")
     public ResponseEntity<EmployeeUser> getEmployeeById(@PathVariable("id") String id) {
         return ResponseCreator.successfulResponse(userService.getEmployeeById(id));
     }
@@ -165,5 +162,44 @@ public class UserController {
     @PutMapping(value = "/employee", produces = "application/json")
     public ResponseEntity<EmployeeUser> updateEmployee(@Valid @RequestBody EmployeeUser employeeUser) {
         return ResponseCreator.successfulResponse(userService.updateEmployee(employeeUser));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Get supplier by id", response = SupplierUser.class)
+    @CrossOrigin
+    @GetMapping(value = "/supplier/{id}", produces = "application/json")
+    public ResponseEntity<SupplierUser> getSupplierById(@PathVariable("id") String id) {
+        return ResponseCreator.successfulResponse(userService.getSupplierById(id));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Save supplier", response = SupplierUser.class)
+    @CrossOrigin
+    @PostMapping(value = "/supplier", produces = "application/json")
+    public ResponseEntity<SupplierUser> saveSupplier(@Valid @RequestBody SupplierUser supplierUser) {
+        return ResponseCreator.successfulResponse(userService.saveSupplier(supplierUser));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "Update supplier", response = SupplierUser.class)
+    @CrossOrigin
+    @PutMapping(value = "/supplier", produces = "application/json")
+    public ResponseEntity<SupplierUser> updateSupplier(@Valid @RequestBody SupplierUser supplierUser) {
+        return ResponseCreator.successfulResponse(userService.updateSupplier(supplierUser));
     }
 }

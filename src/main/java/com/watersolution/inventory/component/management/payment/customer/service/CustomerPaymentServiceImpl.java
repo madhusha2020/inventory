@@ -2,6 +2,7 @@ package com.watersolution.inventory.component.management.payment.customer.servic
 
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.management.order.model.api.OrderItemsList;
+import com.watersolution.inventory.component.management.payment.customer.model.api.CustomerPaymentList;
 import com.watersolution.inventory.component.management.payment.customer.model.db.CustomerPayment;
 import com.watersolution.inventory.component.management.payment.customer.repository.CustomerPaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,18 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerPaymentServiceImpl implements CustomerPaymentService {
 
     @Autowired
     private CustomerPaymentRepository customerPaymentRepository;
+
+    @Override
+    public CustomerPaymentList getAllCustomerPayments() {
+        return new CustomerPaymentList(customerPaymentRepository.findAllByStatusIn(Status.getAllStatusAsList()).stream().map(this::mapCustomerPaymentDetails).collect(Collectors.toList()));
+    }
 
     @Transactional
     @Override
@@ -32,5 +39,9 @@ public class CustomerPaymentServiceImpl implements CustomerPaymentService {
         customerPayment.setSale(orderItemsList.getSale());
         customerPayment.setChemicalTest(orderItemsList.getChemicalTest());
         return customerPaymentRepository.save(customerPayment);
+    }
+
+    private CustomerPayment mapCustomerPaymentDetails(CustomerPayment customerPayment) {
+        return customerPayment;
     }
 }

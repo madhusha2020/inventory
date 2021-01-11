@@ -8,6 +8,7 @@ import com.watersolution.inventory.component.management.inventory.model.db.Inven
 import com.watersolution.inventory.component.management.notification.model.api.NotificationList;
 import com.watersolution.inventory.component.management.notification.model.db.Notification;
 import com.watersolution.inventory.component.management.notification.repository.NotificationRepository;
+import com.watersolution.inventory.component.management.order.model.db.Order;
 import com.watersolution.inventory.component.management.role.model.db.Module;
 import com.watersolution.inventory.component.management.role.repository.ModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,25 @@ public class NotificationServiceImpl implements NotificationService {
         });
         notificationRepository.saveAll(updatableNotificationList);
         return new NotificationList(notificationList);
+    }
+
+    @Override
+    public void orderNotification(Order order) {
+
+        List<Notification> notificationList = new ArrayList<>();
+
+        getUserList("INV-ORD-ALL").stream().forEach(userName -> {
+            Notification notification = new Notification();
+            notification.setDosend(LocalDate.now());
+            notification.setUserName(userName);
+            notification.setMessage("Order #" + order.getId() + " is awaiting for approval!");
+            notification.setType(AlertType.ORDER_ALERT.getValue());
+            notification.fillCompulsory("SYSTEM");
+            notification.setStatus(Status.PENDING.getValue());
+            notificationList.add(notification);
+        });
+
+        notificationRepository.saveAll(notificationList);
     }
 
     @Override

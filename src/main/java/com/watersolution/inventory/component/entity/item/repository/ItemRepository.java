@@ -14,7 +14,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Optional<Item> findByCode(String code);
 
-    Item findByIdAndStatusIn(Long id, List<Integer> statusList);
+    Item findByIdAndStatusIn(long id, List<Integer> statusList);
 
     Page<Item> findAllByStatus(int status, Pageable pageable);
 
