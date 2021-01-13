@@ -1,9 +1,7 @@
 package com.watersolution.inventory.component.management.test.model.db;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.common.model.db.Auditable;
-import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import com.watersolution.inventory.component.management.payment.customer.model.db.CustomerPayment;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -48,7 +46,7 @@ public class ChemicalTest extends Auditable {
     @Lob
     private String address;
 
-    @JsonBackReference(value = "customerpaymentchemicaltest")
+    @JsonManagedReference(value = "customerpaymentchemicaltest")
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "chemicalTest", fetch = FetchType.LAZY, orphanRemoval = true)
     private CustomerPayment customerPayment;
 

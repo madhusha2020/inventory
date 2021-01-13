@@ -1,5 +1,6 @@
 package com.watersolution.inventory.component.management.payment.customer.model.db;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.watersolution.inventory.component.management.payment.common.Payment;
 import com.watersolution.inventory.component.management.sales.model.db.Sale;
@@ -22,15 +23,16 @@ public class CustomerPayment extends Payment {
     private long id;
 
     @JsonManagedReference(value = "customerpaymentsale")
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "sale_id")
     private Sale sale;
 
-    @JsonManagedReference(value = "customerpaymentchemicaltest")
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonBackReference(value = "customerpaymentchemicaltest")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "chemicaltest_id")
     private ChemicalTest chemicalTest;
 
     public CustomerPayment() {
+
     }
 }
