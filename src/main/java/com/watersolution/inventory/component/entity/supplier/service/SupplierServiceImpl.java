@@ -1,13 +1,16 @@
 package com.watersolution.inventory.component.entity.supplier.service;
 
 import com.watersolution.inventory.component.common.model.api.TransactionRequest;
+import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.entity.supplier.model.api.SupplierList;
 import com.watersolution.inventory.component.entity.supplier.model.db.Supplier;
 import com.watersolution.inventory.component.entity.supplier.repository.SupplierRepository;
+import com.watersolution.inventory.component.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +41,9 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public Supplier saveSupplier(Supplier supplier) {
+        if (supplierRepository.findByCode(supplier.getCode()).isPresent()) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "This supplier code is already exist", Collections.singletonList("This supplier code is already exist"));
+        }
         supplier.setStatus(Status.ACTIVE.getValue());
         supplier.fillCompulsory(supplier.getUserId());
         return mapSupplierDetails(supplierRepository.save(supplier));

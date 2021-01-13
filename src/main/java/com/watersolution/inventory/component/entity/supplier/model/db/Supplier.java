@@ -73,6 +73,9 @@ public class Supplier extends Auditable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplier", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<SupplierReturn> supplierReturns;
 
+    @Transient
+    private Integer purchaseOrderCount;
+
     public Supplier() {
 
     }

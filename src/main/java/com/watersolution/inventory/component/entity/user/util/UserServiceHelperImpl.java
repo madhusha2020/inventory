@@ -63,6 +63,8 @@ public class UserServiceHelperImpl implements UserServiceHelper {
             UserRole userRole = new UserRole();
             userRole.setUserRoleId(new UserRoleId(user.getUserName(), role.getUserRoleId().getRoleName()));
             userRole.setStatus(Status.DELETED.getValue());
+            userRole.setCreateddate(role.getCreateddate());
+            userRole.setCreatedby(role.getCreatedby());
             userRole.fillUpdateCompulsory(user.getUserId());
             userRole.setUser(user);
             userRole.setRole(new Role(role.getUserRoleId().getRoleName()));

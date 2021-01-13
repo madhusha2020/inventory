@@ -31,8 +31,8 @@ public class TokenServiceImpl implements TokenService {
     @SneakyThrows
     @Override
     public void deleteToken(User user) {
-        tokenRepository.findByUserNameAndStatus(user.getUserName(), Status.ACTIVE.getValue()).ifPresent(token -> {
-            tokenRepository.delete(token);
+        tokenRepository.findByUserNameAndStatus(user.getUserName(), Status.ACTIVE.getValue()).ifPresent(tokens -> {
+            tokenRepository.deleteAll(tokens);
         });
     }
 }
