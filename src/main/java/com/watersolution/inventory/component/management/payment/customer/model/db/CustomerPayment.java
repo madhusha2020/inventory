@@ -32,6 +32,9 @@ public class CustomerPayment extends Payment {
     @JoinColumn(name = "chemicaltest_id")
     private ChemicalTest chemicalTest;
 
+    @Transient
+    private long saleId;
+
     public CustomerPayment() {
 
     }

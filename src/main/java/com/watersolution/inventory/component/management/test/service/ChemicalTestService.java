@@ -8,5 +8,9 @@ public interface ChemicalTestService {
 
     ChemicalTestList getAllChemicalTests();
 
+    ChemicalTest getChemicalTestById(String testId);
+
+    ChemicalTest updateChemicalTest(ChemicalTest chemicalTest);
+
     ChemicalTest saveChemicalTest(OrderItemsList orderItemsList);
 }

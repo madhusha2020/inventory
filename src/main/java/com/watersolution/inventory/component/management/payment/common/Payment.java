@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -32,6 +33,9 @@ public class Payment extends Auditable {
 
     @Column(name = "ref")
     private String ref;
+
+    @Transient
+    private String paymentTotal;
 
     public Payment() {
     }

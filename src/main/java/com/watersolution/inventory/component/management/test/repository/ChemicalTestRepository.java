@@ -10,4 +10,6 @@ import java.util.List;
 public interface ChemicalTestRepository extends JpaRepository<ChemicalTest, Long> {
 
     List<ChemicalTest> findAllByStatusIn(List<Integer> statusList);
+
+    ChemicalTest findByIdAndStatusIn(long id, List<Integer> statusList);
 }

@@ -8,5 +8,7 @@ public interface CustomerPaymentService {
 
     CustomerPaymentList getAllCustomerPayments();
 
+    CustomerPayment getCustomerPaymentById(String paymentId);
+
     CustomerPayment savePayment(OrderItemsList orderItemsList);
 }

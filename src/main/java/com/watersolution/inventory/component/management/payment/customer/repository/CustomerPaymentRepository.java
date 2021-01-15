@@ -10,4 +10,6 @@ import java.util.List;
 public interface CustomerPaymentRepository extends JpaRepository<CustomerPayment, Long> {
 
     List<CustomerPayment> findAllByStatusIn(List<Integer> statusList);
+
+    CustomerPayment findByIdAndStatusIn(long id, List<Integer> statusList);
 }
