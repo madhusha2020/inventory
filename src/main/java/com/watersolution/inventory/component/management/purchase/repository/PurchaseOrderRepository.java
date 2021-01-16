@@ -20,7 +20,7 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Lo
 
     List<PurchaseOrder> findAllByStatus(int status);
 
-    List<PurchaseOrder> findBySupplier_IdAndStatus(long supplierId, int status);
+    List<PurchaseOrder> findBySupplier_EmailAndStatus(String email, int status);
 
-    List<PurchaseOrder> findBySupplier_IdAndStatusIn(long supplierId, List<Integer> statusList);
+    List<PurchaseOrder> findBySupplier_EmailAndStatusIn(String email, List<Integer> statusList);
 }
