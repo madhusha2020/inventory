@@ -38,6 +38,9 @@ public class SupplierPayment extends Payment {
     @JoinColumn(name = "purchase_id")
     private Purchase purchase;
 
+    @Transient
+    private long purchaseOrderId;
+
     public SupplierPayment() {
 
     }

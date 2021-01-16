@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -35,7 +34,7 @@ public class PurchaseItems extends Auditable {
     private Integer qty;
 
     @Column(name = "unitprice")
-    private BigDecimal unitprice;
+    private Double unitprice;
 
     @Column(name = "doexpire")
     private LocalDate doexpire;

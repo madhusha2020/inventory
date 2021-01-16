@@ -9,6 +9,7 @@ import com.watersolution.inventory.component.management.notification.model.api.N
 import com.watersolution.inventory.component.management.notification.model.db.Notification;
 import com.watersolution.inventory.component.management.notification.repository.NotificationRepository;
 import com.watersolution.inventory.component.management.order.model.db.Order;
+import com.watersolution.inventory.component.management.purchase.model.db.PurchaseOrder;
 import com.watersolution.inventory.component.management.role.model.db.Module;
 import com.watersolution.inventory.component.management.role.repository.ModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,25 @@ public class NotificationServiceImpl implements NotificationService {
             notification.setUserName(userName);
             notification.setMessage("Order #" + order.getId() + " is awaiting for approval!");
             notification.setType(AlertType.ORDER_ALERT.getValue());
+            notification.fillCompulsory("SYSTEM");
+            notification.setStatus(Status.PENDING.getValue());
+            notificationList.add(notification);
+        });
+
+        notificationRepository.saveAll(notificationList);
+    }
+
+    @Override
+    public void purchaseOrderNotification(PurchaseOrder purchaseOrder) {
+
+        List<Notification> notificationList = new ArrayList<>();
+
+        getUserList("INV-PO-CR").stream().forEach(userName -> {
+            Notification notification = new Notification();
+            notification.setDosend(LocalDate.now());
+            notification.setUserName(userName);
+            notification.setMessage("Purchase Order #" + purchaseOrder.getId() + " is awaiting for approval!");
+            notification.setType(AlertType.PURCHASE_ORDER_ALERT.getValue());
             notification.fillCompulsory("SYSTEM");
             notification.setStatus(Status.PENDING.getValue());
             notificationList.add(notification);
@@ -127,6 +147,20 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setUserName(delivery.getEmployee().getEmail());
         notification.setMessage("Delivery #" + delivery.getId() + " is canceled!");
         notification.setType(AlertType.DELIVERY_ALERT.getValue());
+        notification.fillCompulsory("SYSTEM");
+        notification.setStatus(Status.PENDING.getValue());
+
+        notificationRepository.save(notification);
+    }
+
+    @Override
+    public void supplierNotification(PurchaseOrder purchaseOrder) {
+
+        Notification notification = new Notification();
+        notification.setDosend(LocalDate.now());
+        notification.setUserName(purchaseOrder.getSupplier().getEmail());
+        notification.setMessage("Purchase Order #" + purchaseOrder.getId() + " is assigned for you!");
+        notification.setType(AlertType.PURCHASE_ORDER_ALERT.getValue());
         notification.fillCompulsory("SYSTEM");
         notification.setStatus(Status.PENDING.getValue());
 

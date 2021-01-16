@@ -5,6 +5,7 @@ import com.watersolution.inventory.component.management.delivery.model.db.Delive
 import com.watersolution.inventory.component.management.inventory.model.db.Inventory;
 import com.watersolution.inventory.component.management.notification.model.api.NotificationList;
 import com.watersolution.inventory.component.management.order.model.db.Order;
+import com.watersolution.inventory.component.management.purchase.model.db.PurchaseOrder;
 
 public interface NotificationService {
 
@@ -14,6 +15,8 @@ public interface NotificationService {
 
     void orderNotification(Order order);
 
+    void purchaseOrderNotification(PurchaseOrder purchaseOrder);
+
     void inventoryNotification(Inventory inventory);
 
     void disposalInventoryNotification(Inventory inventory);
@@ -21,4 +24,6 @@ public interface NotificationService {
     void deliveryNotification(Delivery delivery);
 
     void deliverySuspendNotification(Delivery delivery);
+
+    void supplierNotification(PurchaseOrder purchaseOrder);
 }

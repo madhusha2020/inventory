@@ -27,7 +27,7 @@ public class SupplierPaymentController {
     @ApiOperation(value = "View a list of available supplier payments", response = SupplierPaymentList.class)
     @CrossOrigin
     @GetMapping(produces = "application/json")
-    public ResponseEntity<SupplierPaymentList> getAllCustomerPayments() {
+    public ResponseEntity<SupplierPaymentList> getAllSupplierPayments() {
         return ResponseCreator.successfulResponse(supplierPaymentService.getAllSupplierPayments());
     }
 
@@ -40,7 +40,7 @@ public class SupplierPaymentController {
     @ApiOperation(value = "Get supplier payment by id", response = SupplierPayment.class)
     @CrossOrigin
     @GetMapping(value = "/{paymentId}", produces = "application/json")
-    public ResponseEntity<SupplierPayment> getCustomerPaymentById(@PathVariable("paymentId") String paymentId) {
+    public ResponseEntity<SupplierPayment> getSupplierPaymentById(@PathVariable("paymentId") String paymentId) {
         return ResponseCreator.successfulResponse(supplierPaymentService.getSupplierPaymentById(paymentId));
     }
 }

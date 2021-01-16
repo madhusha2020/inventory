@@ -8,8 +8,6 @@ import java.util.Collections;
 public enum ImageCategory {
 
     EMPLOYEE("EMPLOYEE"),
-    SUPPLIER("SUPPLIER"),
-    VEHICLE("VEHICLE"),
     ITEM("ITEM");
 
     private final String value;

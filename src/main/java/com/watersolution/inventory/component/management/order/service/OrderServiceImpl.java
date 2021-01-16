@@ -101,8 +101,8 @@ public class OrderServiceImpl implements OrderService {
         orderItemsRepository.saveAll(orderItemsList.getOrderItems());
         orderItemsList.setSale(saleService.saveSale(orderItemsList));
         orderItemsList.setChemicalTest(chemicalTestService.saveChemicalTest(orderItemsList));
-        notificationService.orderNotification(order);
         customerPaymentService.savePayment(orderItemsList);
+        notificationService.orderNotification(order);
 
         return orderItemsList;
     }

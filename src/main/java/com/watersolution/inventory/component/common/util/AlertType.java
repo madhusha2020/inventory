@@ -8,6 +8,7 @@ import java.util.Collections;
 public enum AlertType {
 
     ORDER_ALERT("Order Alert"),
+    PURCHASE_ORDER_ALERT("Purchase Order Alert"),
     INVENTORY_ALERT("Inventory Alert"),
     DELIVERY_ALERT("Delivery Alert");
 

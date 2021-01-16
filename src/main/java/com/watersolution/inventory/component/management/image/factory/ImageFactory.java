@@ -32,8 +32,6 @@ public class ImageFactory {
                 employeeService.saveEmployee(employee);
                 imageModel.setPhoto(employee.getPhoto());
                 return imageModel;
-            case SUPPLIER:
-            case VEHICLE:
             case ITEM:
                 Item item = itemService.getItemById(id);
                 item.setPhoto(imageModel.getPhoto());
@@ -52,8 +50,6 @@ public class ImageFactory {
             case EMPLOYEE:
                 Employee employee = employeeService.getEmployee(id);
                 return new ImageModel(employee.getPhoto());
-            case SUPPLIER:
-            case VEHICLE:
             case ITEM:
                 Item item = itemService.getItemById(id);
                 return new ImageModel(item.getPhoto());
