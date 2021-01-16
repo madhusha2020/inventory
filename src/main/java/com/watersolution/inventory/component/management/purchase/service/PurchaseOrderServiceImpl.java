@@ -1,10 +1,12 @@
 package com.watersolution.inventory.component.management.purchase.service;
 
 import com.watersolution.inventory.component.common.model.api.TransactionRequest;
+import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.entity.supplier.model.db.Supplier;
 import com.watersolution.inventory.component.entity.supplier.service.SupplierService;
+import com.watersolution.inventory.component.exception.CustomException;
 import com.watersolution.inventory.component.management.grn.service.PurchaseService;
 import com.watersolution.inventory.component.management.notification.service.NotificationService;
 import com.watersolution.inventory.component.management.payment.supplier.service.SupplierPaymentService;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -54,6 +57,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     @Transactional
     @Override
     public PurchaseOrderItemsList placePurchaseOrder(PurchaseOrderItemsList purchaseOrderItemsList) {
+
+        if (purchaseOrderRepository.findByCode(purchaseOrderItemsList.getPurchaseOrder().getCode()).isPresent()) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "This purchase order code is already exist", Collections.singletonList("This purchase order code is already exist"));
+        }
 
         Supplier supplier = supplierService.getSupplier(String.valueOf(purchaseOrderItemsList.getPurchaseOrder().getSupplierId()));
         customValidator.validateFoundNull(supplier, "supplier");
@@ -134,6 +141,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     }
 
     private PurchaseOrder mapPurchaseOrderDetails(PurchaseOrder purchaseOrder) {
+        purchaseOrder.setSupplierName(purchaseOrder.getSupplier().getName());
+        purchaseOrder.setSupplierType(purchaseOrder.getSupplier().getType());
         return purchaseOrder;
     }
 }

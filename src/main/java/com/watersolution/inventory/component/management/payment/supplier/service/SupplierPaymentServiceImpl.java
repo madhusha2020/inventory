@@ -45,7 +45,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
         purchaseOrderItemsList.getSupplierPayment().setRef("INV" + (int) (Math.random() * 125) + 1);
         purchaseOrderItemsList.getSupplierPayment().setStatus(Status.PENDING.getValue());
         purchaseOrderItemsList.getSupplierPayment().fillCompulsory(purchaseOrderItemsList.getUserId());
-        return mapSupplerPaymentDetails(supplierPaymentRepository.save(purchaseOrderItemsList.getSupplierPayment()));
+        return supplierPaymentRepository.save(purchaseOrderItemsList.getSupplierPayment());
     }
 
     @Override
@@ -69,6 +69,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
     }
 
     private SupplierPayment mapSupplerPaymentDetails(SupplierPayment supplierPayment) {
+        supplierPayment.setPurchaseOrderId(supplierPayment.getPurchase().getId());
         return supplierPayment;
     }
 }

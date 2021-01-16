@@ -57,6 +57,12 @@ public class PurchaseOrder extends Auditable {
     @Transient
     private long supplierId;
 
+    @Transient
+    private String supplierName;
+
+    @Transient
+    private String supplierType;
+
     public PurchaseOrder() {
 
     }

@@ -65,6 +65,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         purchase.getSupplierPayment().setAmount(purchase.getTotal());
         purchase.getSupplierPayment().setUserId(purchaseOrderItemsList.getUserId());
+        purchaseOrderItemsList.getSupplierPayment().setPurchase(purchase);
         supplierPaymentService.updatePayment(purchaseOrderItemsList.getSupplierPayment());
         return purchase;
     }

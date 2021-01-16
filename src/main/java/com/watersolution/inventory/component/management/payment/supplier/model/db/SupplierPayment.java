@@ -34,7 +34,7 @@ public class SupplierPayment extends Payment {
     private LocalDate chequedate;
 
     @JsonManagedReference(value = "supplierpayment")
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "purchase_id")
     private Purchase purchase;
 

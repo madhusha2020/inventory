@@ -45,7 +45,7 @@ public class Purchase extends Auditable {
     private Supplier supplier;
 
     @JsonManagedReference(value = "purchases")
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "purchaseorder_id")
     private PurchaseOrder purchaseOrder;
 
