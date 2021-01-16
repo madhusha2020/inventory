@@ -48,7 +48,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
     @Override
     public PurchaseOrderList getOrdersBySupplier(TransactionRequest transactionRequest) {
-        return new PurchaseOrderList(purchaseOrderRepository.findBySupplierIdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList()).stream().map(this::mapPurchaseOrderDetails).collect(Collectors.toList()));
+        return new PurchaseOrderList(purchaseOrderRepository.findBySupplier_IdAndStatusIn(transactionRequest.getId(), Status.getAllStatusAsList()).stream().map(this::mapPurchaseOrderDetails).collect(Collectors.toList()));
     }
 
     @Transactional
