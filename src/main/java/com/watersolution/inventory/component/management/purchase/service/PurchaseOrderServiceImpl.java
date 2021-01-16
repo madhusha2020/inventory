@@ -106,6 +106,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
         /**
          * Order Update
+         * Supplier Payment Update
          * Notification Init
          */
         purchaseOrderRepository.save(purchaseOrder);
@@ -128,6 +129,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
         /**
          * Order Update
+         * Supplier Payment Update
          */
         purchaseOrderRepository.save(purchaseOrder);
         supplierPaymentService.rejectPayment(purchaseOrder.getPurchase().getSupplierPayment());
