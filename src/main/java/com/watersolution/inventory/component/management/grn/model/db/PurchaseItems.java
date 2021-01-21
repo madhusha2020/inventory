@@ -33,11 +33,23 @@ public class PurchaseItems extends Auditable {
     @Column(name = "qty")
     private Integer qty;
 
+    @Column(name = "acceptedqty")
+    private Integer acceptedqty;
+
+    @Column(name = "rejectedqty")
+    private Integer rejectedqty;
+
     @Column(name = "unitprice")
     private Double unitprice;
 
     @Column(name = "doexpire")
     private LocalDate doexpire;
+
+    @Transient
+    private String itemName;
+
+    @Transient
+    private long itemId;
 
     public PurchaseItems() {
 

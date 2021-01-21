@@ -105,8 +105,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         purchaseOrder.getPurchase().getSupplierPayment().fillUpdateCompulsory(transactionRequest.getUserId());
 
         /**
-         * Order Update
-         * Supplier Payment Update
+         * Purchase Order Update
+         * Payment Update
          * Notification Init
          */
         purchaseOrderRepository.save(purchaseOrder);
@@ -125,10 +125,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         Status.validateState("purchase order", purchaseOrder.getStatus(), Status.PENDING);
         purchaseOrder.setStatus(Status.REJECTED.getValue());
         purchaseOrder.fillUpdateCompulsory(transactionRequest.getUserId());
+        purchaseOrder.getPurchase().setStatus(Status.REJECTED.getValue());
         purchaseOrder.getPurchase().getSupplierPayment().fillUpdateCompulsory(transactionRequest.getUserId());
 
         /**
-         * Order Update
+         * Purchase Order Update
+         * Purchase Update
          * Supplier Payment Update
          */
         purchaseOrderRepository.save(purchaseOrder);
@@ -140,6 +142,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     @Override
     public PurchaseOrder getPurchaseOrderById(String purchaseOrderId) {
         return mapPurchaseOrderDetails(purchaseOrderRepository.findByIdAndStatusIn(Long.valueOf(purchaseOrderId), Status.getAllStatusAsList()));
+    }
+
+    @Override
+    public PurchaseOrder updatePurchaseOrder(PurchaseOrder purchaseOrder) {
+        return purchaseOrderRepository.save(purchaseOrder);
     }
 
     private PurchaseOrder mapPurchaseOrderDetails(PurchaseOrder purchaseOrder) {

@@ -18,4 +18,6 @@ public interface PurchaseOrderService {
     PurchaseOrder rejectPurchaseOrder(TransactionRequest transactionRequest);
 
     PurchaseOrder getPurchaseOrderById(String purchaseOrderId);
+
+    PurchaseOrder updatePurchaseOrder(PurchaseOrder purchaseOrder);
 }

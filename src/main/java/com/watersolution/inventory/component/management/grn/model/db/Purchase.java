@@ -58,6 +58,12 @@ public class Purchase extends Auditable {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "purchase", fetch = FetchType.LAZY, orphanRemoval = true)
     private SupplierPayment supplierPayment;
 
+    @Transient
+    private String purchaseTotal;
+
+    @Transient
+    private long purchaseOrderId;
+
     public Purchase() {
 
     }
