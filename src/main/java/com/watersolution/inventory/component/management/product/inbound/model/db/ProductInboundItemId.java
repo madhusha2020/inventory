@@ -10,8 +10,8 @@ import java.io.Serializable;
 @Embeddable
 public class ProductInboundItemId implements Serializable {
 
-    @Column(name = "productintbound_id")
-    private long produInboundId;
+    @Column(name = "productinbound_id")
+    private long productInboundId;
 
     @Column(name = "item_id")
     private long itemId;
@@ -20,8 +20,8 @@ public class ProductInboundItemId implements Serializable {
 
     }
 
-    public ProductInboundItemId(long produInboundId, long itemId) {
-        this.produInboundId = produInboundId;
+    public ProductInboundItemId(long productInboundId, long itemId) {
+        this.productInboundId = productInboundId;
         this.itemId = itemId;
     }
 }

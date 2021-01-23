@@ -34,7 +34,7 @@ public class SupplierRefundInventory extends Auditable {
     private Integer qty;
 
     @Column(name = "unitprice")
-    private BigDecimal unitprice;
+    private Double unitprice;
 
     public SupplierRefundInventory() {
 

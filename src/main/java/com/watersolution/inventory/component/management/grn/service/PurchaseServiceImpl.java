@@ -11,9 +11,13 @@ import com.watersolution.inventory.component.management.grn.model.db.PurchaseIte
 import com.watersolution.inventory.component.management.grn.model.db.PurchaseItems;
 import com.watersolution.inventory.component.management.grn.repository.PurchaseItemsRepository;
 import com.watersolution.inventory.component.management.grn.repository.PurchaseRepository;
+import com.watersolution.inventory.component.management.inventory.service.InventoryService;
 import com.watersolution.inventory.component.management.payment.supplier.service.SupplierPaymentService;
+import com.watersolution.inventory.component.management.product.inbound.service.ProductInboundService;
 import com.watersolution.inventory.component.management.purchase.model.api.PurchaseOrderItemsList;
 import com.watersolution.inventory.component.management.purchase.service.PurchaseOrderService;
+import com.watersolution.inventory.component.management.supplier.refund.model.db.SupplierRefundInventory;
+import com.watersolution.inventory.component.management.supplier.returns.model.db.SupplierReturnInventory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +37,10 @@ public class PurchaseServiceImpl implements PurchaseService {
     private SupplierPaymentService supplierPaymentService;
     @Autowired
     private PurchaseOrderService purchaseOrderService;
+    @Autowired
+    private InventoryService inventoryService;
+    @Autowired
+    private ProductInboundService productInboundService;
     @Autowired
     private PurchaseRepository purchaseRepository;
     @Autowired
@@ -55,7 +63,8 @@ public class PurchaseServiceImpl implements PurchaseService {
     public PurchaseItemsList updatePurchase(PurchaseItemsList purchaseItemsList) {
 
         Purchase purchase = purchaseRepository.findByIdAndStatus(purchaseItemsList.getPurchase().getId(), Status.PENDING.getValue());
-        customValidator.validateFoundNull(purchase, "purchase");
+        customValidator.validateFoundNull(purchase.getPurchaseOrder(), "purchase");
+        Status.validateState("Purchase Order", purchase.getPurchaseOrder().getStatus(), Status.AWAITING);
 
         for (PurchaseItems savedPurchaseItem : purchase.getPurchaseItems()) {
             purchaseItemsList.getPurchase().getPurchaseItems().stream().forEach(purchaseItem -> {
@@ -82,6 +91,9 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.getPurchaseOrder().setStatus(Status.ACTIVE.getValue());
         purchase.getPurchaseOrder().fillUpdateCompulsory(purchaseItemsList.getPurchase().getUserId());
         purchaseOrderService.updatePurchaseOrder(purchase.getPurchaseOrder());
+
+        inventoryService.pendingPurchaseOrderUpdateInventory(purchase.getPurchaseItems());
+        productInboundService.updateProductInbound(purchase);
 
         return purchaseItemsList;
     }

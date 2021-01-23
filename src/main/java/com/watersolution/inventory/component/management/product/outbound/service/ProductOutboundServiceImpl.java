@@ -53,9 +53,9 @@ public class ProductOutboundServiceImpl implements ProductOutboundService {
 
         order.getOrderItems().stream().forEach(orderItem -> {
             ProductOutboundItem productOutboundItem = new ProductOutboundItem();
-            productOutboundItem.setProductOutbound(productOutbound);
             productOutboundItem.setProductOutboundItemId(new ProductOutboundItemId(productOutbound.getId(), orderItem.getItem().getId()));
             productOutboundItem.setItem(orderItem.getItem());
+            productOutboundItem.setProductOutbound(productOutbound);
             productOutboundItem.setQty(orderItem.getQty());
             productOutboundItem.setDoexpire(inventoryService.getByItemId(orderItem.getItem().getId()).getDoexpire());
             productOutboundItem.setStatus(Status.ACTIVE.getValue());
