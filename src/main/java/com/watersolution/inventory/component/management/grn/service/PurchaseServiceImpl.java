@@ -92,7 +92,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.getPurchaseOrder().fillUpdateCompulsory(purchaseItemsList.getPurchase().getUserId());
         purchaseOrderService.updatePurchaseOrder(purchase.getPurchaseOrder());
 
-        inventoryService.pendingPurchaseOrderUpdateInventory(purchase.getPurchaseItems());
+        inventoryService.pendingPurchaseOrderUpdateInventory(purchase);
         productInboundService.updateProductInbound(purchase);
 
         return purchaseItemsList;

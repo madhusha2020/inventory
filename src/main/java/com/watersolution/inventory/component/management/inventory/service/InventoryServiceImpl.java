@@ -4,6 +4,7 @@ import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.exception.CustomException;
+import com.watersolution.inventory.component.management.grn.model.db.Purchase;
 import com.watersolution.inventory.component.management.grn.model.db.PurchaseItems;
 import com.watersolution.inventory.component.management.inventory.model.api.InventoryList;
 import com.watersolution.inventory.component.management.inventory.model.db.Inventory;
@@ -136,17 +137,16 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public void pendingPurchaseOrderUpdateInventory(List<PurchaseItems> purchaseItems) {
-
+    public void pendingPurchaseOrderUpdateInventory(Purchase purchase) {
         /**
          *
-         * If applicable Supplier Return
          * If applicable Supplier Refund
+         * If applicable Supplier Return
          */
         List<SupplierRefundInventory> supplierRefundInventoryList = new ArrayList<>();
         List<SupplierReturnInventory> supplierReturnInventoryList = new ArrayList<>();
 
-        purchaseItems.stream().forEach(purchaseOrderItem -> {
+        purchase.getPurchaseItems().stream().forEach(purchaseOrderItem -> {
             Inventory inventory = inventoryRepository.findByIdAndStatus(purchaseOrderItem.getPurchaseItemId().getItemId(), Status.ACTIVE.getValue());
             customValidator.validateFoundNull(inventory, "inventory");
             inventory.setQty(inventory.getQty() + purchaseOrderItem.getAcceptedqty());
@@ -161,15 +161,16 @@ public class InventoryServiceImpl implements InventoryService {
         });
 
         if (!supplierRefundInventoryList.isEmpty()) {
-            supplierRefundService.saveAllSupplierRefundInventories(supplierRefundInventoryList);
+            supplierRefundService.saveAllSupplierRefundInventories(supplierRefundInventoryList, purchase);
         }
         if (!supplierReturnInventoryList.isEmpty()) {
-            supplierReturnService.saveAllSupplierReturnInventories(supplierReturnInventoryList);
+            supplierReturnService.saveAllSupplierReturnInventories(supplierReturnInventoryList, purchase);
         }
     }
 
     private void setRefundAndReturns(PurchaseItems purchaseOrderItem, List<SupplierRefundInventory> supplierRefundInventoryList, List<SupplierReturnInventory> supplierReturnInventoryList) {
         SupplierRefundInventory supplierRefundInventory = new SupplierRefundInventory();
+        supplierRefundInventory.setItemId(purchaseOrderItem.getPurchaseItemId().getItemId());
         supplierRefundInventory.setQty(purchaseOrderItem.getRejectedqty());
         supplierRefundInventory.setUnitprice(purchaseOrderItem.getUnitprice());
         supplierRefundInventory.setStatus(Status.ACTIVE.getValue());
@@ -177,6 +178,7 @@ public class InventoryServiceImpl implements InventoryService {
         supplierRefundInventoryList.add(supplierRefundInventory);
 
         SupplierReturnInventory supplierReturnInventory = new SupplierReturnInventory();
+        supplierReturnInventory.setItemId(purchaseOrderItem.getPurchaseItemId().getItemId());
         supplierReturnInventory.setQty(purchaseOrderItem.getRejectedqty());
         supplierReturnInventory.setStatus(Status.ACTIVE.getValue());
         supplierReturnInventory.fillCompulsory(purchaseOrderItem.getCreatedby());

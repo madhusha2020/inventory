@@ -1,5 +1,6 @@
 package com.watersolution.inventory.component.management.inventory.service;
 
+import com.watersolution.inventory.component.management.grn.model.db.Purchase;
 import com.watersolution.inventory.component.management.grn.model.db.PurchaseItems;
 import com.watersolution.inventory.component.management.inventory.model.api.InventoryList;
 import com.watersolution.inventory.component.management.inventory.model.db.Inventory;
@@ -26,5 +27,5 @@ public interface InventoryService {
 
     void rejectDisposalUpdateInventory(List<DisposalInventory> disposalInventories);
 
-    void pendingPurchaseOrderUpdateInventory(List<PurchaseItems> purchaseItems);
+    void pendingPurchaseOrderUpdateInventory(Purchase purchase);
 }

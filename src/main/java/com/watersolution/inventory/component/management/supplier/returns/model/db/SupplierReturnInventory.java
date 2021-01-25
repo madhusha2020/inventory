@@ -32,6 +32,9 @@ public class SupplierReturnInventory extends Auditable {
     @Column(name = "qty")
     private Integer qty;
 
+    @Transient
+    private long itemId;
+
     public SupplierReturnInventory() {
 
     }

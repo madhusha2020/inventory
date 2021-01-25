@@ -36,6 +36,9 @@ public class SupplierRefundInventory extends Auditable {
     @Column(name = "unitprice")
     private Double unitprice;
 
+    @Transient
+    private long itemId;
+
     public SupplierRefundInventory() {
 
     }
