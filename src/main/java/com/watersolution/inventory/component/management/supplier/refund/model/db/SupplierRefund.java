@@ -64,4 +64,10 @@ public class SupplierRefund extends Auditable {
     public SupplierRefund() {
 
     }
+
+    @Transient
+    private String refundTotal;
+
+    @Transient
+    private String refundItemCount;
 }

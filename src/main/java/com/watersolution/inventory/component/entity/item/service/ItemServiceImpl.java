@@ -68,6 +68,9 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public InventoryItem saveInventoryItem(InventoryItem inventoryItem) {
+        if (itemRepository.findByCode(inventoryItem.getItem().getCode()).isPresent()) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "This item code is already exist", Collections.singletonList("This item code is already exist"));
+        }
         return validateSaveUpdateInventoryItem(inventoryItem);
     }
 
@@ -138,9 +141,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private InventoryItem validateSaveUpdateInventoryItem(InventoryItem inventoryItem) {
-        if (itemRepository.findByCode(inventoryItem.getItem().getCode()).isPresent()) {
-            throw new CustomException(ErrorCodes.BAD_REQUEST, "This item code is already exist", Collections.singletonList("This item code is already exist"));
-        }
         if (inventoryItem.getItem().getSprice() == 0) {
             throw new CustomException(ErrorCodes.BAD_REQUEST, "Item sell price cannot be zero", Collections.singletonList("Item sell price cannot be zero"));
         }
