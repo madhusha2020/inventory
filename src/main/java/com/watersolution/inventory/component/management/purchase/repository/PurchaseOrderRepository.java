@@ -4,6 +4,7 @@ import com.watersolution.inventory.component.management.purchase.model.db.Purcha
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,8 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Lo
     List<PurchaseOrder> findBySupplier_EmailAndStatus(String email, int status);
 
     List<PurchaseOrder> findBySupplier_EmailAndStatusIn(String email, List<Integer> statusList);
+
+    List<PurchaseOrder> findAllByStatusInAndDoorderedBetween(List<Integer> statusList, LocalDate fromDate, LocalDate toDate);
+
+    List<PurchaseOrder> findBySupplier_IdAndStatusInAndDoorderedBetween(long id, List<Integer> statusList, LocalDate fromDate, LocalDate toDate);
 }
