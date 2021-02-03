@@ -7,10 +7,6 @@ public interface ReportService {
 
     ReportResponse salesReport(ReportRequest reportRequest);
 
-    ReportResponse salesReportByCustomer(ReportRequest reportRequest);
-
-    ReportResponse salesReportByItem(ReportRequest reportRequest);
-
     ReportResponse orderReport(ReportRequest reportRequest);
 
     ReportResponse orderReportByCustomer(ReportRequest reportRequest);

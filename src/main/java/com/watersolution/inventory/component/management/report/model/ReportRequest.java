@@ -40,7 +40,7 @@ public class ReportRequest extends ResponseDefault {
     }
 
     public List<Integer> getStatusList() {
-        if(statusList.size() == 0)
+        if(statusList == null || statusList.size() == 0)
         {
             return Status.getAllStatusAsList();
         }

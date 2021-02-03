@@ -39,32 +39,6 @@ public class ReportController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Sales report by customer", response = ReportResponse.class)
-    @CrossOrigin
-    @PostMapping(value = "/sale/customer", produces = "application/json")
-    public ResponseEntity<ReportResponse> salesReportByCustomer(@Valid @RequestBody ReportRequest reportRequest) {
-        return ResponseCreator.successfulResponse(reportService.salesReportByCustomer(reportRequest));
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved list"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
-
-    @ApiOperation(value = "Sales report by item", response = ReportResponse.class)
-    @CrossOrigin
-    @PostMapping(value = "/sale/item", produces = "application/json")
-    public ResponseEntity<ReportResponse> salesReportByItem(@Valid @RequestBody ReportRequest reportRequest) {
-        return ResponseCreator.successfulResponse(reportService.salesReportByItem(reportRequest));
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved list"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
-
     @ApiOperation(value = "Order report", response = ReportResponse.class)
     @CrossOrigin
     @PostMapping(value = "/order", produces = "application/json")

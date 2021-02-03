@@ -56,33 +56,33 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ReportResponse salesReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setSaleList(saleRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSaleDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
-
-    @Override
-    public ReportResponse salesReportByCustomer(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setSaleList(saleRepository.findByCustomer_IdAndStatusInAndDateBetween(reportRequest.getCustomerId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSaleDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
-
-    @Override
-    public ReportResponse salesReportByItem(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        List<Sale> sales = saleRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSaleDetails).collect(Collectors.toList());
-
         List<Sale> saleList = new ArrayList<>();
 
-        sales.forEach(sale -> {
-            sale.getSaleInventoryList().forEach(saleInventory -> {
-                if (saleInventory.getInventory().getItem().getId() == reportRequest.getItemId()) {
-                    saleList.add(sale);
-                }
+        if (reportRequest.getCustomerId() != 0 && reportRequest.getItemId() != 0) {
+            List<Sale> sales = saleRepository.findByCustomer_IdAndStatusInAndDateBetween(reportRequest.getCustomerId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSaleDetails).collect(Collectors.toList());
+            sales.forEach(sale -> {
+                sale.getSaleInventoryList().forEach(saleInventory -> {
+                    if (saleInventory.getInventory().getItem().getId() == reportRequest.getItemId()) {
+                        saleList.add(sale);
+                    }
+                });
             });
-        });
-
-        reportResponse.setSaleList(saleList.stream().map(this::mapSaleDetails).collect(Collectors.toList()));
+            reportResponse.setSaleList(saleList.stream().map(this::mapSaleDetails).collect(Collectors.toList()));
+        } else if (reportRequest.getItemId() != 0) {
+            List<Sale> sales = saleRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSaleDetails).collect(Collectors.toList());
+            sales.forEach(sale -> {
+                sale.getSaleInventoryList().forEach(saleInventory -> {
+                    if (saleInventory.getInventory().getItem().getId() == reportRequest.getItemId()) {
+                        saleList.add(sale);
+                    }
+                });
+            });
+            reportResponse.setSaleList(saleList.stream().map(this::mapSaleDetails).collect(Collectors.toList()));
+        } else if (reportRequest.getCustomerId() != 0) {
+            reportResponse.setSaleList(saleRepository.findByCustomer_IdAndStatusInAndDateBetween(reportRequest.getCustomerId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSaleDetails).collect(Collectors.toList()));
+        } else {
+            reportResponse.setSaleList(saleRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSaleDetails).collect(Collectors.toList()));
+        }
         return reportResponse;
     }
 
@@ -256,6 +256,9 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private Sale mapSaleDetails(Sale sale) {
+        sale.setName(sale.getCustomer().getName());
+        sale.setEmail(sale.getCustomer().getEmail());
+        sale.setContact1(sale.getCustomer().getContact1());
         return sale;
     }
 
