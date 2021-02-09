@@ -89,169 +89,155 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ReportResponse orderReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setOrderList(orderRepository.findAllByStatusInAndDoorderedBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapOrderDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
 
-    @Override
-    public ReportResponse orderReportByCustomer(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setOrderList(orderRepository.findByCustomer_IdAndStatusInAndDoorderedBetween(reportRequest.getCustomerId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapOrderDetails).collect(Collectors.toList()));
+        if (reportRequest.getCustomerId() != 0) {
+            reportResponse.setOrderList(orderRepository.findByCustomer_IdAndStatusInAndDoorderedBetween(reportRequest.getCustomerId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapOrderDetails).collect(Collectors.toList()));
+        } else {
+            reportResponse.setOrderList(orderRepository.findAllByStatusInAndDoorderedBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapOrderDetails).collect(Collectors.toList()));
+        }
         return reportResponse;
     }
 
     @Override
     public ReportResponse purchaseOrderReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setPurchaseOrderList(purchaseOrderRepository.findAllByStatusInAndDoorderedBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapPurchaseOrderDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
-
-    @Override
-    public ReportResponse purchaseOrderReportBySupplier(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setPurchaseOrderList(purchaseOrderRepository.findBySupplier_IdAndStatusInAndDoorderedBetween(reportRequest.getSupplierId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapPurchaseOrderDetails).collect(Collectors.toList()));
+        if (reportRequest.getSupplierId() != 0) {
+            reportResponse.setPurchaseOrderList(purchaseOrderRepository.findBySupplier_IdAndStatusInAndDoorderedBetween(reportRequest.getSupplierId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapPurchaseOrderDetails).collect(Collectors.toList()));
+        } else {
+            reportResponse.setPurchaseOrderList(purchaseOrderRepository.findAllByStatusInAndDoorderedBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapPurchaseOrderDetails).collect(Collectors.toList()));
+        }
         return reportResponse;
     }
 
     @Override
     public ReportResponse purchaseReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setPurchaseList(purchaseRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapPurchaseDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
-
-    @Override
-    public ReportResponse purchaseReportBySupplier(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setPurchaseList(purchaseRepository.findBySupplier_IdAndStatusInAndDateBetween(reportRequest.getSupplierId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapPurchaseDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
-
-    @Override
-    public ReportResponse purchaseReportByItem(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        List<Purchase> purchases = purchaseRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapPurchaseDetails).collect(Collectors.toList());
-
         List<Purchase> purchaseList = new ArrayList<>();
 
-        purchases.forEach(purchase -> {
-            purchase.getPurchaseItems().forEach(purchaseItems -> {
-                if (purchaseItems.getItem().getId() == reportRequest.getItemId()) {
-                    purchaseList.add(purchase);
-                }
+        if (reportRequest.getSupplierId() != 0 && reportRequest.getItemId() != 0) {
+            List<Purchase> purchases = purchaseRepository.findBySupplier_IdAndStatusInAndDateBetween(reportRequest.getSupplierId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapPurchaseDetails).collect(Collectors.toList());
+            purchases.forEach(purchase -> {
+                purchase.getPurchaseItems().forEach(purchaseItems -> {
+                    if (purchaseItems.getItem().getId() == reportRequest.getItemId()) {
+                        purchaseList.add(purchase);
+                    }
+                });
             });
-        });
-
-        reportResponse.setPurchaseList(purchaseList.stream().map(this::mapPurchaseDetails).collect(Collectors.toList()));
+            reportResponse.setPurchaseList(purchaseList.stream().map(this::mapPurchaseDetails).collect(Collectors.toList()));
+        } else if (reportRequest.getItemId() != 0) {
+            List<Purchase> purchases = purchaseRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapPurchaseDetails).collect(Collectors.toList());
+            purchases.forEach(purchase -> {
+                purchase.getPurchaseItems().forEach(purchaseItems -> {
+                    if (purchaseItems.getItem().getId() == reportRequest.getItemId()) {
+                        purchaseList.add(purchase);
+                    }
+                });
+            });
+            reportResponse.setPurchaseList(purchaseList.stream().map(this::mapPurchaseDetails).collect(Collectors.toList()));
+        } else if (reportRequest.getSupplierId() != 0) {
+            reportResponse.setPurchaseList(purchaseRepository.findBySupplier_IdAndStatusInAndDateBetween(reportRequest.getSupplierId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapPurchaseDetails).collect(Collectors.toList()));
+        } else {
+            reportResponse.setPurchaseList(purchaseRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapPurchaseDetails).collect(Collectors.toList()));
+        }
         return reportResponse;
     }
 
     @Override
     public ReportResponse customerPaymentReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setCustomerPaymentList(customerPaymentRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapCustomerPaymentDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
 
-    @Override
-    public ReportResponse customerPaymentReportByCustomer(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setCustomerPaymentList(customerPaymentRepository.findBySale_Customer_IdAndStatusInAndDateBetween(reportRequest.getCustomerId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapCustomerPaymentDetails).collect(Collectors.toList()));
+        if (reportRequest.getCustomerId() != 0) {
+            reportResponse.setCustomerPaymentList(customerPaymentRepository.findBySale_Customer_IdAndStatusInAndDateBetween(reportRequest.getCustomerId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapCustomerPaymentDetails).collect(Collectors.toList()));
+        } else {
+            reportResponse.setCustomerPaymentList(customerPaymentRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapCustomerPaymentDetails).collect(Collectors.toList()));
+        }
         return reportResponse;
     }
 
     @Override
     public ReportResponse supplierPaymentReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setSupplierPaymentList(supplierPaymentRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierPaymentDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
 
-    @Override
-    public ReportResponse supplierPaymentReportBySupplier(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setSupplierPaymentList(supplierPaymentRepository.findByPurchase_Supplier_IdAndStatusInAndDateBetween(reportRequest.getSupplierId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierPaymentDetails).collect(Collectors.toList()));
+        if (reportRequest.getSupplierId() != 0) {
+            reportResponse.setSupplierPaymentList(supplierPaymentRepository.findByPurchase_Supplier_IdAndStatusInAndDateBetween(reportRequest.getSupplierId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierPaymentDetails).collect(Collectors.toList()));
+        } else {
+            reportResponse.setSupplierPaymentList(supplierPaymentRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierPaymentDetails).collect(Collectors.toList()));
+        }
         return reportResponse;
     }
 
     @Override
     public ReportResponse supplierReturnReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setSupplierReturnList(supplierReturnRepository.findAllByStatusInAndDorecivedBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierReturnDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
 
-    @Override
-    public ReportResponse supplierReturnReportBySupplier(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setSupplierReturnList(supplierReturnRepository.findBySupplier_IdAndStatusInAndDorecivedBetween(reportRequest.getSupplierId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierReturnDetails).collect(Collectors.toList()));
+        if (reportRequest.getSupplierId() != 0) {
+            reportResponse.setSupplierReturnList(supplierReturnRepository.findBySupplier_IdAndStatusInAndDorecivedBetween(reportRequest.getSupplierId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierReturnDetails).collect(Collectors.toList()));
+        } else {
+            reportResponse.setSupplierReturnList(supplierReturnRepository.findAllByStatusInAndDorecivedBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierReturnDetails).collect(Collectors.toList()));
+        }
         return reportResponse;
     }
 
     @Override
     public ReportResponse supplierRefundReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setSupplierRefundList(supplierRefundRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierRefundDetails).collect(Collectors.toList()));
+        List<SupplierRefund> supplierRefundList = new ArrayList<>();
+
+        if (reportRequest.getItemId() != 0) {
+            List<SupplierRefund> supplierRefunds = supplierRefundRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierRefundDetails).collect(Collectors.toList());
+            supplierRefunds.forEach(supplierRefund -> {
+                supplierRefund.getSupplierRefundInventories().forEach(supplierRefundInventory -> {
+                    if (supplierRefundInventory.getInventory().getItem().getId() == reportRequest.getItemId()) {
+                        supplierRefundList.add(supplierRefund);
+                    }
+                });
+            });
+            reportResponse.setSupplierRefundList(supplierRefundList.stream().map(this::mapSupplierRefundDetails).collect(Collectors.toList()));
+        } else {
+            reportResponse.setSupplierRefundList(supplierRefundRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierRefundDetails).collect(Collectors.toList()));
+        }
         return reportResponse;
     }
 
     @Override
     public ReportResponse deliveryReportByEmployee(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setDeliveryList(deliveryRepository.findByEmployee_IdAndStatusInAndDateBetween(reportRequest.getEmployeeId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDeliveryDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
+        List<Delivery> deliveryList = new ArrayList<>();
 
-    @Override
-    public ReportResponse deliveryReportByVehicle(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setDeliveryList(deliveryRepository.findByVehicle_IdAndStatusInAndDateBetween(reportRequest.getVehicleId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDeliveryDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
-
-    @Override
-    public ReportResponse supplierRefundReportByItem(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        List<SupplierRefund> supplierRefunds = supplierRefundRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierRefundDetails).collect(Collectors.toList());
-
-        List<SupplierRefund> supplierRefundList = new ArrayList<>();
-
-        supplierRefunds.forEach(supplierRefund -> {
-            supplierRefund.getSupplierRefundInventories().forEach(supplierRefundInventory -> {
-                if (supplierRefundInventory.getInventory().getItem().getId() == reportRequest.getItemId()) {
-                    supplierRefundList.add(supplierRefund);
+        if (reportRequest.getEmployeeId() != 0 && reportRequest.getVehicleId() != 0) {
+            List<Delivery> deliveries = deliveryRepository.findByEmployee_IdAndStatusInAndDateBetween(reportRequest.getEmployeeId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDeliveryDetails).collect(Collectors.toList());
+            deliveries.forEach(delivery -> {
+                if (delivery.getVehicle().getId() == reportRequest.getVehicleId()) {
+                    deliveryList.add(delivery);
                 }
             });
-        });
-
-        reportResponse.setSupplierRefundList(supplierRefundList.stream().map(this::mapSupplierRefundDetails).collect(Collectors.toList()));
+            reportResponse.setDeliveryList(deliveryList.stream().map(this::mapDeliveryDetails).collect(Collectors.toList()));
+        } else if (reportRequest.getEmployeeId() != 0) {
+            reportResponse.setDeliveryList(deliveryRepository.findByEmployee_IdAndStatusInAndDateBetween(reportRequest.getEmployeeId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDeliveryDetails).collect(Collectors.toList()));
+        } else if (reportRequest.getVehicleId() != 0) {
+            reportResponse.setDeliveryList(deliveryRepository.findByVehicle_IdAndStatusInAndDateBetween(reportRequest.getVehicleId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDeliveryDetails).collect(Collectors.toList()));
+        }
         return reportResponse;
     }
 
     @Override
     public ReportResponse disposalReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-        reportResponse.setDisposalList(disposalRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDisposalDetails).collect(Collectors.toList()));
-        return reportResponse;
-    }
-
-    @Override
-    public ReportResponse disposalReportByItem(ReportRequest reportRequest) {
-        ReportResponse reportResponse = new ReportResponse();
-        List<Disposal> disposals = disposalRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDisposalDetails).collect(Collectors.toList());
-
         List<Disposal> disposalList = new ArrayList<>();
 
-        disposals.forEach(disposal -> {
-            disposal.getDisposalInventoryList().forEach(disposalInventory -> {
-                if (disposalInventory.getInventory().getItem().getId() == reportRequest.getItemId()) {
-                    disposalList.add(disposal);
-                }
+        if (reportRequest.getItemId() != 0) {
+            List<Disposal> disposals = disposalRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDisposalDetails).collect(Collectors.toList());
+            disposals.forEach(disposal -> {
+                disposal.getDisposalInventoryList().forEach(disposalInventory -> {
+                    if (disposalInventory.getInventory().getItem().getId() == reportRequest.getItemId()) {
+                        disposalList.add(disposal);
+                    }
+                });
             });
-        });
-
-        reportResponse.setDisposalList(disposalList.stream().map(this::mapDisposalDetails).collect(Collectors.toList()));
+            reportResponse.setDisposalList(disposalList.stream().map(this::mapDisposalDetails).collect(Collectors.toList()));
+        } else {
+            reportResponse.setDisposalList(disposalRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDisposalDetails).collect(Collectors.toList()));
+        }
         return reportResponse;
     }
 
