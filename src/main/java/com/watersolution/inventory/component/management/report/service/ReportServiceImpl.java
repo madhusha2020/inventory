@@ -249,6 +249,11 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private Order mapOrderDetails(Order order) {
+        order.setName(order.getCustomer().getName());
+        order.setAddress(order.getCustomer().getAddress());
+        order.setContact1(order.getCustomer().getContact1());
+        order.setEmail(order.getCustomer().getEmail());
+        order.setType(order.getCustomer().getType());
         return order;
     }
 

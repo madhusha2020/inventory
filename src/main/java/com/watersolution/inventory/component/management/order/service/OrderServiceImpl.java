@@ -214,9 +214,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Order mapOrderDetails(Order order) {
-        order.getOrderItems().stream().forEach(orderItems -> {
-
-        });
         order.setName(order.getCustomer().getName());
         order.setAddress(order.getCustomer().getAddress());
         order.setContact1(order.getCustomer().getContact1());
