@@ -26,17 +26,17 @@ public class ReportRequest extends ResponseDefault {
     public LocalDate getFromDate() {
         if(fromDate == null)
         {
-            return LocalDate.now();
+            return LocalDate.now().minusDays(1);
         }
-        return fromDate;
+        return fromDate.minusDays(1);
     }
 
     public LocalDate getToDate() {
         if(toDate == null)
         {
-            return LocalDate.now();
+            return LocalDate.now().plusDays(1);
         }
-        return toDate;
+        return toDate.plusDays(1);
     }
 
     public List<Integer> getStatusList() {
