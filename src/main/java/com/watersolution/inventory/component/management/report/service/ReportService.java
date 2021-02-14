@@ -21,7 +21,7 @@ public interface ReportService {
 
     ReportResponse supplierRefundReport(ReportRequest reportRequest);
 
-    ReportResponse deliveryReportByEmployee(ReportRequest reportRequest);
+    ReportResponse deliveryReport(ReportRequest reportRequest);
 
     ReportResponse disposalReport(ReportRequest reportRequest);
 }

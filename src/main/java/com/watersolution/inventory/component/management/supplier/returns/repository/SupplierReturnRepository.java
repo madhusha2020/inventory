@@ -15,6 +15,4 @@ public interface SupplierReturnRepository extends JpaRepository<SupplierReturn, 
     SupplierReturn findByIdAndStatusIn(long id, List<Integer> statusList);
 
     List<SupplierReturn> findAllByStatusInAndDorecivedBetween(List<Integer> statusList, LocalDate fromDate, LocalDate toDate);
-
-    List<SupplierReturn> findBySupplier_IdAndStatusInAndDorecivedBetween(long id, List<Integer> statusList, LocalDate fromDate, LocalDate toDate);
 }

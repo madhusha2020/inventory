@@ -130,11 +130,11 @@ public class ReportController {
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
 
-    @ApiOperation(value = "Delivery report by employee", response = ReportResponse.class)
+    @ApiOperation(value = "Delivery report", response = ReportResponse.class)
     @CrossOrigin
     @PostMapping(value = "/delivery", produces = "application/json")
-    public ResponseEntity<ReportResponse> deliveryReportByEmployee(@Valid @RequestBody ReportRequest reportRequest) {
-        return ResponseCreator.successfulResponse(reportService.deliveryReportByEmployee(reportRequest));
+    public ResponseEntity<ReportResponse> deliveryReport(@Valid @RequestBody ReportRequest reportRequest) {
+        return ResponseCreator.successfulResponse(reportService.deliveryReport(reportRequest));
     }
 
     @ApiResponses(value = {

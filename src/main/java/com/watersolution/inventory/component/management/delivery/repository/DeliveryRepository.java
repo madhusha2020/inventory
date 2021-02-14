@@ -14,6 +14,8 @@ public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
 
     Delivery findByIdAndStatusIn(long id, List<Integer> statusList);
 
+    List<Delivery> findByStatusInAndDateBetween(List<Integer> statusList, LocalDate fromDate, LocalDate toDate);
+
     List<Delivery> findByEmployee_IdAndStatusInAndDateBetween(long id, List<Integer> statusList, LocalDate fromDate, LocalDate toDate);
 
     List<Delivery> findByVehicle_IdAndStatusInAndDateBetween(long id, List<Integer> statusList, LocalDate fromDate, LocalDate toDate);

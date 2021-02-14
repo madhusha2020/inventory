@@ -1,5 +1,6 @@
 package com.watersolution.inventory.component.management.report.service;
 
+import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.management.delivery.model.db.Delivery;
 import com.watersolution.inventory.component.management.delivery.repository.DeliveryRepository;
 import com.watersolution.inventory.component.management.grn.model.db.Purchase;
@@ -169,38 +170,19 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ReportResponse supplierReturnReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-
-        if (reportRequest.getSupplierId() != 0) {
-            reportResponse.setSupplierReturnList(supplierReturnRepository.findBySupplier_IdAndStatusInAndDorecivedBetween(reportRequest.getSupplierId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierReturnDetails).collect(Collectors.toList()));
-        } else {
-            reportResponse.setSupplierReturnList(supplierReturnRepository.findAllByStatusInAndDorecivedBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierReturnDetails).collect(Collectors.toList()));
-        }
+        reportResponse.setSupplierReturnList(supplierReturnRepository.findAllByStatusInAndDorecivedBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierReturnDetails).collect(Collectors.toList()));
         return reportResponse;
     }
 
     @Override
     public ReportResponse supplierRefundReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
-        List<SupplierRefund> supplierRefundList = new ArrayList<>();
-
-        if (reportRequest.getItemId() != 0) {
-            List<SupplierRefund> supplierRefunds = supplierRefundRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierRefundDetails).collect(Collectors.toList());
-            supplierRefunds.forEach(supplierRefund -> {
-                supplierRefund.getSupplierRefundInventories().forEach(supplierRefundInventory -> {
-                    if (supplierRefundInventory.getInventory().getItem().getId() == reportRequest.getItemId()) {
-                        supplierRefundList.add(supplierRefund);
-                    }
-                });
-            });
-            reportResponse.setSupplierRefundList(supplierRefundList.stream().map(this::mapSupplierRefundDetails).collect(Collectors.toList()));
-        } else {
-            reportResponse.setSupplierRefundList(supplierRefundRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierRefundDetails).collect(Collectors.toList()));
-        }
+        reportResponse.setSupplierRefundList(supplierRefundRepository.findAllByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapSupplierRefundDetails).collect(Collectors.toList()));
         return reportResponse;
     }
 
     @Override
-    public ReportResponse deliveryReportByEmployee(ReportRequest reportRequest) {
+    public ReportResponse deliveryReport(ReportRequest reportRequest) {
         ReportResponse reportResponse = new ReportResponse();
         List<Delivery> deliveryList = new ArrayList<>();
 
@@ -216,6 +198,8 @@ public class ReportServiceImpl implements ReportService {
             reportResponse.setDeliveryList(deliveryRepository.findByEmployee_IdAndStatusInAndDateBetween(reportRequest.getEmployeeId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDeliveryDetails).collect(Collectors.toList()));
         } else if (reportRequest.getVehicleId() != 0) {
             reportResponse.setDeliveryList(deliveryRepository.findByVehicle_IdAndStatusInAndDateBetween(reportRequest.getVehicleId(), reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDeliveryDetails).collect(Collectors.toList()));
+        } else {
+            reportResponse.setDeliveryList(deliveryRepository.findByStatusInAndDateBetween(reportRequest.getStatusList(), reportRequest.getFromDate(), reportRequest.getToDate()).stream().map(this::mapDeliveryDetails).collect(Collectors.toList()));
         }
         return reportResponse;
     }
@@ -258,6 +242,8 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private PurchaseOrder mapPurchaseOrderDetails(PurchaseOrder purchaseOrder) {
+        purchaseOrder.setSupplierName(purchaseOrder.getSupplier().getName());
+        purchaseOrder.setSupplierType(purchaseOrder.getSupplier().getType());
         return purchaseOrder;
     }
 
@@ -282,6 +268,14 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private Delivery mapDeliveryDetails(Delivery delivery) {
+        if (delivery.getStatus().equals(Status.ACTIVE.getValue()) || delivery.getStatus().equals(Status.SUSPENDED.getValue())) {
+            delivery.setEmployeeId(delivery.getEmployee().getId());
+            delivery.setDeliveryempname(delivery.getEmployee().getName());
+            delivery.setDeliveryempcontactno(delivery.getEmployee().getMobile());
+            delivery.setVehicleId(delivery.getVehicle().getId());
+            delivery.setDeliveryvehicletype(delivery.getVehicle().getVehicleType().getName());
+            delivery.setDeliveryvehicleno(delivery.getVehicle().getNo());
+        }
         return delivery;
     }
 
