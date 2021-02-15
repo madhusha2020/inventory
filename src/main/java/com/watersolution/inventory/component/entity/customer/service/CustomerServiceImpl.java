@@ -8,10 +8,13 @@ import com.watersolution.inventory.component.common.validator.CustomValidator;
 import com.watersolution.inventory.component.entity.customer.model.api.CustomerList;
 import com.watersolution.inventory.component.entity.customer.model.db.Customer;
 import com.watersolution.inventory.component.entity.customer.repository.CustomerRepository;
+import com.watersolution.inventory.component.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -74,7 +77,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer getCustomerByUserName(String userName) {
-        return customerRepository.findByEmail(userName);
+        Customer customer = customerRepository.findByEmail(userName);
+        if (customer == null) {
+            throw new CustomException(ErrorCodes.BAD_REQUEST, "You are not a customer in the system, please contact administration", Collections.singletonList("You are not a customer in the system, please contact administration"));
+        }
+        return customer;
     }
 
 

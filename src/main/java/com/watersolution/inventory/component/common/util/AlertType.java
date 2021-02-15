@@ -10,7 +10,8 @@ public enum AlertType {
     ORDER_ALERT("Order Alert"),
     PURCHASE_ORDER_ALERT("Purchase Order Alert"),
     INVENTORY_ALERT("Inventory Alert"),
-    DELIVERY_ALERT("Delivery Alert");
+    DELIVERY_ALERT("Delivery Alert"),
+    COMPLAIN_ALERT("Complain Alert");
 
     private final String value;
 

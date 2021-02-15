@@ -3,6 +3,7 @@ package com.watersolution.inventory.component.management.notification.service;
 import com.watersolution.inventory.component.common.model.api.TransactionRequest;
 import com.watersolution.inventory.component.common.util.AlertType;
 import com.watersolution.inventory.component.common.util.Status;
+import com.watersolution.inventory.component.management.complain.model.db.Complain;
 import com.watersolution.inventory.component.management.delivery.model.db.Delivery;
 import com.watersolution.inventory.component.management.inventory.model.db.Inventory;
 import com.watersolution.inventory.component.management.notification.model.api.NotificationList;
@@ -165,6 +166,25 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setStatus(Status.PENDING.getValue());
 
         notificationRepository.save(notification);
+    }
+
+    @Override
+    public void complainNotification(Complain complain) {
+
+        List<Notification> notificationList = new ArrayList<>();
+
+        getUserList("INV-COM-VW").stream().forEach(userName -> {
+            Notification notification = new Notification();
+            notification.setDosend(LocalDate.now());
+            notification.setUserName(userName);
+            notification.setMessage("Complain #" + complain.getId() + " is raised by " + complain.getCustomer().getName() + "!");
+            notification.setType(AlertType.COMPLAIN_ALERT.getValue());
+            notification.fillCompulsory("SYSTEM");
+            notification.setStatus(Status.PENDING.getValue());
+            notificationList.add(notification);
+        });
+
+        notificationRepository.saveAll(notificationList);
     }
 
     private List<String> getUserList(String permission) {
