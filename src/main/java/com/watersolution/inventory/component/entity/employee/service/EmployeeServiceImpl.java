@@ -5,8 +5,10 @@ import com.watersolution.inventory.component.common.model.api.TransactionRequest
 import com.watersolution.inventory.component.common.util.ErrorCodes;
 import com.watersolution.inventory.component.common.util.Status;
 import com.watersolution.inventory.component.common.validator.CustomValidator;
+import com.watersolution.inventory.component.entity.employee.model.api.DesignationList;
 import com.watersolution.inventory.component.entity.employee.model.api.EmployeeList;
 import com.watersolution.inventory.component.entity.employee.model.db.Employee;
+import com.watersolution.inventory.component.entity.employee.repository.DesignationRepository;
 import com.watersolution.inventory.component.entity.employee.repository.EmployeeRepository;
 import com.watersolution.inventory.component.exception.CustomException;
 import com.watersolution.inventory.component.management.image.util.ImageUtil;
@@ -23,6 +25,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private DesignationRepository designationRepository;
     @Autowired
     private ImageUtil imageUtil;
     @Autowired
@@ -111,6 +115,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         Page<Employee> employees = employeeRepository.findAllByDesignationAndStatus(designation, Status.ACTIVE.getValue(), PageRequest.of(page, pageDetails.getLimit()));
         employees.stream().map(this::setImage).collect(Collectors.toList());
         return new EmployeeList(employees.getContent(), employees.getTotalPages());
+    }
+
+    @Override
+    public DesignationList getDesignationList() {
+        return new DesignationList(designationRepository.findAll());
     }
 
     private Employee setImage(Employee employee) {

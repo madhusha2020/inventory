@@ -5,6 +5,7 @@ import com.watersolution.inventory.component.common.exception.ResponseCreator;
 import com.watersolution.inventory.component.common.model.api.PageDetails;
 import com.watersolution.inventory.component.common.model.api.SearchFilter;
 import com.watersolution.inventory.component.common.model.api.TransactionRequest;
+import com.watersolution.inventory.component.entity.employee.model.api.DesignationList;
 import com.watersolution.inventory.component.entity.employee.model.api.EmployeeList;
 import com.watersolution.inventory.component.entity.employee.model.db.Employee;
 import com.watersolution.inventory.component.entity.employee.service.EmployeeService;
@@ -102,5 +103,18 @@ public class EmployeeController {
     @GetMapping(value = "/{designation}", produces = "application/json")
     public ResponseEntity<EmployeeList> getByEmployeeDesignation(@PathVariable("designation") String designation, @NotNull @Min(0) @ApiParam(value = "The number of items to skip before starting to collect the result set.", required = true, defaultValue = "0") @RequestParam(value = "offset", required = true, defaultValue = "0") Integer offset, @NotNull @Min(1) @Max(100) @ApiParam(value = "The numbers of items to return.", required = true, defaultValue = "10") @RequestParam(value = "limit", required = true, defaultValue = "10") Integer limit) {
         return ResponseCreator.successfulResponse(employeeService.getByEmployeeDesignation(new PageDetails(new SearchFilter(), offset, limit), designation));
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")})
+
+    @ApiOperation(value = "View a list of available designations", response = DesignationList.class)
+    @CrossOrigin
+    @GetMapping(value = "/designations", produces = "application/json")
+    public ResponseEntity<DesignationList> getAllDesignations() {
+        return ResponseCreator.successfulResponse(employeeService.getDesignationList());
     }
 }
