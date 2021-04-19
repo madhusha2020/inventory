@@ -114,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(transactionRequest.getId());
         customValidator.validateFoundNull(order, "order");
         Status.validateState("Order", order.getStatus(), Status.PENDING);
-        order.setStatus(Status.AWAITING.getValue());
+        order.setStatus(Status.ACTIVE.getValue());
         order.setDosold(LocalDate.now());
         order.fillUpdateCompulsory(transactionRequest.getUserId());
 
