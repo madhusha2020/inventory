@@ -23,7 +23,7 @@ public class Supplier extends Auditable {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "supplier_seq")
-    @SequenceGenerator(initialValue = 1, sequenceName = "supplier_seq", name = "supplier_seq")
+    @SequenceGenerator(initialValue = 5, sequenceName = "supplier_seq", name = "supplier_seq")
     private long id;
 
     @NotBlank(message = "Supplier code must not be blank")

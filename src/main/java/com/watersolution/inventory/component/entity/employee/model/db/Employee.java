@@ -23,7 +23,7 @@ public class Employee extends Auditable {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq")
-    @SequenceGenerator(initialValue = 1, sequenceName = "employee_seq", name = "employee_seq")
+    @SequenceGenerator(initialValue = 5, sequenceName = "employee_seq", name = "employee_seq")
     private long id;
 
     @NotBlank(message = "Employee code must not be blank")

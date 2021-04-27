@@ -18,7 +18,7 @@ public class VehicleType extends Auditable {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_type_seq")
-    @SequenceGenerator(initialValue = 1, sequenceName = "vehicle_type_seq", name = "vehicle_type_seq")
+    @SequenceGenerator(initialValue = 6, sequenceName = "vehicle_type_seq", name = "vehicle_type_seq")
     private long id;
 
     @Column(name = "name")

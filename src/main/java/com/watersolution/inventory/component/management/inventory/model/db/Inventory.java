@@ -27,7 +27,7 @@ public class Inventory extends Auditable {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "inventory_seq")
-    @SequenceGenerator(initialValue = 1, sequenceName = "inventory_seq", name = "inventory_seq")
+    @SequenceGenerator(initialValue = 11, sequenceName = "inventory_seq", name = "inventory_seq")
     private long id;
 
     @NotBlank(message = "Item Code must not be blank")

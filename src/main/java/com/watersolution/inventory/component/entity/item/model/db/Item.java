@@ -25,7 +25,7 @@ public class Item extends Auditable {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_seq")
-    @SequenceGenerator(initialValue = 1, sequenceName = "item_seq", name = "item_seq")
+    @SequenceGenerator(initialValue = 11, sequenceName = "item_seq", name = "item_seq")
     private long id;
 
     @NotBlank(message = "Item Code must not be blank")

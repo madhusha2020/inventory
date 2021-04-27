@@ -18,7 +18,7 @@ public class VehicleFacility extends Auditable {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_facility_seq")
-    @SequenceGenerator(initialValue = 1, sequenceName = "vehicle_facility_seq", name = "vehicle_facility_seq")
+    @SequenceGenerator(initialValue = 4, sequenceName = "vehicle_facility_seq", name = "vehicle_facility_seq")
     private long id;
 
     @Column(name = "name")
