@@ -53,7 +53,9 @@ public class UserServiceHelperImpl implements UserServiceHelper {
         validatePassword(user);
 
         user.fillUpdateCompulsory(user.getUserId());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if(user.getOldPassword() != null){
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         user.setFailedAttempts(0);
 
         Map<String, UserRole> userRoleMap = new HashMap<>();
